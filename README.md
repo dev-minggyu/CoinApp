@@ -9,6 +9,7 @@
 <br/>
 
 ## Features (WIP)
+
 - 코인 시세 조회 및 검색
 - 코인 즐겨찾기
 - 다크 모드
@@ -19,6 +20,7 @@
 <br/>
 
 # Architecture
+
 ![CleanArchitecture.png](https://github.com/smk513/CoinApp/blob/master/readme-res/CleanArchitecture.png?raw=true)
 
 ![MVVM.png](https://github.com/smk513/CoinMVVM/blob/Ktor/readme-resource/architecture/MVVM.png?raw=true)

@@ -46,18 +46,16 @@ class InitActivity : BaseActivity<ActivityInitBinding>(R.layout.activity_init) {
 
     private fun setupSplashScreen() {
         val content: View = findViewById(android.R.id.content)
-        content.viewTreeObserver.addOnPreDrawListener(
-            object : ViewTreeObserver.OnPreDrawListener {
-                override fun onPreDraw(): Boolean {
-                    return if (_isReady) {
-                        content.viewTreeObserver.removeOnPreDrawListener(this)
-                        gotoMain()
-                        true
-                    } else {
-                        false
-                    }
+        content.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+            override fun onPreDraw(): Boolean {
+                return if (_isReady) {
+                    content.viewTreeObserver.removeOnPreDrawListener(this)
+                    gotoMain()
+                    true
+                } else {
+                    false
                 }
             }
-        )
+        })
     }
 }
