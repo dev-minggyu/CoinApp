@@ -1,4 +1,4 @@
-package com.example.data.model.ticker
+package com.example.data.model.favorite
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
