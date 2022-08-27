@@ -1,5 +1,6 @@
 package com.example.coinapp.ui.splash
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -15,6 +16,7 @@ import com.example.coinapp.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@SuppressLint("CustomSplashScreen")
 @AndroidEntryPoint
 class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_splash) {
     private val _splashViewModel: SplashViewModel by viewModels()
