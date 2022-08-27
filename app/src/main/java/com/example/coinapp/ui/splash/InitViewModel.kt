@@ -11,13 +11,17 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SplashViewModel @Inject constructor(
+class InitViewModel @Inject constructor(
     private val getAllTickersUseCase: GetAllTickersUseCase
 ) : ViewModel() {
     private val _isSuccessGetAllTickers = MutableStateFlow(false)
     val isSuccessGetAllTickers = _isSuccessGetAllTickers.asStateFlow()
 
-    fun getAllTickers() {
+    init {
+        getAllTickers()
+    }
+
+    private fun getAllTickers() {
         viewModelScope.launch {
             when (getAllTickersUseCase.execute()) {
                 is Resource.Success -> _isSuccessGetAllTickers.emit(true)
