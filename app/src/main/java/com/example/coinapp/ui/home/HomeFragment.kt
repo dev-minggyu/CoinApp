@@ -7,7 +7,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.coinapp.R
 import com.example.coinapp.base.BaseFragment
 import com.example.coinapp.databinding.FragmentHomeBinding
-import com.example.coinapp.ui.home.adapter.FavoriteClickListener
 import com.example.coinapp.ui.home.adapter.TickerListAdapter
 import com.example.coinapp.ui.home.adapter.TickerListPagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
@@ -41,7 +40,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     private fun initListAdapters() {
-        val favoriteClickListener = object : FavoriteClickListener {
+        val favoriteClickListener = object : TickerListAdapter.FavoriteClickListener {
             override fun onAddFavorite(symbol: String) {
 //                _homeViewModel.addFavoriteSymbol(symbol)
             }
