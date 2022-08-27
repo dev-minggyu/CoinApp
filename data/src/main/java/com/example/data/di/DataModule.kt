@@ -6,6 +6,7 @@ import com.example.data.BuildConfig
 import com.example.data.db.AppDatabase
 import com.example.data.db.ticker.FavoriteTickerDao
 import com.example.data.api.ApiInterface
+import com.example.data.db.ticker.TickerDao
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -29,6 +30,12 @@ object DataModule {
             context.applicationContext,
             AppDatabase::class.java, AppDatabase.DB_FILE_NAME
         ).build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideTickerDao(appDB: AppDatabase): TickerDao {
+        return appDB.tickerDao()
     }
 
     @Singleton

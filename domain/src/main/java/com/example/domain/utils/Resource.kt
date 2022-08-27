@@ -1,4 +1,4 @@
-package com.example.coinapp.utils
+package com.example.domain.utils
 
 sealed class Resource<out T : Any> {
     class Success<T : Any>(val data: T) : Resource<T>()

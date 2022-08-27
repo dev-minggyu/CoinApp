@@ -2,6 +2,7 @@ package com.example.data.di
 
 import com.example.data.repository.ticker.TickerRepositoryImpl
 import com.example.data.repository.ticker.local.TickerLocalDataSource
+import com.example.data.repository.ticker.local.TickerLocalDataSourceImpl
 import com.example.data.repository.ticker.remote.TickerRemoteDataSource
 import com.example.data.repository.ticker.remote.TickerRemoteDataSourceImpl
 import com.example.domain.repository.ticker.TickerRepository
@@ -16,13 +17,13 @@ import javax.inject.Singleton
 abstract class RepositoryModule {
     @Binds
     @Singleton
-    abstract fun bindExamRepository(examRepositoryImpl: TickerRepositoryImpl): TickerRepository
+    abstract fun bindTickerRepository(tickerRepositoryImpl: TickerRepositoryImpl): TickerRepository
 
     @Binds
     @Singleton
-    abstract fun bindExamRemoteDataSource(tickerRemoteDataSourceImpl: TickerRemoteDataSourceImpl): TickerRemoteDataSource
+    abstract fun bindTickerRemoteDataSource(tickerRemoteDataSourceImpl: TickerRemoteDataSourceImpl): TickerRemoteDataSource
 
     @Binds
     @Singleton
-    abstract fun bindExamLocalDataSource(tickerLocalDataSource: TickerLocalDataSource): TickerLocalDataSource
+    abstract fun bindTickerLocalDataSource(tickerLocalDataSourceImpl: TickerLocalDataSourceImpl): TickerLocalDataSource
 }
