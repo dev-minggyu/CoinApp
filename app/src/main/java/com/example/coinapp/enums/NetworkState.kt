@@ -1,4 +1,4 @@
-package com.example.coinmvvm.constant.enums
+package com.example.coinapp.enums
 
 enum class NetworkState {
     CONNECTED,

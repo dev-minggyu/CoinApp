@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">CoinApp</string>
 
+    <string name="tab_ticker_list_all">전체</string>
+    <string name="tab_ticker_list_favorite">즐겨찾기</string>
+
     <string name="sort_coin_price">가격</string>
     <string name="sort_coin_name">이름</string>
     <string name="sort_coin_rate">변동률</string>

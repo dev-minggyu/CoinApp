@@ -8,7 +8,7 @@ import com.example.coinapp.enums.SortCategory
 import com.example.coinapp.enums.SortModel
 import com.example.coinapp.enums.SortType
 import com.example.coinapp.ui.custom.SortButton
-import com.example.coinmvvm.constant.enums.PriceState
+import com.example.domain.model.ticker.enums.PriceState
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 object BindingAdapter {
