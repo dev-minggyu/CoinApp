@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_primary">#03A9F4</color>
+    <color name="color_primary_variant">#2196F3</color>
+
+    <color name="color_background_regular1">#FFFFFF</color>
+    <color name="color_background_regular2">#FFFFFF</color>
+
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="grey">#808080</color>
+
+    <color name="color_text">#000000</color>
+
+    <color name="color_price_same">#000000</color>
+    <color name="color_price_up">#FF0000</color>
+    <color name="color_price_down">#008EFF</color>
+</resources>

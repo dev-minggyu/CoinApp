@@ -1,0 +1,90 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+    id 'kotlinx-serialization'
+}
+
+android {
+    compileSdk 32
+
+    defaultConfig {
+        applicationId "com.example.coinapp"
+        minSdk 21
+        targetSdk 32
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    dataBinding {
+        enabled = true
+    }
+}
+
+dependencies {
+    implementation project(':data')
+    implementation project(':domain')
+
+    implementation deps.core_ktx
+    implementation deps.appcompat
+    implementation deps.material
+    implementation deps.constraint_layout
+
+    // Ktx
+    implementation deps.activity_ktx
+    implementation deps.fragment_ktx
+    implementation deps.lifecycle_viewmodel_ktx
+
+    // Hilt
+    implementation deps.hilt.android
+    kapt deps.hilt.android_compiler
+
+    // Retrofit
+    implementation deps.retrofit.runtime
+
+    // OkHttp
+    implementation deps.okhttp.logging_interceptor
+
+    // Room
+    implementation deps.room.runtime
+    implementation deps.room.ktx
+    kapt deps.room.compiler
+    annotationProcessor deps.room.annotation
+
+    // Kotlin Serialization
+    implementation deps.kotlin_serialization_json
+    implementation deps.kotlin_serialization_converter
+
+    // SDP, SSP
+    implementation deps.sdp
+    implementation deps.ssp
+
+    // Preference Screen
+    implementation deps.preference_screen
+
+    // Leak Canary
+    debugImplementation deps.leakcanary.android
+
+    testImplementation deps.junit
+    androidTestImplementation deps.ext_junit
+    androidTestImplementation deps.espresso_core
+}

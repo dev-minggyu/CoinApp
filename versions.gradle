@@ -1,0 +1,85 @@
+def versions = [:]
+versions.gradle = '7.2.2'
+versions.kotlin = '1.7.10'
+versions.core_ktx = '1.8.0'
+versions.appcompat = '1.5.0'
+versions.material = '1.6.1'
+versions.constraint_layout = '2.1.4'
+versions.retrofit = '2.9.0'
+versions.okhttp = '5.0.0-alpha.10'
+versions.hilt = '2.43.2'
+versions.room = '2.4.3'
+versions.leakcanary = '2.9.1'
+versions.kotlin_serialization_json = '1.4.0'
+versions.kotlin_serialization_converter = '0.8.0'
+versions.activity_ktx = '1.5.1'
+versions.fragment_ktx = '1.5.2'
+versions.lifecycle_viewmodel_ktx = '2.5.1'
+versions.sdp = '1.0.6'
+versions.ssp = '1.0.6'
+versions.preference_screen = '1.2.0'
+
+versions.junit = '4.13.2'
+versions.ext_junit = '1.1.3'
+versions.espresso_core = '3.4.0'
+
+// --------------------------------------------- //
+
+def gradle = "com.android.tools.build:gradle:$versions.gradle"
+
+def kotlin = [:]
+kotlin.plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
+
+def hilt = [:]
+hilt.android = "com.google.dagger:hilt-android:$versions.hilt"
+hilt.android_compiler = "com.google.dagger:hilt-android-compiler:$versions.hilt"
+hilt.android_gradle_plugin = "com.google.dagger:hilt-android-gradle-plugin:$versions.hilt"
+
+def retrofit = [:]
+retrofit.runtime = "com.squareup.retrofit2:retrofit:$versions.retrofit"
+retrofit.gson = "com.squareup.retrofit2:converter-gson:$versions.retrofit"
+
+def okhttp = [:]
+okhttp.logging_interceptor = "com.squareup.okhttp3:logging-interceptor:$versions.okhttp"
+
+def room = [:]
+room.runtime = "androidx.room:room-runtime:$versions.room"
+room.ktx = "androidx.room:room-ktx:$versions.room"
+room.compiler = "androidx.room:room-compiler:$versions.room"
+room.annotation = "androidx.room:room-compiler:$versions.room"
+
+def leakcanary = [:]
+leakcanary.android = "com.squareup.leakcanary:leakcanary-android:$versions.leakcanary"
+
+// --------------------------------------------- //
+
+def deps = [:]
+deps.gradle = gradle
+deps.kotlin = kotlin
+deps.core_ktx = "androidx.core:core-ktx:$versions.core_ktx"
+deps.appcompat = "androidx.appcompat:appcompat:$versions.appcompat"
+deps.hilt = hilt
+deps.material = "com.google.android.material:material:$versions.material"
+deps.constraint_layout = "androidx.constraintlayout:constraintlayout:$versions.constraint_layout"
+deps.retrofit = retrofit
+deps.okhttp = okhttp
+deps.room = room
+deps.leakcanary = leakcanary
+deps.kotlin_serialization = "org.jetbrains.kotlin:kotlin-serialization:$versions.kotlin"
+deps.kotlin_serialization_json = "org.jetbrains.kotlinx:kotlinx-serialization-json:$versions.kotlin_serialization_json"
+deps.kotlin_serialization_converter = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$versions.kotlin_serialization_converter"
+deps.activity_ktx = "androidx.activity:activity-ktx:$versions.activity_ktx"
+deps.fragment_ktx = "androidx.fragment:fragment-ktx:$versions.fragment_ktx"
+deps.lifecycle_viewmodel_ktx = "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle_viewmodel_ktx"
+deps.sdp = "com.intuit.sdp:sdp-android:$versions.sdp"
+deps.ssp = "com.intuit.ssp:ssp-android:$versions.ssp"
+deps.preference_screen = "androidx.preference:preference-ktx:$versions.preference_screen"
+
+deps.junit = "junit:junit:$versions.junit"
+deps.ext_junit = "androidx.test.ext:junit:$versions.ext_junit"
+deps.espresso_core = "androidx.test.espresso:espresso-core:$versions.espresso_core"
+
+// --------------------------------------------- //
+
+ext.deps = [:]
+ext.deps = deps

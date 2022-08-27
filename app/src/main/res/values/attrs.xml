@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SortButton">
+        <attr name="sortCategory" format="enum">
+            <enum name="name" value="0" />
+            <enum name="price" value="1" />
+            <enum name="rate" value="2" />
+            <enum name="volume" value="3" />
+        </attr>
+    </declare-styleable>
+</resources>

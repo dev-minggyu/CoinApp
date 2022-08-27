@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">CoinApp</string>
+
+    <string name="sort_coin_price">가격</string>
+    <string name="sort_coin_name">이름</string>
+    <string name="sort_coin_rate">변동률</string>
+    <string name="sort_coin_volume">거래량</string>
+
+    <string name="hint_search_ticker">코인명 검색</string>
+
+    <string name="settings_app_theme">테마</string>
+    <string name="key_pref_app_theme">app_theme</string>
+
+    <string name="app_theme_system">시스템</string>
+    <string name="app_theme_light">라이트</string>
+    <string name="app_theme_dark">다크</string>
+</resources>
