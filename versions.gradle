@@ -18,7 +18,7 @@ versions.lifecycle_viewmodel_ktx = '2.5.1'
 versions.sdp = '1.0.6'
 versions.ssp = '1.0.6'
 versions.preference_screen = '1.2.0'
-versions.splash_screen = '1.0.0-beta02'
+versions.splash_screen = '1.0.0'
 
 versions.junit = '4.13.2'
 versions.ext_junit = '1.1.3'
