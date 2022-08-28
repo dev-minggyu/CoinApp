@@ -53,6 +53,10 @@ dependencies {
     kapt deps.room.compiler
     annotationProcessor deps.room.annotation
 
+    // Ktor
+    implementation deps.ktor.websockets
+    implementation deps.ktor.okhttp
+
     // Kotlin Serialization
     implementation deps.kotlin_serialization_json
     implementation deps.kotlin_serialization_converter

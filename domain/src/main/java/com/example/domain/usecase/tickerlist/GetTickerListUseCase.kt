@@ -1,4 +1,4 @@
-package com.example.domain.usecase
+package com.example.domain.usecase.tickerlist
 
 import com.example.domain.repository.tickerlist.TickerListRepository
 import com.example.domain.utils.Resource

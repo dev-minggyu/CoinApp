@@ -5,5 +5,5 @@ import com.example.domain.utils.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface TickerRepository {
-    fun observeTicker(): Flow<Resource<Ticker>>
+    fun observeTicker(): Flow<Resource<List<Ticker>>>
 }
