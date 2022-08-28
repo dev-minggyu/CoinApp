@@ -1,7 +1,6 @@
 package com.example.data.repository.tickerlist.remote
 
 import com.example.data.api.ApiInterface
-import com.example.data.model.ticker.TickerResponse
 import com.example.data.model.tickerlist.TickerListResponse
 import com.example.domain.utils.Resource
 import javax.inject.Inject
@@ -18,8 +17,4 @@ class TickerListRemoteDataSourceImpl @Inject constructor(private val apiInterfac
         } catch (e: Exception) {
             Resource.Error(e.message!!)
         }
-
-    override fun observeTickerList(): Resource<List<TickerResponse>> {
-        TODO("Not yet implemented")
-    }
 }
