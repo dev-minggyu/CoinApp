@@ -3,7 +3,7 @@ package com.example.data.di
 import android.content.Context
 import androidx.room.Room
 import com.example.data.BuildConfig
-import com.example.data.api.ApiInterface
+import com.example.data.api.ApiService
 import com.example.data.db.AppDatabase
 import com.example.data.db.favorite.FavoriteTickerDao
 import com.example.data.db.tickerlist.TickerListDao
@@ -56,7 +56,7 @@ object DataModule {
         }
 
         return Retrofit.Builder()
-            .baseUrl(ApiInterface.BASE_URL)
+            .baseUrl(ApiService.BASE_URL)
             .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
             .client(okHttpClient.build())
             .build()
@@ -64,7 +64,7 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideApiInterface(retrofit: Retrofit): ApiInterface {
-        return retrofit.create(ApiInterface::class.java)
+    fun provideApiService(retrofit: Retrofit): ApiService {
+        return retrofit.create(ApiService::class.java)
     }
 }
