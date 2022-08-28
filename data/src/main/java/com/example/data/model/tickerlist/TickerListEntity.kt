@@ -1,13 +1,13 @@
-package com.example.data.model.ticker
+package com.example.data.model.tickerlist
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "ticker"
+    tableName = "ticker_name"
 )
-data class TickerEntity(
+data class TickerListEntity(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "market")
     val market: String,

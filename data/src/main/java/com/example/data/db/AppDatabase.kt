@@ -2,14 +2,14 @@ package com.example.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.data.db.ticker.FavoriteTickerDao
-import com.example.data.db.ticker.TickerDao
+import com.example.data.db.favorite.FavoriteTickerDao
+import com.example.data.db.tickerlist.TickerListDao
 import com.example.data.model.favorite.FavoriteTickerEntity
-import com.example.data.model.ticker.TickerEntity
+import com.example.data.model.tickerlist.TickerListEntity
 
-@Database(entities = [TickerEntity::class, FavoriteTickerEntity::class], version = 1, exportSchema = false)
+@Database(entities = [TickerListEntity::class, FavoriteTickerEntity::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun tickerDao(): TickerDao
+    abstract fun tickerListDao(): TickerListDao
 
     abstract fun favoriteTickerDao(): FavoriteTickerDao
 

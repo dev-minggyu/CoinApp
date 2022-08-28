@@ -1,4 +1,4 @@
-package com.example.data.db.ticker
+package com.example.data.db.favorite
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -9,7 +9,7 @@ import com.example.data.model.favorite.FavoriteTickerEntity
 @Dao
 interface FavoriteTickerDao {
     @Query("SELECT * FROM favorite")
-    suspend fun getFavoriteTickers(): List<FavoriteTickerEntity>
+    suspend fun getFavoriteTickerList(): List<FavoriteTickerEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addFavoriteTicker(symbol: FavoriteTickerEntity): Long

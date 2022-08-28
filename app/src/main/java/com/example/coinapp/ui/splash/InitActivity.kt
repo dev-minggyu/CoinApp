@@ -33,7 +33,7 @@ class InitActivity : BaseActivity<ActivityInitBinding>(R.layout.activity_init) {
 
     private fun setupObserver() {
         lifecycleScope.launch {
-            _initViewModel.isSuccessGetAllTickers.collectWithLifecycle(lifecycle) {
+            _initViewModel.isSuccessGetTickerList.collectWithLifecycle(lifecycle) {
                 _isReady = it
             }
         }

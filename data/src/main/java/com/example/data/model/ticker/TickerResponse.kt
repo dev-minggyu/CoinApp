@@ -1,16 +1,37 @@
 package com.example.data.model.ticker
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-
-@Serializable
 data class TickerResponse(
-    @SerialName("english_name")
-    val englishName: String,
-
-    @SerialName("korean_name")
-    val koreanName: String,
-
-    @SerialName("market")
-    val market: String
+    val acc_ask_volume: Double,
+    val acc_bid_volume: Double,
+    val acc_trade_price: Double,
+    val acc_trade_price_24h: Double,
+    val acc_trade_volume: Double,
+    val acc_trade_volume_24h: Double,
+    val ask_bid: String,
+    val change: String,
+    val change_price: Double,
+    val change_rate: Double,
+    val delisting_date: Any,
+    val high_price: Double,
+    val highest_52_week_date: String,
+    val highest_52_week_price: Double,
+    val is_trading_suspended: Boolean,
+    val low_price: Double,
+    val lowest_52_week_date: String,
+    val lowest_52_week_price: Double,
+    val market: String,
+    val market_state: String,
+    val market_state_for_ios: String,
+    val market_warning: String,
+    val opening_price: Double,
+    val prev_closing_price: Double,
+    val signed_change_price: Double,
+    val signed_change_rate: Double,
+    val timestamp: Long,
+    val trade_date: String,
+    val trade_price: Double,
+    val trade_status: String,
+    val trade_time: String,
+    val trade_timestamp: Long,
+    val trade_volume: Double
 )

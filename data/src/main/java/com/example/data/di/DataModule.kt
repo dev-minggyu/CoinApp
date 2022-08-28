@@ -5,8 +5,8 @@ import androidx.room.Room
 import com.example.data.BuildConfig
 import com.example.data.api.ApiInterface
 import com.example.data.db.AppDatabase
-import com.example.data.db.ticker.FavoriteTickerDao
-import com.example.data.db.ticker.TickerDao
+import com.example.data.db.favorite.FavoriteTickerDao
+import com.example.data.db.tickerlist.TickerListDao
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -34,8 +34,8 @@ object DataModule {
 
     @Singleton
     @Provides
-    fun provideTickerDao(appDB: AppDatabase): TickerDao {
-        return appDB.tickerDao()
+    fun provideTickerListDao(appDB: AppDatabase): TickerListDao {
+        return appDB.tickerListDao()
     }
 
     @Singleton
