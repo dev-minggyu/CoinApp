@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewTreeObserver
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.example.coinapp.R
 import com.example.coinapp.base.BaseActivity
 import com.example.coinapp.databinding.ActivityInitBinding
+import com.example.coinapp.extension.collectWithLifecycle
 import com.example.coinapp.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -33,7 +33,7 @@ class InitActivity : BaseActivity<ActivityInitBinding>(R.layout.activity_init) {
 
     private fun setupObserver() {
         lifecycleScope.launch {
-            _initViewModel.isSuccessGetAllTickers.flowWithLifecycle(lifecycle).collect {
+            _initViewModel.isSuccessGetAllTickers.collectWithLifecycle(lifecycle) {
                 _isReady = it
             }
         }

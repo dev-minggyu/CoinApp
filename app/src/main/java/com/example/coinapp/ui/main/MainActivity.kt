@@ -3,11 +3,11 @@ package com.example.coinapp.ui.main
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.example.coinapp.R
 import com.example.coinapp.base.BaseActivity
 import com.example.coinapp.databinding.ActivityMainBinding
+import com.example.coinapp.extension.collectWithLifecycle
 import com.example.coinapp.ui.home.HomeFragment
 import com.example.coinapp.ui.myasset.MyAssetFragment
 import com.example.coinapp.ui.setting.SettingFragment
@@ -34,7 +34,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private fun setupObserver() {
         lifecycleScope.launch {
-            _mainViewModel.currentMenuId.flowWithLifecycle(lifecycle).collect {
+            _mainViewModel.currentMenuId.collectWithLifecycle(lifecycle) {
                 showFragment(it)
             }
         }

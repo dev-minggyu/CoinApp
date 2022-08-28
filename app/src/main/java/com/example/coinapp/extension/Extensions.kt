@@ -5,11 +5,14 @@ import android.content.res.TypedArray
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.StateFlow
 
-fun <T> MutableLiveData<T>.asLiveData() = this as LiveData<T>
+suspend fun <T> StateFlow<T>.collectWithLifecycle(lifecycle: Lifecycle, collector: FlowCollector<T>) =
+    flowWithLifecycle(lifecycle).collect(collector)
 
 fun Activity.showToast(text: String) {
     Toast.makeText(this, text, Toast.LENGTH_LONG).show()
