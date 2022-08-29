@@ -6,7 +6,8 @@ import com.example.coinapp.enums.SortCategory
 import com.example.coinapp.enums.SortModel
 import com.example.coinapp.enums.SortType
 import com.example.domain.model.ticker.Ticker
-import com.example.domain.usecase.ticker.TickerListUseCase
+import com.example.domain.usecase.ticker.SubscribeTickerUseCase
+import com.example.domain.usecase.ticker.TickerDataUseCase
 import com.example.domain.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val tickerListUseCase: TickerListUseCase
+    private val subscribeTickerUseCase: SubscribeTickerUseCase,
+    private val tickerDataUseCase: TickerDataUseCase
 ) : ViewModel() {
     private val _tickerList: MutableStateFlow<List<Ticker>?> = MutableStateFlow(null)
     val tickerList = _tickerList.asStateFlow()
@@ -28,8 +30,19 @@ class HomeViewModel @Inject constructor(
     }
 
     init {
+        observeTickerList()
+        subscribeTicker()
+    }
+
+    private fun subscribeTicker() {
         viewModelScope.launch {
-            tickerListUseCase.execute().collect {
+            subscribeTickerUseCase.execute()
+        }
+    }
+
+    private fun observeTickerList() {
+        viewModelScope.launch {
+            tickerDataUseCase.execute().collect {
                 when (it) {
                     is Resource.Success -> {
                         _tickerList.value = it.data

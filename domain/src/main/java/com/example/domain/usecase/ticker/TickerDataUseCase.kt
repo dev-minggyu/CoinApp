@@ -6,6 +6,6 @@ import com.example.domain.utils.Resource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class TickerListUseCase @Inject constructor(private val repository: TickerRepository) {
-    fun execute(): Flow<Resource<List<Ticker>>> = repository.observeTicker()
+class TickerDataUseCase @Inject constructor(private val repository: TickerRepository) {
+    fun execute(): Flow<Resource<List<Ticker>>> = repository.tickerSocketData
 }

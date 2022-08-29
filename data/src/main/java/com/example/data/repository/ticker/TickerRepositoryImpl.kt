@@ -9,9 +9,12 @@ import com.example.domain.model.ticker.Ticker
 import com.example.domain.repository.ticker.TickerRepository
 import com.example.domain.utils.Resource
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class TickerRepositoryImpl @Inject constructor(
@@ -21,29 +24,48 @@ class TickerRepositoryImpl @Inject constructor(
     private val tickerMapperProvider: TickerMapperProvider
 ) : TickerRepository {
 
-    override fun observeTicker(): Flow<Resource<List<Ticker>>> = flow {
-        if (tickerSocketService.openSession()) {
-            tickerSocketService.send(
-                mutableListOf(
-                    TickerRequest(
-                        codes = tickerListLocalDataSource.getTickerList().map {
-                            it.market
-                        },
-                        type = TickerSocketService.REQUEST_TYPE
-                    ),
-                    TickerRequest(
-                        ticket = TickerSocketService.REQUEST_TICKET
+    private val _tickerSocketData = MutableSharedFlow<Resource<List<Ticker>>>(
+        replay = 0,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    override val tickerSocketData = _tickerSocketData.asSharedFlow()
+
+    override suspend fun subscribeTicker(): Resource<Unit> =
+        withContext(Dispatchers.IO) {
+            if (tickerSocketService.isAlreadyOpen()) Resource.Success(Unit)
+            if (tickerSocketService.openSession()) {
+                tickerSocketService.observeData().onEach {
+                    when (it) {
+                        is Resource.Success -> {
+                            atomicTickerList.updateTicker(
+                                tickerMapperProvider.mapperToTicker(it.data)
+                            )
+                            _tickerSocketData.emit(Resource.Success(atomicTickerList.getList()))
+                        }
+                        else -> _tickerSocketData.emit(Resource.Error(null))
+                    }
+                }.launchIn(this)
+                tickerSocketService.send(
+                    mutableListOf(
+                        TickerRequest(
+                            codes = tickerListLocalDataSource.getTickerList().map {
+                                it.market
+                            },
+                            type = TickerSocketService.REQUEST_TYPE
+                        ),
+                        TickerRequest(
+                            ticket = TickerSocketService.REQUEST_TICKET
+                        )
                     )
                 )
-            )
-            tickerSocketService.observeData().collect {
-                atomicTickerList.updateTicker(
-                    tickerMapperProvider.mapperToTicker(it)
-                )
-                emit(Resource.Success(atomicTickerList.getList()))
+                Resource.Success(Unit)
+            } else {
+                Resource.Error(null)
             }
-        } else {
-            emit(Resource.Error(null))
         }
-    }.flowOn(Dispatchers.IO)
+
+    override suspend fun unsubscribeTicker() {
+        tickerSocketService.closeSession()
+    }
 }

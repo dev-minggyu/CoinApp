@@ -2,11 +2,14 @@ package com.example.data.repository.ticker.remote
 
 import com.example.data.model.ticker.TickerRequest
 import com.example.data.model.ticker.TickerResponse
+import com.example.domain.utils.Resource
 import io.ktor.websocket.*
 import kotlinx.coroutines.flow.Flow
 
 interface TickerSocketService {
     var socketSession: WebSocketSession?
+
+    fun isAlreadyOpen(): Boolean
 
     suspend fun openSession(): Boolean
 
@@ -14,7 +17,7 @@ interface TickerSocketService {
 
     suspend fun closeSession()
 
-    fun observeData(): Flow<TickerResponse>
+    fun observeData(): Flow<Resource<TickerResponse>>
 
     companion object {
         const val BASE_URL = "wss://api.upbit.com/websocket/v1"

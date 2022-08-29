@@ -2,11 +2,14 @@ package com.example.data.repository.ticker.remote
 
 import com.example.data.model.ticker.TickerRequest
 import com.example.data.model.ticker.TickerResponse
+import com.example.domain.utils.Resource
 import io.ktor.client.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.client.request.*
 import io.ktor.websocket.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -17,6 +20,8 @@ class TickerSocketServiceImpl @Inject constructor(
     private val client: HttpClient
 ) : TickerSocketService {
     override var socketSession: WebSocketSession? = null
+
+    override fun isAlreadyOpen(): Boolean = socketSession == null
 
     override suspend fun openSession(): Boolean {
         return try {
@@ -35,21 +40,21 @@ class TickerSocketServiceImpl @Inject constructor(
 
     override suspend fun closeSession() {
         socketSession?.close()
+        socketSession = null
     }
 
-    override fun observeData(): Flow<TickerResponse> {
+    override fun observeData(): Flow<Resource<TickerResponse>> = flow {
         val json = Json { ignoreUnknownKeys = true }
-        return try {
-            socketSession?.incoming
-                ?.receiveAsFlow()
-                ?.filter { it is Frame.Binary }
-                ?.map {
-                    val text = String((it as Frame.Binary).readBytes())
-                    val tickerResponse = json.decodeFromString<TickerResponse>(text)
-                    tickerResponse
-                } ?: flow {}
+        try {
+            socketSession?.incoming?.consumeEach { frame ->
+                if (frame is Frame.Binary) {
+                    val tickerResponse = json.decodeFromString<TickerResponse>(String(frame.readBytes()))
+                    emit(Resource.Success(tickerResponse))
+                }
+            }
         } catch (e: Exception) {
-            flow {}
+            closeSession()
+            emit(Resource.Error(null))
         }
     }
 }
