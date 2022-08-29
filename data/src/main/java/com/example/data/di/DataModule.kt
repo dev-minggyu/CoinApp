@@ -6,7 +6,7 @@ import com.example.data.BuildConfig
 import com.example.data.api.ApiService
 import com.example.data.db.AppDatabase
 import com.example.data.db.favoriteticker.FavoriteTickerDao
-import com.example.data.db.tickerlist.TickerListDao
+import com.example.data.db.tickersymbol.TickerSymbolDao
 import com.example.data.model.ticker.AtomicTickerList
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
@@ -38,8 +38,8 @@ object DataModule {
 
     @Singleton
     @Provides
-    fun provideTickerListDao(appDB: AppDatabase): TickerListDao {
-        return appDB.tickerListDao()
+    fun provideTickerSymbolDao(appDB: AppDatabase): TickerSymbolDao {
+        return appDB.tickerSymbolDao()
     }
 
     @Singleton

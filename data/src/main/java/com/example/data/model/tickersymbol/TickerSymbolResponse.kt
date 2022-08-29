@@ -1,10 +1,10 @@
-package com.example.data.model.tickerlist
+package com.example.data.model.tickersymbol
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TickerListResponse(
+data class TickerSymbolResponse(
     @SerialName("english_name")
     val englishName: String,
 

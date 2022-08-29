@@ -2,7 +2,7 @@ package com.example.coinapp.ui.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.usecase.tickerlist.GetTickerListUseCase
+import com.example.domain.usecase.tickersymbol.GetTickerSymbolUseCase
 import com.example.domain.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,20 +12,20 @@ import javax.inject.Inject
 
 @HiltViewModel
 class InitViewModel @Inject constructor(
-    private val getTickerListUseCase: GetTickerListUseCase
+    private val getTickerSymbolUseCase: GetTickerSymbolUseCase
 ) : ViewModel() {
-    private val _isSuccessGetTickerList = MutableStateFlow(false)
-    val isSuccessGetTickerList = _isSuccessGetTickerList.asStateFlow()
+    private val _isSuccessGetTickerSymbol = MutableStateFlow(false)
+    val isSuccessGetTickerSymbol = _isSuccessGetTickerSymbol.asStateFlow()
 
     init {
-        getTickerList()
+        getTickerSymbol()
     }
 
-    private fun getTickerList() {
+    private fun getTickerSymbol() {
         viewModelScope.launch {
-            when (getTickerListUseCase.execute()) {
-                is Resource.Success -> _isSuccessGetTickerList.emit(true)
-                else -> _isSuccessGetTickerList.emit(false)
+            when (getTickerSymbolUseCase.execute()) {
+                is Resource.Success -> _isSuccessGetTickerSymbol.emit(true)
+                else -> _isSuccessGetTickerSymbol.emit(false)
             }
         }
     }

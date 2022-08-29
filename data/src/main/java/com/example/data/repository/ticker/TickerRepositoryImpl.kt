@@ -6,7 +6,7 @@ import com.example.data.model.ticker.TickerRequest
 import com.example.data.provider.TickerMapperProvider
 import com.example.data.repository.favoriteticker.local.FavoriteTickerLocalDataSource
 import com.example.data.repository.ticker.remote.TickerSocketService
-import com.example.data.repository.tickerlist.local.TickerListLocalDataSource
+import com.example.data.repository.tickersymbol.local.TickerSymbolLocalDataSource
 import com.example.domain.model.ticker.Ticker
 import com.example.domain.repository.ticker.TickerRepository
 import com.example.domain.utils.Resource
@@ -22,7 +22,7 @@ import javax.inject.Inject
 class TickerRepositoryImpl @Inject constructor(
     private val tickerSocketService: TickerSocketService,
     private val atomicTickerList: AtomicTickerList,
-    private val tickerListLocalDataSource: TickerListLocalDataSource,
+    private val tickerSymbolLocalDataSource: TickerSymbolLocalDataSource,
     private val favoriteTickerLocalDataSource: FavoriteTickerLocalDataSource,
     private val tickerMapperProvider: TickerMapperProvider
 ) : TickerRepository {
@@ -57,7 +57,7 @@ class TickerRepositoryImpl @Inject constructor(
                 tickerSocketService.send(
                     mutableListOf(
                         TickerRequest(
-                            codes = tickerListLocalDataSource.getTickerList().map {
+                            codes = tickerSymbolLocalDataSource.getTickerSymbolList().map {
                                 it.market
                             },
                             type = TickerSocketService.REQUEST_TYPE
