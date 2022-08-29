@@ -38,10 +38,6 @@ class TickerListAdapter(val favoriteClickListener: FavoriteClickListener?) :
         }
     }
 
-    override fun submitList(list: List<Ticker>?) {
-        super.submitList(list?.map { it.copy() })
-    }
-
     class TickerDiffCallback : DiffUtil.ItemCallback<Ticker>() {
         override fun areItemsTheSame(oldItem: Ticker, newItem: Ticker): Boolean {
             return oldItem.symbol == newItem.symbol

@@ -9,16 +9,10 @@ class AtomicTickerList {
 
     private var _list = mutableListOf<Ticker>()
 
-    suspend fun addAll(elements: Collection<Ticker>) {
-        _mutex.withLock {
-            _list.addAll(elements)
-        }
-    }
-
     suspend fun updateTicker(element: Ticker) {
         _mutex.withLock {
             _list.find {
-                it.symbol == element.symbol
+                (it.symbol == element.symbol) && (it.currencyType == element.currencyType)
             }?.apply {
                 prevPrice = element.prevPrice
                 currentPrice = element.currentPrice
@@ -30,7 +24,11 @@ class AtomicTickerList {
         }
     }
 
-    fun getList(): List<Ticker> = _list.toList()
+    suspend fun getList(): List<Ticker> = _mutex.withLock {
+        _list.map {
+            it.copy()
+        }
+    }
 
     suspend fun clear() {
         _mutex.withLock {

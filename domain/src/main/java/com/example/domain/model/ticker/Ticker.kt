@@ -2,11 +2,11 @@ package com.example.domain.model.ticker
 
 data class Ticker(
     var symbol: String,
-    var currencyType: String,
-    var currentPrice: Double,
-    var prevPrice: Double,
-    var rate: Double,
-    var volume: Double,
+    var currencyType: Currency,
+    var currentPrice: String,
+    var prevPrice: String,
+    var rate: String,
+    var volume: String,
     var isFavorite: Boolean = false,
     var favoriteIndex: Long = -1
 )

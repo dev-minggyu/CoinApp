@@ -1,8 +1,8 @@
 package com.example.data.repository.ticker
 
-import com.example.data.mapper.TickerMapper
 import com.example.data.model.ticker.AtomicTickerList
 import com.example.data.model.ticker.TickerRequest
+import com.example.data.provider.TickerMapperProvider
 import com.example.data.repository.ticker.remote.TickerSocketService
 import com.example.data.repository.tickerlist.local.TickerListLocalDataSource
 import com.example.domain.model.ticker.Ticker
@@ -17,7 +17,8 @@ import javax.inject.Inject
 class TickerRepositoryImpl @Inject constructor(
     private val tickerSocketService: TickerSocketService,
     private val atomicTickerList: AtomicTickerList,
-    private val tickerListLocalDataSource: TickerListLocalDataSource
+    private val tickerListLocalDataSource: TickerListLocalDataSource,
+    private val tickerMapperProvider: TickerMapperProvider
 ) : TickerRepository {
 
     override fun observeTicker(): Flow<Resource<List<Ticker>>> = flow {
@@ -37,7 +38,7 @@ class TickerRepositoryImpl @Inject constructor(
             )
             tickerSocketService.observeData().collect {
                 atomicTickerList.updateTicker(
-                    TickerMapper.mapperToTicker(it)
+                    tickerMapperProvider.mapperToTicker(it)
                 )
                 emit(Resource.Success(atomicTickerList.getList()))
             }
