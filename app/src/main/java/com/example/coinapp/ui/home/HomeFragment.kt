@@ -48,11 +48,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private fun setupListAdapters() {
         val favoriteClickListener = object : TickerListAdapter.FavoriteClickListener {
             override fun onAddFavorite(symbol: String) {
-//                _homeViewModel.addFavoriteSymbol(symbol)
+                _homeViewModel.insertFavoriteTicker(symbol)
             }
 
             override fun onDeleteFavorite(symbol: String) {
-//                _homeViewModel.deleteFavoriteSymbol(symbol)
+                _homeViewModel.deleteFavoriteTicker(symbol)
             }
         }
         _tickerListAdapter = TickerListAdapter(favoriteClickListener)

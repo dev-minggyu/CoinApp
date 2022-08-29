@@ -1,5 +1,8 @@
 package com.example.data.di
 
+import com.example.data.repository.favoriteticker.FavoriteTickerRepositoryImpl
+import com.example.data.repository.favoriteticker.local.FavoriteTickerLocalDataSource
+import com.example.data.repository.favoriteticker.local.FavoriteTickerLocalDataSourceImpl
 import com.example.data.repository.ticker.TickerRepositoryImpl
 import com.example.data.repository.ticker.remote.TickerSocketService
 import com.example.data.repository.ticker.remote.TickerSocketServiceImpl
@@ -8,6 +11,7 @@ import com.example.data.repository.tickerlist.local.TickerListLocalDataSource
 import com.example.data.repository.tickerlist.local.TickerListLocalDataSourceImpl
 import com.example.data.repository.tickerlist.remote.TickerListRemoteDataSource
 import com.example.data.repository.tickerlist.remote.TickerListRemoteDataSourceImpl
+import com.example.domain.repository.favoriteticker.FavoriteTickerRepository
 import com.example.domain.repository.ticker.TickerRepository
 import com.example.domain.repository.tickerlist.TickerListRepository
 import dagger.Binds
@@ -38,4 +42,12 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindTickerSocketService(tickerSocketServiceImpl: TickerSocketServiceImpl): TickerSocketService
+
+    @Binds
+    @Singleton
+    abstract fun bindFavoriteTickerLocalDataSource(favoriteTickerLocalDataSourceImpl: FavoriteTickerLocalDataSourceImpl): FavoriteTickerLocalDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindFavoriteTickerRepository(favoriteTickerRepositoryImpl: FavoriteTickerRepositoryImpl): FavoriteTickerRepository
 }

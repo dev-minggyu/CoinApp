@@ -5,7 +5,7 @@ import androidx.room.Room
 import com.example.data.BuildConfig
 import com.example.data.api.ApiService
 import com.example.data.db.AppDatabase
-import com.example.data.db.favorite.FavoriteTickerDao
+import com.example.data.db.favoriteticker.FavoriteTickerDao
 import com.example.data.db.tickerlist.TickerListDao
 import com.example.data.model.ticker.AtomicTickerList
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory

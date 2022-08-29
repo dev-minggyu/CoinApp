@@ -5,6 +5,10 @@
     <data>
 
         <variable
+            name="favoriteClickListener"
+            type="com.example.coinapp.ui.home.adapter.TickerListAdapter.FavoriteClickListener" />
+
+        <variable
             name="ticker"
             type="com.example.domain.model.ticker.Ticker" />
     </data>
@@ -44,9 +48,12 @@
 
         <ToggleButton
             android:id="@+id/btn_favorite"
+            favoriteClickListener="@{favoriteClickListener}"
+            tickerSymbol="@{ticker.currencyType.name() + '-' + ticker.symbol}"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@drawable/ic_favorite_toggle"
+            android:checked="@{ticker.favorite}"
             android:textOff=""
             android:textOn=""
             app:layout_constraintBottom_toBottomOf="parent"

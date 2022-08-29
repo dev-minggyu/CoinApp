@@ -1,4 +1,4 @@
-package com.example.data.model.favorite
+package com.example.data.model.favoriteticker
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -6,7 +6,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "favorite",
+    tableName = "ticker_favorite",
     indices = [Index(value = ["symbol"], unique = true)]
 )
 data class FavoriteTickerEntity(

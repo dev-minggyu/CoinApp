@@ -27,13 +27,7 @@ class TickerListAdapter(val favoriteClickListener: FavoriteClickListener?) :
 
         fun bind(item: Ticker) {
             binding.ticker = item
-            binding.btnFavorite.setOnClickListener {
-                if (binding.btnFavorite.isChecked) {
-                    favoriteClickListener?.onAddFavorite(item.symbol)
-                } else {
-                    favoriteClickListener?.onDeleteFavorite(item.symbol)
-                }
-            }
+            binding.favoriteClickListener = favoriteClickListener
             binding.executePendingBindings()
         }
     }

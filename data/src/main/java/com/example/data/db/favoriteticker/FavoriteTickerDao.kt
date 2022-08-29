@@ -1,25 +1,25 @@
-package com.example.data.db.favorite
+package com.example.data.db.favoriteticker
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.data.model.favorite.FavoriteTickerEntity
+import com.example.data.model.favoriteticker.FavoriteTickerEntity
 
 @Dao
 interface FavoriteTickerDao {
-    @Query("SELECT * FROM favorite")
+    @Query("SELECT * FROM ticker_favorite")
     suspend fun getFavoriteTickerList(): List<FavoriteTickerEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addFavoriteTicker(symbol: FavoriteTickerEntity): Long
+    suspend fun insertFavoriteTicker(symbol: FavoriteTickerEntity): Long
 
     /**
      * @return the number of favorite deleted. This should always be 1.
      */
-    @Query("DELETE FROM favorite WHERE symbol = :symbol")
+    @Query("DELETE FROM ticker_favorite WHERE symbol = :symbol")
     suspend fun deleteFavoriteSymbol(symbol: String): Int
 
-    @Query("DELETE FROM favorite")
+    @Query("DELETE FROM ticker_favorite")
     suspend fun deleteAllFavorite(): Int
 }

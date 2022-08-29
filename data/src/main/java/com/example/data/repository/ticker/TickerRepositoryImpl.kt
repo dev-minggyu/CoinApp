@@ -1,8 +1,10 @@
 package com.example.data.repository.ticker
 
+import com.example.data.mapper.FavoriteTickerMapper
 import com.example.data.model.ticker.AtomicTickerList
 import com.example.data.model.ticker.TickerRequest
 import com.example.data.provider.TickerMapperProvider
+import com.example.data.repository.favoriteticker.local.FavoriteTickerLocalDataSource
 import com.example.data.repository.ticker.remote.TickerSocketService
 import com.example.data.repository.tickerlist.local.TickerListLocalDataSource
 import com.example.domain.model.ticker.Ticker
@@ -21,6 +23,7 @@ class TickerRepositoryImpl @Inject constructor(
     private val tickerSocketService: TickerSocketService,
     private val atomicTickerList: AtomicTickerList,
     private val tickerListLocalDataSource: TickerListLocalDataSource,
+    private val favoriteTickerLocalDataSource: FavoriteTickerLocalDataSource,
     private val tickerMapperProvider: TickerMapperProvider
 ) : TickerRepository {
 
@@ -35,6 +38,11 @@ class TickerRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             if (tickerSocketService.isAlreadyOpen()) Resource.Success(Unit)
             if (tickerSocketService.openSession()) {
+                favoriteTickerLocalDataSource.getFavoriteTickerList().forEach {
+                    atomicTickerList.updateTicker(
+                        FavoriteTickerMapper.mapperToTicker(it)
+                    )
+                }
                 tickerSocketService.observeData().onEach {
                     when (it) {
                         is Resource.Success -> {

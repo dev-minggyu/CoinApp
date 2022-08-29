@@ -6,6 +6,7 @@ import com.example.coinapp.enums.SortCategory
 import com.example.coinapp.enums.SortModel
 import com.example.coinapp.enums.SortType
 import com.example.domain.model.ticker.Ticker
+import com.example.domain.usecase.favoriteticker.FavoriteTickerUseCase
 import com.example.domain.usecase.ticker.SubscribeTickerUseCase
 import com.example.domain.usecase.ticker.TickerDataUseCase
 import com.example.domain.utils.Resource
@@ -18,8 +19,15 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val subscribeTickerUseCase: SubscribeTickerUseCase,
-    private val tickerDataUseCase: TickerDataUseCase
+    private val tickerDataUseCase: TickerDataUseCase,
+    private val favoriteTickerUseCase: FavoriteTickerUseCase
 ) : ViewModel() {
+
+    init {
+        observeTickerList()
+        subscribeTicker()
+    }
+
     private val _tickerList: MutableStateFlow<List<Ticker>?> = MutableStateFlow(null)
     val tickerList = _tickerList.asStateFlow()
 
@@ -27,11 +35,7 @@ class HomeViewModel @Inject constructor(
 
     val sortModel: MutableStateFlow<SortModel> = MutableStateFlow(SortModel(SortCategory.NAME, SortType.NO))
     val onTickerSortClick = { sortModel: SortModel ->
-    }
 
-    init {
-        observeTickerList()
-        subscribeTicker()
     }
 
     private fun subscribeTicker() {
@@ -50,6 +54,18 @@ class HomeViewModel @Inject constructor(
                     else -> {}
                 }
             }
+        }
+    }
+
+    fun insertFavoriteTicker(symbol: String) {
+        viewModelScope.launch {
+            favoriteTickerUseCase.executeInsert(symbol)
+        }
+    }
+
+    fun deleteFavoriteTicker(symbol: String) {
+        viewModelScope.launch {
+            favoriteTickerUseCase.executeDelete(symbol)
         }
     }
 }
