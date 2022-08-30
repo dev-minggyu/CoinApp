@@ -22,19 +22,23 @@ class InitActivity : BaseActivity<ActivityInitBinding>(R.layout.activity_init) {
     private var _isReady = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
+        installSplashScreen().apply {
+            setKeepOnScreenCondition { true }
+        }
 
         super.onCreate(savedInstanceState)
 
         binding.vm = _initViewModel
-        setupSplashScreen()
+
         setupObserver()
     }
 
     private fun setupObserver() {
         lifecycleScope.launch {
             _initViewModel.isSuccessGetTickerSymbol.collectWithLifecycle(lifecycle) {
-                _isReady = it
+                if (it) {
+                    gotoMain()
+                }
             }
         }
     }
@@ -44,13 +48,16 @@ class InitActivity : BaseActivity<ActivityInitBinding>(R.layout.activity_init) {
         finish()
     }
 
+    /**
+     * Animation이 있는 Splash의 경우,
+     * 해당 Animation이 다 그려졌는지 판단하는 코드.
+     */
     private fun setupSplashScreen() {
         val content: View = findViewById(android.R.id.content)
         content.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
             override fun onPreDraw(): Boolean {
                 return if (_isReady) {
                     content.viewTreeObserver.removeOnPreDrawListener(this)
-                    gotoMain()
                     true
                 } else {
                     false
