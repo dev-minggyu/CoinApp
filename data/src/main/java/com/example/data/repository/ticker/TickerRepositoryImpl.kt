@@ -91,7 +91,7 @@ class TickerRepositoryImpl @Inject constructor(
         tickerSocketService.closeSession()
     }
 
-    override suspend fun getSortedTickerList(sortModel: SortModel): List<Ticker> =
+    override suspend fun sortTickerList(sortModel: SortModel): List<Ticker> =
         withContext(Dispatchers.IO) {
             atomicTickerList.getList(sortModel)
         }
