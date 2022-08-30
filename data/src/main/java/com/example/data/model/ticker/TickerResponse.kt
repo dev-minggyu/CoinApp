@@ -35,5 +35,6 @@ data class TickerResponse(
     val trade_time: String,
     val trade_timestamp: Long,
     val trade_volume: Double,
-    val type: String
+    val type: String,
+    var isFavorite: Boolean = false
 )

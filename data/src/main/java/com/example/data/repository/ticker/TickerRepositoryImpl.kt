@@ -1,14 +1,13 @@
 package com.example.data.repository.ticker
 
-import com.example.data.mapper.FavoriteTickerMapper
 import com.example.data.model.ticker.AtomicTickerList
 import com.example.data.model.ticker.TickerRequest
 import com.example.data.provider.TickerMapperProvider
-import com.example.data.repository.favoriteticker.local.FavoriteTickerLocalDataSource
 import com.example.data.repository.ticker.remote.TickerSocketService
 import com.example.data.repository.tickersymbol.local.TickerSymbolLocalDataSource
 import com.example.domain.model.ticker.SortModel
 import com.example.domain.model.ticker.Ticker
+import com.example.domain.repository.favoriteticker.FavoriteTickerRepository
 import com.example.domain.repository.ticker.TickerRepository
 import com.example.domain.utils.Resource
 import kotlinx.coroutines.*
@@ -20,7 +19,7 @@ class TickerRepositoryImpl @Inject constructor(
     private val tickerSocketService: TickerSocketService,
     private val atomicTickerList: AtomicTickerList,
     private val tickerSymbolLocalDataSource: TickerSymbolLocalDataSource,
-    private val favoriteTickerLocalDataSource: FavoriteTickerLocalDataSource,
+    private val favoriteTickerRepository: FavoriteTickerRepository,
     private val tickerMapperProvider: TickerMapperProvider
 ) : TickerRepository {
 
@@ -37,11 +36,6 @@ class TickerRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             if (tickerSocketService.isAlreadyOpen()) Resource.Success(Unit)
             if (tickerSocketService.openSession()) {
-                favoriteTickerLocalDataSource.getFavoriteTickerList().forEach {
-                    atomicTickerList.updateTicker(
-                        FavoriteTickerMapper.mapperToTicker(it)
-                    )
-                }
                 tickerSocketService.observeData().onEach { tickerResponse ->
                     when (tickerResponse) {
                         is Resource.Success -> {
@@ -86,6 +80,7 @@ class TickerRepositoryImpl @Inject constructor(
         while (atomicTickerList.getSize() < symbolCount) {
             delay(100)
         }
+        favoriteTickerRepository.applyFavoriteTickerList()
         emit(true)
     }.flowOn(Dispatchers.Default)
 }

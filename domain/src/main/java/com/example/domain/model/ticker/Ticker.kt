@@ -9,6 +9,5 @@ data class Ticker(
     var rate: String,
     var volume: String,
     var dividedVolume: String,
-    var isFavorite: Boolean = false,
-    var favoriteIndex: Long = -1
+    var isFavorite: Boolean = false
 )

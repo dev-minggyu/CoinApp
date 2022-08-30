@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class TickerSymbolRepositoryImpl @Inject constructor(
     private val tickerSymbolRemoteDataSource: TickerSymbolRemoteDataSource,
-    private val tickerSymbolLocalDataSource: TickerSymbolLocalDataSource,
+    private val tickerSymbolLocalDataSource: TickerSymbolLocalDataSource
 ) : TickerSymbolRepository {
     override suspend fun getTickerSymbolList(): Resource<Unit> =
         withContext(Dispatchers.IO) {

@@ -28,6 +28,17 @@ class AtomicTickerList {
         }
     }
 
+    suspend fun updateFavorite(symbol: String, isFavorite: Boolean) {
+        _mutex.withLock {
+            val splitSymbol = symbol.split("-")
+            _list.find {
+                (it.symbol == splitSymbol[1]) && (it.currencyType.name == splitSymbol[0])
+            }?.apply {
+                this.isFavorite = isFavorite
+            }
+        }
+    }
+
     suspend fun getList(): List<Ticker> = _mutex.withLock {
         sortList(_sortModel)
         _list.map {
