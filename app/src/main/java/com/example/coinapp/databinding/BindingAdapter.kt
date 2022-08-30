@@ -2,11 +2,9 @@ package com.example.coinapp.databinding
 
 import android.widget.ToggleButton
 import androidx.databinding.BindingAdapter
-import com.example.coinapp.enums.SortCategory
-import com.example.coinapp.enums.SortModel
-import com.example.coinapp.enums.SortType
 import com.example.coinapp.ui.custom.SortButton
 import com.example.coinapp.ui.home.adapter.TickerListAdapter
+import com.example.domain.model.ticker.SortModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 object BindingAdapter {
@@ -27,18 +25,18 @@ object BindingAdapter {
         view: SortButton, function: (SortModel) -> Unit
     ) {
         view.setOnSortChangedListener(object : SortButton.OnSortChangedListener {
-            override fun onChanged(sortCategory: SortCategory, sortType: SortType) {
-                function(SortModel(sortCategory, sortType))
+            override fun onChanged(sortModel: SortModel) {
+                function(sortModel)
             }
         })
     }
 
     @JvmStatic
-    @BindingAdapter("sortArrow")
-    fun bindSortArrowDrawable(
-        view: SortButton, res: Int
+    @BindingAdapter("sortState")
+    fun bindSortState(
+        view: SortButton, sortModel: SortModel
     ) {
-        view.setArrowDrawable(res)
+        view.setSortState(sortModel)
     }
 
     @JvmStatic

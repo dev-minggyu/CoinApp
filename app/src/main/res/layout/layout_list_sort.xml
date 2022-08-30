@@ -4,8 +4,6 @@
 
     <data>
 
-        <import type="com.example.coinapp.enums.SortCategory" />
-
         <variable
             name="vm"
             type="com.example.coinapp.ui.home.HomeViewModel" />
@@ -47,8 +45,8 @@
 
         <com.example.coinapp.ui.custom.SortButton
             android:id="@+id/tv_sort_name"
-            onSortChangedListener="@{vm.onTickerSortClick}"
-            sortArrow="@{vm.sortModel.getArrowRes(SortCategory.NAME)}"
+            onSortChangedListener="@{vm.sortTickerList}"
+            sortState="@{vm.sortModel}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -61,8 +59,8 @@
 
         <com.example.coinapp.ui.custom.SortButton
             android:id="@+id/tv_sort_price"
-            onSortChangedListener="@{vm.onTickerSortClick}"
-            sortArrow="@{vm.sortModel.getArrowRes(SortCategory.PRICE)}"
+            onSortChangedListener="@{vm.sortTickerList}"
+            sortState="@{vm.sortModel}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -75,8 +73,8 @@
 
         <com.example.coinapp.ui.custom.SortButton
             android:id="@+id/tv_sort_rate"
-            onSortChangedListener="@{vm.onTickerSortClick}"
-            sortArrow="@{vm.sortModel.getArrowRes(SortCategory.RATE)}"
+            onSortChangedListener="@{vm.sortTickerList}"
+            sortState="@{vm.sortModel}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -89,8 +87,8 @@
 
         <com.example.coinapp.ui.custom.SortButton
             android:id="@+id/tv_sort_volume"
-            onSortChangedListener="@{vm.onTickerSortClick}"
-            sortArrow="@{vm.sortModel.getArrowRes(SortCategory.VOLUME)}"
+            onSortChangedListener="@{vm.sortTickerList}"
+            sortState="@{vm.sortModel}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"

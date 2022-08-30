@@ -13,26 +13,28 @@ class TickerMapperProviderImpl @Inject constructor() : TickerMapperProvider {
             val splitCode = code.split("-")
             val currencyType = Currency.valueOf(splitCode[0])
 
-            var currentPrice = ""
+            var decimalCurrentPrice = ""
             var prevPrice = ""
             currencyType.currencyFormat?.let { format ->
                 val priceFormat = DecimalFormat(format)
-                currentPrice = priceFormat.format(trade_price)
+                decimalCurrentPrice = priceFormat.format(trade_price)
                 prevPrice = priceFormat.format(prev_closing_price)
             }
 
-            var volume = ""
+            var dividedVolume = ""
             currencyType.volumeDivider?.let { divider ->
-                volume = DecimalFormat("#,###").format((acc_trade_price_24h / divider).toInt())
+                dividedVolume = DecimalFormat("#,###").format((acc_trade_price_24h / divider).toInt())
             }
 
             Ticker(
                 symbol = splitCode[1],
                 currencyType = currencyType,
-                currentPrice = currentPrice,
+                currentPrice = trade_price.toString(),
+                decimalCurrentPrice = decimalCurrentPrice,
                 prevPrice = prevPrice,
-                rate = String.format("%.2f", ((trade_price - prev_closing_price) / prev_closing_price) * 100) + "%",
-                volume = volume
+                rate = String.format("%.2f", ((trade_price - prev_closing_price) / prev_closing_price) * 100),
+                volume = acc_trade_price_24h.toString(),
+                dividedVolume = dividedVolume
             )
         }
     }

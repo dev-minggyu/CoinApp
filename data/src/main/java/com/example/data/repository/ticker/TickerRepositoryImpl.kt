@@ -7,6 +7,7 @@ import com.example.data.provider.TickerMapperProvider
 import com.example.data.repository.favoriteticker.local.FavoriteTickerLocalDataSource
 import com.example.data.repository.ticker.remote.TickerSocketService
 import com.example.data.repository.tickersymbol.local.TickerSymbolLocalDataSource
+import com.example.domain.model.ticker.SortModel
 import com.example.domain.model.ticker.Ticker
 import com.example.domain.repository.ticker.TickerRepository
 import com.example.domain.utils.Resource
@@ -76,4 +77,9 @@ class TickerRepositoryImpl @Inject constructor(
     override suspend fun unsubscribeTicker() {
         tickerSocketService.closeSession()
     }
+
+    override suspend fun getSortedTickerList(sortModel: SortModel): List<Ticker> =
+        withContext(Dispatchers.IO) {
+            atomicTickerList.getList(sortModel)
+        }
 }

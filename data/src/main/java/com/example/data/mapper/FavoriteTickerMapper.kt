@@ -16,9 +16,11 @@ object FavoriteTickerMapper {
             symbol = splitSymbol[1],
             currencyType = Currency.valueOf(splitSymbol[0]),
             currentPrice = "",
+            decimalCurrentPrice = "",
             prevPrice = "",
             rate = "",
             volume = "",
+            dividedVolume = "",
             isFavorite = true,
             favoriteIndex = favoriteTickerEntity.id
         )
