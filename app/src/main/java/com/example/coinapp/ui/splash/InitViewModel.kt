@@ -2,7 +2,6 @@ package com.example.coinapp.ui.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.usecase.favoriteticker.ApplyFavoriteTickerUseCase
 import com.example.domain.usecase.ticker.SubscribeTickerUseCase
 import com.example.domain.usecase.tickersymbol.GetTickerSymbolUseCase
 import com.example.domain.utils.Resource
@@ -15,8 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class InitViewModel @Inject constructor(
     private val getTickerSymbolUseCase: GetTickerSymbolUseCase,
-    private val subscribeTickerUseCase: SubscribeTickerUseCase,
-    private val applyFavoriteTickerUseCase: ApplyFavoriteTickerUseCase
+    private val subscribeTickerUseCase: SubscribeTickerUseCase
 ) : ViewModel() {
     private val _isLoadCompleted = MutableStateFlow(false)
     val isLoadCompleted = _isLoadCompleted.asStateFlow()
@@ -39,7 +37,6 @@ class InitViewModel @Inject constructor(
     private fun subscribeTicker() {
         viewModelScope.launch {
             subscribeTickerUseCase.execute()
-            applyFavoriteTickerUseCase.execute()
             _isLoadCompleted.value = true
         }
     }
