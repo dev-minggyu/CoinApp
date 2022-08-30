@@ -24,6 +24,7 @@ class TickerListPagerAdapter(
         binding.tickerList.apply {
             itemAnimator = null
             addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
+            setHasFixedSize(true)
         }
 
         return TickerListsViewHolder(binding)
