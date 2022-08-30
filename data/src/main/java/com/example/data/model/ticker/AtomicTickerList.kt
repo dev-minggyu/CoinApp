@@ -1,9 +1,6 @@
 package com.example.data.model.ticker
 
-import com.example.domain.model.ticker.SortCategory
-import com.example.domain.model.ticker.SortModel
-import com.example.domain.model.ticker.SortType
-import com.example.domain.model.ticker.Ticker
+import com.example.domain.model.ticker.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
@@ -19,10 +16,12 @@ class AtomicTickerList {
             _list.find {
                 (it.symbol == element.symbol) && (it.currencyType == element.currencyType)
             }?.apply {
-                prevPrice = element.prevPrice
                 currentPrice = element.currentPrice
+                decimalCurrentPrice = element.decimalCurrentPrice
+                prevPrice = element.prevPrice
                 rate = element.rate
                 volume = element.volume
+                dividedVolume = element.dividedVolume
             } ?: run {
                 _list.add(element)
             }
@@ -67,6 +66,8 @@ class AtomicTickerList {
             }
         }
     }
+
+    fun getSize(): Int = _list.size
 
     suspend fun clear() {
         _mutex.withLock {

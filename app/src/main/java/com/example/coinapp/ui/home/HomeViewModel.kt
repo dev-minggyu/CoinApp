@@ -7,7 +7,6 @@ import com.example.domain.model.ticker.SortModel
 import com.example.domain.model.ticker.SortType
 import com.example.domain.model.ticker.Ticker
 import com.example.domain.usecase.favoriteticker.FavoriteTickerUseCase
-import com.example.domain.usecase.ticker.SubscribeTickerUseCase
 import com.example.domain.usecase.ticker.TickerDataUseCase
 import com.example.domain.usecase.ticker.TickerSortUseCase
 import com.example.domain.utils.Resource
@@ -19,7 +18,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val subscribeTickerUseCase: SubscribeTickerUseCase,
     private val tickerDataUseCase: TickerDataUseCase,
     private val tickerSortUseCase: TickerSortUseCase,
     private val favoriteTickerUseCase: FavoriteTickerUseCase
@@ -27,10 +25,9 @@ class HomeViewModel @Inject constructor(
 
     init {
         observeTickerList()
-        subscribeTicker()
     }
 
-    private val _tickerList: MutableStateFlow<List<Ticker>?> = MutableStateFlow(null)
+    private val _tickerList: MutableStateFlow<List<Ticker>?> = MutableStateFlow(listOf())
     val tickerList = _tickerList.asStateFlow()
 
     val searchText: MutableStateFlow<String> = MutableStateFlow("")
@@ -40,12 +37,6 @@ class HomeViewModel @Inject constructor(
     val sortTickerList = { sortModel: SortModel ->
         this.sortModel.value = sortModel.copy()
         sortTickerList(sortModel)
-    }
-
-    private fun subscribeTicker() {
-        viewModelScope.launch {
-            subscribeTickerUseCase.execute()
-        }
     }
 
     private fun observeTickerList() {

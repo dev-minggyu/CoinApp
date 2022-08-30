@@ -11,13 +11,9 @@ import com.example.domain.model.ticker.SortModel
 import com.example.domain.model.ticker.Ticker
 import com.example.domain.repository.ticker.TickerRepository
 import com.example.domain.utils.Resource
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 class TickerRepositoryImpl @Inject constructor(
@@ -27,6 +23,8 @@ class TickerRepositoryImpl @Inject constructor(
     private val favoriteTickerLocalDataSource: FavoriteTickerLocalDataSource,
     private val tickerMapperProvider: TickerMapperProvider
 ) : TickerRepository {
+
+    private val _coroutineScope = CoroutineScope(Job() + Dispatchers.Default)
 
     private val _tickerSocketData = MutableSharedFlow<Resource<List<Ticker>>>(
         replay = 0,
@@ -44,17 +42,17 @@ class TickerRepositoryImpl @Inject constructor(
                         FavoriteTickerMapper.mapperToTicker(it)
                     )
                 }
-                tickerSocketService.observeData().onEach {
-                    when (it) {
+                tickerSocketService.observeData().onEach { tickerResponse ->
+                    when (tickerResponse) {
                         is Resource.Success -> {
                             atomicTickerList.updateTicker(
-                                tickerMapperProvider.mapperToTicker(it.data)
+                                tickerMapperProvider.mapperToTicker(tickerResponse.data)
                             )
                             _tickerSocketData.emit(Resource.Success(atomicTickerList.getList()))
                         }
                         else -> _tickerSocketData.emit(Resource.Error(null))
                     }
-                }.launchIn(this)
+                }.launchIn(_coroutineScope)
                 tickerSocketService.send(
                     mutableListOf(
                         TickerRequest(
@@ -82,4 +80,12 @@ class TickerRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             atomicTickerList.getList(sortModel)
         }
+
+    override suspend fun observeLoadComplete(): Flow<Boolean> = flow {
+        val symbolCount = tickerSymbolLocalDataSource.getTickerSymbolList().size
+        while (atomicTickerList.getSize() < symbolCount) {
+            delay(100)
+        }
+        emit(true)
+    }.flowOn(Dispatchers.Default)
 }

@@ -35,7 +35,7 @@ class InitActivity : BaseActivity<ActivityInitBinding>(R.layout.activity_init) {
 
     private fun setupObserver() {
         lifecycleScope.launch {
-            _initViewModel.isSuccessGetTickerSymbol.collectWithLifecycle(lifecycle) {
+            _initViewModel.isLoadCompleted.collectWithLifecycle(lifecycle) {
                 if (it) {
                     gotoMain()
                 }
