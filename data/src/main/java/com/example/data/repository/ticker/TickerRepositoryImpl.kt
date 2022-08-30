@@ -1,10 +1,10 @@
 package com.example.data.repository.ticker
 
-import com.example.data.model.ticker.AtomicTickerList
 import com.example.data.model.ticker.TickerRequest
 import com.example.data.provider.TickerMapperProvider
 import com.example.data.repository.ticker.remote.TickerSocketService
 import com.example.data.repository.tickersymbol.local.TickerSymbolLocalDataSource
+import com.example.domain.model.ticker.AtomicTickerList
 import com.example.domain.model.ticker.SortModel
 import com.example.domain.model.ticker.Ticker
 import com.example.domain.repository.favoriteticker.FavoriteTickerRepository
@@ -19,7 +19,6 @@ class TickerRepositoryImpl @Inject constructor(
     private val tickerSocketService: TickerSocketService,
     private val atomicTickerList: AtomicTickerList,
     private val tickerSymbolLocalDataSource: TickerSymbolLocalDataSource,
-    private val favoriteTickerRepository: FavoriteTickerRepository,
     private val tickerMapperProvider: TickerMapperProvider
 ) : TickerRepository {
 
@@ -36,6 +35,10 @@ class TickerRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             if (tickerSocketService.isAlreadyOpen()) Resource.Success(Unit)
             if (tickerSocketService.openSession()) {
+                /**
+                 * TickerSocketService의 데이터를 옵저빙 하는 작업.
+                 * 해당 작업은 withContext()의 Scope가 아닌, 별도의 Scope를 사용해야한다.
+                 */
                 tickerSocketService.observeData().onEach { tickerResponse ->
                     when (tickerResponse) {
                         is Resource.Success -> {
@@ -47,6 +50,7 @@ class TickerRepositoryImpl @Inject constructor(
                         else -> _tickerSocketData.emit(Resource.Error(null))
                     }
                 }.launchIn(_coroutineScope)
+
                 tickerSocketService.send(
                     mutableListOf(
                         TickerRequest(
@@ -80,7 +84,6 @@ class TickerRepositoryImpl @Inject constructor(
         while (atomicTickerList.getSize() < symbolCount) {
             delay(100)
         }
-        favoriteTickerRepository.applyFavoriteTickerList()
         emit(true)
     }.flowOn(Dispatchers.Default)
 }

@@ -7,7 +7,6 @@ import com.example.data.api.ApiService
 import com.example.data.db.AppDatabase
 import com.example.data.db.favoriteticker.FavoriteTickerDao
 import com.example.data.db.tickersymbol.TickerSymbolDao
-import com.example.data.model.ticker.AtomicTickerList
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -78,11 +77,5 @@ object DataModule {
         return HttpClient(OkHttp) {
             install(WebSockets)
         }
-    }
-
-    @Provides
-    @Singleton
-    fun provideAtomicTickerList(): AtomicTickerList {
-        return AtomicTickerList()
     }
 }

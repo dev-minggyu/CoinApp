@@ -1,7 +1,9 @@
 package com.example.domain.repository.favoriteticker
 
+import com.example.domain.model.favoriteticker.FavoriteTicker
+
 interface FavoriteTickerRepository {
-    suspend fun applyFavoriteTickerList()
+    suspend fun getFavoriteTickerList(): List<FavoriteTicker>
 
     suspend fun insertFavoriteTicker(symbol: String)
 

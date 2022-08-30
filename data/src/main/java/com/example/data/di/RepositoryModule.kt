@@ -1,5 +1,6 @@
 package com.example.data.di
 
+import com.example.data.model.ticker.AtomicTickerListImpl
 import com.example.data.repository.favoriteticker.FavoriteTickerRepositoryImpl
 import com.example.data.repository.favoriteticker.local.FavoriteTickerLocalDataSource
 import com.example.data.repository.favoriteticker.local.FavoriteTickerLocalDataSourceImpl
@@ -11,6 +12,7 @@ import com.example.data.repository.tickersymbol.local.TickerSymbolLocalDataSourc
 import com.example.data.repository.tickersymbol.local.TickerSymbolLocalDataSourceImpl
 import com.example.data.repository.tickersymbol.remote.TickerSymbolRemoteDataSource
 import com.example.data.repository.tickersymbol.remote.TickerSymbolRemoteDataSourceImpl
+import com.example.domain.model.ticker.AtomicTickerList
 import com.example.domain.repository.favoriteticker.FavoriteTickerRepository
 import com.example.domain.repository.ticker.TickerRepository
 import com.example.domain.repository.tickersymbol.TickerSymbolRepository
@@ -50,4 +52,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindFavoriteTickerRepository(favoriteTickerRepositoryImpl: FavoriteTickerRepositoryImpl): FavoriteTickerRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindAtomicTickerList(atomicTickerListImpl: AtomicTickerListImpl): AtomicTickerList
 }
