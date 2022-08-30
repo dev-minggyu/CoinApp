@@ -35,6 +35,7 @@ class TickerRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             if (tickerSocketService.isAlreadyOpen()) Resource.Success(Unit)
             if (tickerSocketService.openSession()) {
+                val symbolCount = tickerSymbolLocalDataSource.getTickerSymbolList().size
                 /**
                  * TickerSocketService의 데이터를 옵저빙 하는 작업.
                  * 해당 작업은 withContext()의 Scope가 아닌, 별도의 Scope를 사용해야한다.
@@ -45,7 +46,9 @@ class TickerRepositoryImpl @Inject constructor(
                             atomicTickerList.updateTicker(
                                 tickerMapperProvider.mapperToTicker(tickerResponse.data)
                             )
-                            _tickerSocketData.emit(Resource.Success(atomicTickerList.getList()))
+                            if (atomicTickerList.getSize() == symbolCount) {
+                                _tickerSocketData.emit(Resource.Success(atomicTickerList.getList()))
+                            }
                         }
                         else -> _tickerSocketData.emit(Resource.Error(null))
                     }
@@ -78,12 +81,4 @@ class TickerRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             atomicTickerList.getList(sortModel)
         }
-
-    override suspend fun observeLoadComplete(): Flow<Boolean> = flow {
-        val symbolCount = tickerSymbolLocalDataSource.getTickerSymbolList().size
-        while (atomicTickerList.getSize() < symbolCount) {
-            delay(100)
-        }
-        emit(true)
-    }.flowOn(Dispatchers.Default)
 }

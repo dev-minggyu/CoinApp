@@ -14,6 +14,4 @@ interface TickerRepository {
     suspend fun unsubscribeTicker()
 
     suspend fun getSortedTickerList(sortModel: SortModel): List<Ticker>
-
-    suspend fun observeLoadComplete(): Flow<Boolean>
 }

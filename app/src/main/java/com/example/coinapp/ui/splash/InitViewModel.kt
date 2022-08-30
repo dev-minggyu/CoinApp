@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.usecase.favoriteticker.ApplyFavoriteTickerUseCase
 import com.example.domain.usecase.ticker.SubscribeTickerUseCase
-import com.example.domain.usecase.ticker.TickerLoadCompleteUseCase
 import com.example.domain.usecase.tickersymbol.GetTickerSymbolUseCase
 import com.example.domain.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +16,6 @@ import javax.inject.Inject
 class InitViewModel @Inject constructor(
     private val getTickerSymbolUseCase: GetTickerSymbolUseCase,
     private val subscribeTickerUseCase: SubscribeTickerUseCase,
-    private val tickerLoadCompleteUseCase: TickerLoadCompleteUseCase,
     private val applyFavoriteTickerUseCase: ApplyFavoriteTickerUseCase
 ) : ViewModel() {
     private val _isLoadCompleted = MutableStateFlow(false)
@@ -32,7 +30,6 @@ class InitViewModel @Inject constructor(
             when (getTickerSymbolUseCase.execute()) {
                 is Resource.Success -> {
                     subscribeTicker()
-                    observeLoadComplete()
                 }
                 else -> {}
             }
@@ -42,15 +39,8 @@ class InitViewModel @Inject constructor(
     private fun subscribeTicker() {
         viewModelScope.launch {
             subscribeTickerUseCase.execute()
-        }
-    }
-
-    private fun observeLoadComplete() {
-        viewModelScope.launch {
-            tickerLoadCompleteUseCase.execute().collect {
-                applyFavoriteTickerUseCase.execute()
-                _isLoadCompleted.value = true
-            }
+            applyFavoriteTickerUseCase.execute()
+            _isLoadCompleted.value = true
         }
     }
 }
