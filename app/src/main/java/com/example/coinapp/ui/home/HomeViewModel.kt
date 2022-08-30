@@ -8,6 +8,7 @@ import com.example.domain.model.ticker.SortType
 import com.example.domain.model.ticker.Ticker
 import com.example.domain.usecase.favoriteticker.FavoriteTickerUseCase
 import com.example.domain.usecase.ticker.TickerDataUseCase
+import com.example.domain.usecase.ticker.TickerSearchUseCase
 import com.example.domain.usecase.ticker.TickerSortUseCase
 import com.example.domain.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,13 +21,9 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val tickerDataUseCase: TickerDataUseCase,
     private val tickerSortUseCase: TickerSortUseCase,
+    private val tickerSearchUseCase: TickerSearchUseCase,
     private val favoriteTickerUseCase: FavoriteTickerUseCase
 ) : ViewModel() {
-
-    init {
-        observeTickerList()
-    }
-
     private val _tickerList: MutableStateFlow<List<Ticker>?> = MutableStateFlow(listOf())
     val tickerList = _tickerList.asStateFlow()
 
@@ -37,6 +34,11 @@ class HomeViewModel @Inject constructor(
     val sortTickerList = { sortModel: SortModel ->
         this.sortModel.value = sortModel.copy()
         sortTickerList(sortModel)
+    }
+
+    init {
+        observeTickerList()
+        observeSearchText()
     }
 
     private fun observeTickerList() {
@@ -66,8 +68,15 @@ class HomeViewModel @Inject constructor(
 
     private fun sortTickerList(sortModel: SortModel) {
         viewModelScope.launch {
-            _tickerList.value = null
             _tickerList.value = tickerSortUseCase.execute(sortModel)
+        }
+    }
+
+    private fun observeSearchText() {
+        viewModelScope.launch {
+            searchText.collect {
+                _tickerList.value = tickerSearchUseCase.execute(it)
+            }
         }
     }
 }

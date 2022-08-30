@@ -14,4 +14,6 @@ interface TickerRepository {
     suspend fun unsubscribeTicker()
 
     suspend fun sortTickerList(sortModel: SortModel): List<Ticker>
+
+    suspend fun searchTickerList(searchSymbol: String): List<Ticker>
 }

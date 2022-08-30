@@ -92,7 +92,12 @@ class TickerRepositoryImpl @Inject constructor(
     }
 
     override suspend fun sortTickerList(sortModel: SortModel): List<Ticker> =
-        withContext(Dispatchers.IO) {
-            atomicTickerList.getList(sortModel)
+        withContext(Dispatchers.Default) {
+            atomicTickerList.getList(sortModel = sortModel)
+        }
+
+    override suspend fun searchTickerList(searchSymbol: String): List<Ticker> =
+        withContext(Dispatchers.Default) {
+            atomicTickerList.getList(searchSymbol = searchSymbol)
         }
 }
