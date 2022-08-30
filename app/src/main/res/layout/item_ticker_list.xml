@@ -2,21 +2,15 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.example.coinapp.utils.NestedScrollableHost
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.example.coinapp.utils.NestedScrollableHost
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ticker_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/ticker_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-        </com.example.coinapp.utils.NestedScrollableHost>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+    </com.example.coinapp.utils.NestedScrollableHost>
 
 </layout>

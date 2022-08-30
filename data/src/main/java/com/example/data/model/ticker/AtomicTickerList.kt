@@ -1,6 +1,9 @@
 package com.example.data.model.ticker
 
-import com.example.domain.model.ticker.*
+import com.example.domain.model.ticker.SortCategory
+import com.example.domain.model.ticker.SortModel
+import com.example.domain.model.ticker.SortType
+import com.example.domain.model.ticker.Ticker
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
