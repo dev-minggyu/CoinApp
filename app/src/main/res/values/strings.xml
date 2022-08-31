@@ -17,4 +17,6 @@
     <string name="app_theme_system">시스템</string>
     <string name="app_theme_light">라이트</string>
     <string name="app_theme_dark">다크</string>
+    <string name="list_category_krw">KRW</string>
+    <string name="list_category_favorite">관심</string>
 </resources>

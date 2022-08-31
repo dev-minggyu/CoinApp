@@ -4,15 +4,14 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.viewpager2.widget.ViewPager2
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.example.coinapp.R
 import com.example.coinapp.base.BaseFragment
 import com.example.coinapp.databinding.FragmentHomeBinding
 import com.example.coinapp.extension.collectWithLifecycle
 import com.example.coinapp.ui.home.adapter.TickerListAdapter
-import com.example.coinapp.ui.home.adapter.TickerListPagerAdapter
 import com.example.domain.model.ticker.Currency
-import com.google.android.material.tabs.TabLayoutMediator
+import com.example.domain.model.ticker.Ticker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -21,31 +20,31 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private val _homeViewModel: HomeViewModel by viewModels()
 
     private var _tickerListAdapter: TickerListAdapter? = null
-    private var _favoriteListAdapter: TickerListAdapter? = null
+
+    private var _tickerList: List<Ticker>? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.vm = _homeViewModel
 
-        setupListAdapters()
-        setupViewPager()
+        setupRecyclerView()
+
         setupObserver()
+
+        setupListCategoryButton()
     }
 
-    private fun setupViewPager() {
-        binding.apply {
-            viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-            viewPager.offscreenPageLimit = ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT
-            viewPager.adapter = TickerListPagerAdapter(_tickerListAdapter!!, _favoriteListAdapter!!)
-
-            TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-                tab.text = (viewPager.adapter as TickerListPagerAdapter).getListTitle(position)
-            }.attach()
+    private fun setupObserver() {
+        lifecycleScope.launch {
+            _homeViewModel.tickerList.collectWithLifecycle(lifecycle) { tickerList ->
+                _tickerList = tickerList
+                setListOfCategory(binding.layoutListCategory.radioGroupCatecory.checkedRadioButtonId)
+            }
         }
     }
 
-    private fun setupListAdapters() {
+    private fun setupRecyclerView() {
         val favoriteClickListener = object : TickerListAdapter.FavoriteClickListener {
             override fun onAddFavorite(symbol: String) {
                 _homeViewModel.insertFavoriteTicker(symbol)
@@ -56,17 +55,31 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             }
         }
         _tickerListAdapter = TickerListAdapter(favoriteClickListener)
-        _favoriteListAdapter = TickerListAdapter(favoriteClickListener)
-    }
 
-    private fun setupObserver() {
-        lifecycleScope.launch {
-            _homeViewModel.tickerList.collectWithLifecycle(lifecycle) { tickerList ->
-                _tickerListAdapter?.submitList(tickerList?.filter { it.currencyType == Currency.KRW })
-                _favoriteListAdapter?.submitList(tickerList?.filter { it.isFavorite })
-            }
+        binding.rvTicker.apply {
+            setHasFixedSize(true)
+            itemAnimator = null
+            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+            adapter = _tickerListAdapter
         }
     }
+
+    private fun setupListCategoryButton() {
+        binding.layoutListCategory.radioGroupCatecory.setOnCheckedChangeListener { _, id ->
+            setListOfCategory(id)
+        }
+    }
+
+    private fun setListOfCategory(categoryId: Int) {
+        when (categoryId) {
+            R.id.btn_krw ->
+                setTickerList(_tickerList?.filter { it.currencyType == Currency.KRW })
+            R.id.btn_favorite ->
+                setTickerList(_tickerList?.filter { it.isFavorite })
+        }
+    }
+
+    private fun setTickerList(list: List<Ticker>?) = _tickerListAdapter?.submitList(list)
 
     companion object {
         fun newInstance() = HomeFragment()

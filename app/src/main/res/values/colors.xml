@@ -13,6 +13,8 @@
 
     <color name="color_text">#000000</color>
 
+    <color name="color_button_stroke">#000000</color>
+
     <color name="color_price_same">#000000</color>
     <color name="color_price_up">#FF0000</color>
     <color name="color_price_down">#008EFF</color>
