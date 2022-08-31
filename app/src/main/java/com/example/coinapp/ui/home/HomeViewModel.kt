@@ -68,14 +68,14 @@ class HomeViewModel @Inject constructor(
 
     private fun sortTickerList(sortModel: SortModel) {
         viewModelScope.launch {
-            _tickerList.value = tickerSortUseCase.execute(sortModel)
+            tickerSortUseCase.execute(sortModel)
         }
     }
 
     private fun observeSearchText() {
         viewModelScope.launch {
             searchText.collect {
-                _tickerList.value = tickerSearchUseCase.execute(it)
+                tickerSearchUseCase.execute(it)
             }
         }
     }

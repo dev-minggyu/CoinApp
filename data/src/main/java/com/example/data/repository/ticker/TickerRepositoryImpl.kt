@@ -91,13 +91,23 @@ class TickerRepositoryImpl @Inject constructor(
         tickerSocketService.closeSession()
     }
 
-    override suspend fun sortTickerList(sortModel: SortModel): List<Ticker> =
+    override suspend fun sortTickerList(sortModel: SortModel) {
         withContext(Dispatchers.Default) {
-            atomicTickerList.getList(sortModel = sortModel)
+            _tickerSocketData.emit(
+                Resource.Success(
+                    atomicTickerList.getList(sortModel = sortModel)
+                )
+            )
         }
+    }
 
-    override suspend fun searchTickerList(searchSymbol: String): List<Ticker> =
+    override suspend fun searchTickerList(searchSymbol: String) {
         withContext(Dispatchers.Default) {
-            atomicTickerList.getList(searchSymbol = searchSymbol)
+            _tickerSocketData.emit(
+                Resource.Success(
+                    atomicTickerList.getList(searchSymbol = searchSymbol)
+                )
+            )
         }
+    }
 }
