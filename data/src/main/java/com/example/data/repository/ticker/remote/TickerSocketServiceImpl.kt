@@ -2,6 +2,8 @@ package com.example.data.repository.ticker.remote
 
 import com.example.data.model.ticker.TickerRequest
 import com.example.data.model.ticker.TickerResponse
+import com.example.data.provider.TickerMapperProvider
+import com.example.domain.model.ticker.AtomicTickerList
 import com.example.domain.utils.Resource
 import io.ktor.client.*
 import io.ktor.client.plugins.websocket.*
@@ -17,7 +19,9 @@ import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 class TickerSocketServiceImpl @Inject constructor(
-    private val client: HttpClient
+    private val client: HttpClient,
+    private val atomicTickerList: AtomicTickerList,
+    private val tickerMapperProvider: TickerMapperProvider
 ) : TickerSocketService {
     override var socketSession: WebSocketSession? = null
 
@@ -43,13 +47,16 @@ class TickerSocketServiceImpl @Inject constructor(
         socketSession = null
     }
 
-    override fun observeData(): Flow<Resource<TickerResponse>> = flow {
+    override fun observeData(): Flow<Resource<Unit>> = flow {
         val json = Json { ignoreUnknownKeys = true }
         try {
             socketSession?.incoming?.consumeEach { frame ->
                 if (frame is Frame.Binary) {
                     val tickerResponse = json.decodeFromString<TickerResponse>(String(frame.readBytes()))
-                    emit(Resource.Success(tickerResponse))
+                    atomicTickerList.updateTicker(
+                        tickerMapperProvider.mapperToTicker(tickerResponse)
+                    )
+                    emit(Resource.Success(Unit))
                 }
             }
         } catch (e: Exception) {

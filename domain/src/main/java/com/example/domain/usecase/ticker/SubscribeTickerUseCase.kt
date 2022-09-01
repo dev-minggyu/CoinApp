@@ -5,5 +5,5 @@ import com.example.domain.utils.Resource
 import javax.inject.Inject
 
 class SubscribeTickerUseCase @Inject constructor(private val repository: TickerRepository) {
-    suspend fun execute(): Resource<Unit> = repository.subscribeTicker()
+    suspend fun execute(receiveDelayMillis: Long = 300L): Resource<Unit> = repository.subscribeTicker(receiveDelayMillis)
 }

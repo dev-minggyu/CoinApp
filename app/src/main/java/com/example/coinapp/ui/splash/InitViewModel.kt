@@ -36,7 +36,7 @@ class InitViewModel @Inject constructor(
 
     private fun subscribeTicker() {
         viewModelScope.launch {
-            subscribeTickerUseCase.execute()
+            subscribeTickerUseCase.execute(300L)
             _isLoadCompleted.value = true
         }
     }
