@@ -11,7 +11,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor() : ViewModel() {
     private val _currentMenuId: MutableStateFlow<Int> = MutableStateFlow(R.id.home_fragment)
     val currentMenuId = _currentMenuId.asStateFlow()
-    val selectedNavigationItem = { itemId: Int ->
+    val onNavItemSelected = { itemId: Int ->
         _currentMenuId.value = itemId
     }
 }

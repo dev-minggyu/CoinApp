@@ -9,8 +9,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 object BindingAdapter {
     @JvmStatic
-    @BindingAdapter("onItemSelectedListener")
-    fun bindOnItemSelectedListener(
+    @BindingAdapter("onNavItemSelected")
+    fun bindOnNavItemSelected(
         view: BottomNavigationView, function: (Int) -> Unit
     ) {
         view.setOnItemSelectedListener { item ->
