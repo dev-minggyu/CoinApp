@@ -7,7 +7,7 @@ import com.example.data.repository.ticker.remote.TickerSocketService
 import com.example.data.repository.tickersymbol.local.TickerSymbolLocalDataSource
 import com.example.domain.model.ticker.AtomicTickerList
 import com.example.domain.model.ticker.SortModel
-import com.example.domain.model.ticker.Ticker
+import com.example.domain.model.ticker.TickerListModel
 import com.example.domain.repository.ticker.TickerRepository
 import com.example.domain.utils.Resource
 import com.example.domain.utils.TickerResource
@@ -32,7 +32,7 @@ class TickerRepositoryImpl @Inject constructor(
 
     private val _coroutineScope = CoroutineScope(Job() + Dispatchers.Default)
 
-    private val _tickerSocketData = MutableSharedFlow<TickerResource<List<Ticker>>>(
+    private val _tickerSocketData = MutableSharedFlow<TickerResource<TickerListModel>>(
         replay = 0,
         extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST

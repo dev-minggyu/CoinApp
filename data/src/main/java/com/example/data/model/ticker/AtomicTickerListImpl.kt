@@ -10,7 +10,7 @@ class AtomicTickerListImpl @Inject constructor() : AtomicTickerList {
 
     override var list = mutableListOf<Ticker>()
 
-    override var sortModel = SortModel(SortCategory.VOLUME, SortType.NO)
+    override var sortModel = SortModel(SortCategory.VOLUME, SortType.DESC)
 
     override var searchSymbol: String = ""
 
@@ -42,7 +42,7 @@ class AtomicTickerListImpl @Inject constructor() : AtomicTickerList {
         }
     }
 
-    override suspend fun getList(sortModel: SortModel?, searchSymbol: String?): List<Ticker> = mutex.withLock {
+    override suspend fun getList(sortModel: SortModel?, searchSymbol: String?): TickerListModel = mutex.withLock {
         sortModel?.let {
             this.sortModel = sortModel
         }
@@ -56,7 +56,8 @@ class AtomicTickerListImpl @Inject constructor() : AtomicTickerList {
         if (this.searchSymbol.isNotEmpty()) {
             result = result.filter { it.symbol.startsWith(this.searchSymbol, true) }
         }
-        result
+
+        TickerListModel(result, this.sortModel.copy())
     }
 
     private fun copyTickerList(): List<Ticker> =
@@ -67,8 +68,6 @@ class AtomicTickerListImpl @Inject constructor() : AtomicTickerList {
     override fun sortList() {
         list.apply {
             when (sortModel.type) {
-                SortType.NO ->
-                    sortByDescending { it.volume.toFloat() }
                 SortType.DESC ->
                     when (sortModel.category) {
                         SortCategory.NAME -> sortByDescending { it.symbol }

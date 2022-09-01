@@ -20,8 +20,8 @@ object BindingAdapter {
     }
 
     @JvmStatic
-    @BindingAdapter("onSortChangedListener")
-    fun bindOnSortChangedListener(
+    @BindingAdapter("onSortChanged")
+    fun bindOnSortChanged(
         view: SortButton, function: (SortModel) -> Unit
     ) {
         view.setOnSortChangedListener(object : SortButton.OnSortChangedListener {
@@ -34,9 +34,11 @@ object BindingAdapter {
     @JvmStatic
     @BindingAdapter("sortState")
     fun bindSortState(
-        view: SortButton, sortModel: SortModel
+        view: SortButton, sortModel: SortModel?
     ) {
-        view.setSortState(sortModel)
+        sortModel?.let {
+            view.setSortState(it)
+        }
     }
 
     @JvmStatic

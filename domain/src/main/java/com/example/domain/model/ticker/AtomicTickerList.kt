@@ -15,7 +15,7 @@ interface AtomicTickerList {
 
     suspend fun updateFavorite(symbol: String, isFavorite: Boolean)
 
-    suspend fun getList(sortModel: SortModel? = null, searchSymbol: String? = null): List<Ticker>
+    suspend fun getList(sortModel: SortModel? = null, searchSymbol: String? = null): TickerListModel
 
     fun sortList()
 

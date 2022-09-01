@@ -2,9 +2,7 @@ package com.example.coinapp.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.model.ticker.SortCategory
 import com.example.domain.model.ticker.SortModel
-import com.example.domain.model.ticker.SortType
 import com.example.domain.model.ticker.Ticker
 import com.example.domain.usecase.favoriteticker.FavoriteTickerUseCase
 import com.example.domain.usecase.ticker.TickerDataUseCase
@@ -30,10 +28,9 @@ class HomeViewModel @Inject constructor(
 
     val searchText: MutableStateFlow<String> = MutableStateFlow("")
 
-    val sortModel: MutableStateFlow<SortModel> = MutableStateFlow(SortModel(SortCategory.NAME, SortType.NO))
+    val sortModel: MutableStateFlow<SortModel?> = MutableStateFlow(null)
 
-    val sortTickerList = { sortModel: SortModel ->
-        this.sortModel.value = sortModel.copy()
+    val onSortChanged = { sortModel: SortModel ->
         sortTickerList(sortModel)
     }
 
@@ -48,11 +45,13 @@ class HomeViewModel @Inject constructor(
                 .collect {
                     when (it) {
                         is TickerResource.Update -> {
-                            _tickerList.value = it.data
+                            _tickerList.value = it.data.tickerList
+                            sortModel.value = it.data.sortModel
                         }
                         is TickerResource.Refresh -> {
                             _tickerList.value = null
-                            _tickerList.value = it.data
+                            _tickerList.value = it.data.tickerList
+                            sortModel.value = it.data.sortModel
                         }
                         else -> {}
                     }

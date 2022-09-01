@@ -16,6 +16,8 @@ class SortButton(context: Context?, attrs: AttributeSet?) : LinearLayout(context
 
     private lateinit var _binding: ButtonSortBinding
 
+    private lateinit var _sortCategory: SortCategory
+
     private lateinit var _sortModel: SortModel
 
     private var _onSortChangedListener: OnSortChangedListener? = null
@@ -33,17 +35,19 @@ class SortButton(context: Context?, attrs: AttributeSet?) : LinearLayout(context
             this,
             false
         )
+
+        _binding.ivSortArrow.setImageResource(R.drawable.ic_arrow_normal)
+
         addView(_binding.root)
     }
 
     private fun getAttrs(attrs: AttributeSet?) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.SortButton)
 
-        val sortCategory = typedArray.getEnum<SortCategory>(R.styleable.SortButton_sortCategory)
-        _sortModel = SortModel(sortCategory, SortType.NO)
+        _sortCategory = typedArray.getEnum(R.styleable.SortButton_sortCategory)
 
         _binding.tvSortName.apply {
-            text = when (sortCategory) {
+            text = when (_sortCategory) {
                 SortCategory.NAME -> context.getString(R.string.sort_coin_name)
                 SortCategory.PRICE -> context.getString(R.string.sort_coin_price)
                 SortCategory.RATE -> context.getString(R.string.sort_coin_rate)
@@ -56,22 +60,26 @@ class SortButton(context: Context?, attrs: AttributeSet?) : LinearLayout(context
 
     private fun setListener() {
         setOnClickListener {
-            _binding.ivSortArrow.apply {
-                _sortModel.type = when (_sortModel.type) {
-                    SortType.NO -> SortType.DESC
-                    SortType.DESC -> SortType.ASC
-                    SortType.ASC -> SortType.NO
+            _binding.apply {
+                if (_sortModel.category == _sortCategory) {
+                    when (_sortModel.type) {
+                        SortType.ASC -> _sortModel.type = SortType.DESC
+                        SortType.DESC -> _sortModel.type = SortType.ASC
+                    }
+                } else {
+                    _sortModel.type = SortType.DESC
                 }
-                _onSortChangedListener?.onChanged(_sortModel)
+                _sortModel.category = _sortCategory
             }
+            _onSortChangedListener?.onChanged(_sortModel.copy())
         }
     }
 
     fun setSortState(sortModel: SortModel) {
+        _sortModel = sortModel.copy()
         _binding.apply {
-            if (sortModel.category == _sortModel.category) {
+            if (_sortModel.category == _sortCategory) {
                 when (sortModel.type) {
-                    SortType.NO -> ivSortArrow.setImageResource(R.drawable.ic_arrow_normal)
                     SortType.DESC -> ivSortArrow.setImageResource(R.drawable.ic_arrow_down)
                     SortType.ASC -> ivSortArrow.setImageResource(R.drawable.ic_arrow_up)
                 }

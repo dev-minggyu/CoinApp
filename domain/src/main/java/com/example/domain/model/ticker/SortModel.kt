@@ -6,7 +6,6 @@ data class SortModel(
 )
 
 enum class SortType {
-    NO,
     DESC,
     ASC
 }

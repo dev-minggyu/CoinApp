@@ -45,7 +45,7 @@
 
         <com.example.coinapp.ui.custom.SortButton
             android:id="@+id/tv_sort_name"
-            onSortChangedListener="@{vm.sortTickerList}"
+            onSortChanged="@{vm.onSortChanged}"
             sortState="@{vm.sortModel}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
 
         <com.example.coinapp.ui.custom.SortButton
             android:id="@+id/tv_sort_price"
-            onSortChangedListener="@{vm.sortTickerList}"
+            onSortChanged="@{vm.onSortChanged}"
             sortState="@{vm.sortModel}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -73,7 +73,7 @@
 
         <com.example.coinapp.ui.custom.SortButton
             android:id="@+id/tv_sort_rate"
-            onSortChangedListener="@{vm.sortTickerList}"
+            onSortChanged="@{vm.onSortChanged}"
             sortState="@{vm.sortModel}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -87,7 +87,7 @@
 
         <com.example.coinapp.ui.custom.SortButton
             android:id="@+id/tv_sort_volume"
-            onSortChangedListener="@{vm.sortTickerList}"
+            onSortChanged="@{vm.onSortChanged}"
             sortState="@{vm.sortModel}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
