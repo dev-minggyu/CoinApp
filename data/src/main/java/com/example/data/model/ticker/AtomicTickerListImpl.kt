@@ -50,20 +50,21 @@ class AtomicTickerListImpl @Inject constructor() : AtomicTickerList {
             this.searchSymbol = searchSymbol
         }
 
+        sortList()
+
         var result = copyTickerList()
         if (this.searchSymbol.isNotEmpty()) {
-            result = result.filter { it.symbol.startsWith(this.searchSymbol, true) }.toMutableList()
+            result = result.filter { it.symbol.startsWith(this.searchSymbol, true) }
         }
-        sortList(result)
         result
     }
 
-    private fun copyTickerList(): MutableList<Ticker> =
+    private fun copyTickerList(): List<Ticker> =
         list.map {
             it.copy()
-        }.toMutableList()
+        }
 
-    override fun sortList(list: MutableList<Ticker>) {
+    override fun sortList() {
         list.apply {
             when (sortModel.type) {
                 SortType.NO ->

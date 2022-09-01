@@ -17,7 +17,7 @@ interface AtomicTickerList {
 
     suspend fun getList(sortModel: SortModel? = null, searchSymbol: String? = null): List<Ticker>
 
-    fun sortList(list: MutableList<Ticker>)
+    fun sortList()
 
     fun getSize(): Int
 
