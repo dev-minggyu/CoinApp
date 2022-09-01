@@ -10,6 +10,7 @@ import com.example.domain.model.ticker.SortModel
 import com.example.domain.model.ticker.Ticker
 import com.example.domain.repository.ticker.TickerRepository
 import com.example.domain.utils.Resource
+import com.example.domain.utils.TickerResource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -31,7 +32,7 @@ class TickerRepositoryImpl @Inject constructor(
 
     private val _coroutineScope = CoroutineScope(Job() + Dispatchers.Default)
 
-    private val _tickerSocketData = MutableSharedFlow<Resource<List<Ticker>>>(
+    private val _tickerSocketData = MutableSharedFlow<TickerResource<List<Ticker>>>(
         replay = 0,
         extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
@@ -61,10 +62,10 @@ class TickerRepositoryImpl @Inject constructor(
                                     }
                                     requireFavoriteSetup = false
                                 }
-                                _tickerSocketData.emit(Resource.Success(atomicTickerList.getList()))
+                                _tickerSocketData.emit(TickerResource.Update(atomicTickerList.getList()))
                             }
                         }
-                        else -> _tickerSocketData.emit(Resource.Error(null))
+                        else -> _tickerSocketData.emit(TickerResource.Error(null))
                     }
                 }.launchIn(_coroutineScope)
 
@@ -94,7 +95,7 @@ class TickerRepositoryImpl @Inject constructor(
     override suspend fun sortTickerList(sortModel: SortModel) {
         withContext(Dispatchers.Default) {
             _tickerSocketData.emit(
-                Resource.Success(
+                TickerResource.Refresh(
                     atomicTickerList.getList(sortModel = sortModel)
                 )
             )
@@ -104,7 +105,7 @@ class TickerRepositoryImpl @Inject constructor(
     override suspend fun searchTickerList(searchSymbol: String) {
         withContext(Dispatchers.Default) {
             _tickerSocketData.emit(
-                Resource.Success(
+                TickerResource.Refresh(
                     atomicTickerList.getList(searchSymbol = searchSymbol)
                 )
             )

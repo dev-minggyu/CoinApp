@@ -10,10 +10,10 @@ import com.example.domain.usecase.favoriteticker.FavoriteTickerUseCase
 import com.example.domain.usecase.ticker.TickerDataUseCase
 import com.example.domain.usecase.ticker.TickerSearchUseCase
 import com.example.domain.usecase.ticker.TickerSortUseCase
-import com.example.domain.utils.Resource
+import com.example.domain.utils.TickerResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,8 +24,9 @@ class HomeViewModel @Inject constructor(
     private val tickerSearchUseCase: TickerSearchUseCase,
     private val favoriteTickerUseCase: FavoriteTickerUseCase
 ) : ViewModel() {
-    private val _tickerList: MutableStateFlow<List<Ticker>?> = MutableStateFlow(listOf())
-    val tickerList = _tickerList.asStateFlow()
+    private val _tickerList: MutableStateFlow<List<Ticker>?> = MutableStateFlow(null)
+    val tickerList: StateFlow<List<Ticker>?>
+        get() = _tickerList
 
     val searchText: MutableStateFlow<String> = MutableStateFlow("")
 
@@ -43,14 +44,19 @@ class HomeViewModel @Inject constructor(
 
     private fun observeTickerList() {
         viewModelScope.launch {
-            tickerDataUseCase.execute().collect {
-                when (it) {
-                    is Resource.Success -> {
-                        _tickerList.value = it.data
+            tickerDataUseCase.execute()
+                .collect {
+                    when (it) {
+                        is TickerResource.Update -> {
+                            _tickerList.value = it.data
+                        }
+                        is TickerResource.Refresh -> {
+                            _tickerList.value = null
+                            _tickerList.value = it.data
+                        }
+                        else -> {}
                     }
-                    else -> {}
                 }
-            }
         }
     }
 

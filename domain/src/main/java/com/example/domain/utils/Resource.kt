@@ -5,3 +5,9 @@ sealed class Resource<out T : Any> {
     class Error(val message: String?) : Resource<Nothing>()
     object Loading : Resource<Nothing>()
 }
+
+sealed class TickerResource<out T : Any> {
+    class Update<T : Any>(val data: T) : TickerResource<T>()
+    class Refresh<T : Any>(val data: T) : TickerResource<T>()
+    class Error(val message: String?) : TickerResource<Nothing>()
+}
