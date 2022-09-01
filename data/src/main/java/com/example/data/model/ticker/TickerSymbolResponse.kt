@@ -1,4 +1,4 @@
-package com.example.data.model.tickersymbol
+package com.example.data.model.ticker
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

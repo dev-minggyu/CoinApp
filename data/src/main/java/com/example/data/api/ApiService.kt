@@ -1,6 +1,6 @@
 package com.example.data.api
 
-import com.example.data.model.tickersymbol.TickerSymbolResponse
+import com.example.data.model.ticker.TickerSymbolResponse
 import retrofit2.Response
 import retrofit2.http.GET
 

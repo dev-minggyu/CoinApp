@@ -1,9 +1,10 @@
 package com.example.data.repository.ticker
 
 import com.example.data.model.ticker.TickerRequest
+import com.example.data.model.ticker.TickerSymbolResponse
 import com.example.data.repository.favoriteticker.local.FavoriteTickerLocalDataSource
 import com.example.data.repository.ticker.remote.TickerSocketService
-import com.example.data.repository.tickersymbol.local.TickerSymbolLocalDataSource
+import com.example.data.repository.ticker.remote.TickerSymbolRemoteDataSource
 import com.example.domain.model.ticker.AtomicTickerList
 import com.example.domain.model.ticker.SortModel
 import com.example.domain.model.ticker.TickerListModel
@@ -18,7 +19,7 @@ import javax.inject.Inject
 class TickerRepositoryImpl @Inject constructor(
     private val tickerSocketService: TickerSocketService,
     private val atomicTickerList: AtomicTickerList,
-    private val tickerSymbolLocalDataSource: TickerSymbolLocalDataSource,
+    private val tickerSymbolRemoteDataSource: TickerSymbolRemoteDataSource,
     private val favoriteTickerLocalDataSource: FavoriteTickerLocalDataSource
 ) : TickerRepository {
 
@@ -35,18 +36,28 @@ class TickerRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             if (tickerSocketService.isAlreadyOpen()) Resource.Success(Unit)
             if (tickerSocketService.openSession()) {
-                val symbolCount = tickerSymbolLocalDataSource.getTickerSymbolList().size
-                var requireFavoriteSetup = true
+                /**
+                 * 서버에 요청할 전체 Symbol 리스트 준비
+                 */
+                val symbolList = mutableListOf<TickerSymbolResponse>()
+                when (val symbolResponse = tickerSymbolRemoteDataSource.getTickerSymbolList()) {
+                    is Resource.Success -> {
+                        symbolList.addAll(symbolResponse.data)
+                    }
+                    else -> Resource.Error(null)
+                }
+
                 /**
                  * TickerSocketService의 데이터를 옵저빙 하는 작업.
                  * 해당 작업은 withContext()의 Scope가 아닌, 별도의 Scope를 사용해야한다.
                  */
+                var requireFavoriteSetup = true
                 tickerSocketService.observeData()
                     .conflate()
                     .onEach { tickerResponse ->
                         when (tickerResponse) {
                             is Resource.Success -> {
-                                if (atomicTickerList.getSize() == symbolCount) {
+                                if (atomicTickerList.getSize() == symbolList.size) {
                                     if (requireFavoriteSetup) {
                                         favoriteTickerLocalDataSource.getFavoriteTickerList().map {
                                             atomicTickerList.updateFavorite(it.symbol, true)
@@ -61,10 +72,13 @@ class TickerRepositoryImpl @Inject constructor(
                         }
                     }.launchIn(_coroutineScope)
 
+                /**
+                 * 서버에 전체 Symbol에 대한 데이터 요청
+                 */
                 tickerSocketService.send(
                     mutableListOf(
                         TickerRequest(
-                            codes = tickerSymbolLocalDataSource.getTickerSymbolList().map {
+                            codes = symbolList.map {
                                 it.market
                             },
                             type = TickerSocketService.REQUEST_TYPE
@@ -84,7 +98,7 @@ class TickerRepositoryImpl @Inject constructor(
         tickerSocketService.closeSession()
     }
 
-    override suspend fun sortTickerList(sortModel: SortModel) {
+    override suspend fun sortTickerList(sortModel: SortModel) =
         withContext(Dispatchers.Default) {
             _tickerSocketData.emit(
                 TickerResource.Refresh(
@@ -92,9 +106,8 @@ class TickerRepositoryImpl @Inject constructor(
                 )
             )
         }
-    }
 
-    override suspend fun searchTickerList(searchSymbol: String) {
+    override suspend fun searchTickerList(searchSymbol: String) =
         withContext(Dispatchers.Default) {
             _tickerSocketData.emit(
                 TickerResource.Refresh(
@@ -102,5 +115,4 @@ class TickerRepositoryImpl @Inject constructor(
                 )
             )
         }
-    }
 }
