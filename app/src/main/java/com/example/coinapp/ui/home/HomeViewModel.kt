@@ -26,7 +26,7 @@ class HomeViewModel @Inject constructor(
     val tickerList: StateFlow<List<Ticker>?>
         get() = _tickerList
 
-    val searchText: MutableStateFlow<String> = MutableStateFlow("")
+    val searchText: MutableStateFlow<String?> = MutableStateFlow(null)
 
     val sortModel: MutableStateFlow<SortModel?> = MutableStateFlow(null)
 
@@ -80,7 +80,9 @@ class HomeViewModel @Inject constructor(
     private fun observeSearchText() {
         viewModelScope.launch {
             searchText.collect {
-                tickerSearchUseCase.execute(it)
+                it?.let {
+                    tickerSearchUseCase.execute(it)
+                }
             }
         }
     }
