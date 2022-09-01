@@ -19,7 +19,6 @@ class AtomicTickerListImpl @Inject constructor() : AtomicTickerList {
             list.find {
                 (it.symbol == element.symbol) && (it.currencyType == element.currencyType)
             }?.apply {
-                prevPrice = this.currentPrice
                 currentPrice = element.currentPrice
                 decimalCurrentPrice = element.decimalCurrentPrice
                 changePricePrevDay = element.changePricePrevDay

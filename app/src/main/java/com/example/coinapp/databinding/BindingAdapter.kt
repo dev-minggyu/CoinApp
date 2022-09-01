@@ -1,7 +1,9 @@
 package com.example.coinapp.databinding
 
+import android.view.View
 import android.widget.TextView
 import android.widget.ToggleButton
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.example.coinapp.R
@@ -76,5 +78,49 @@ object BindingAdapter {
             else -> ContextCompat.getColor(view.context, R.color.color_price_same)
         }
         view.setTextColor(color)
+    }
+
+    @JvmStatic
+    @BindingAdapter("currentPrice")
+    fun bindTickerItemColor(
+        priceView: TextView,
+        currentPrice: String
+    ) {
+        if (priceView.text.isEmpty()) return
+
+        val prevPrice = priceView.text.toString().replace(",", "").toFloat()
+
+        if (prevPrice == currentPrice.toFloat()) return
+
+        val startColor = ContextCompat.getColor(priceView.context, R.color.color_background_regular2)
+        val endColor = if (prevPrice < currentPrice.toFloat()) {
+            ContextCompat.getColor(priceView.context, R.color.color_price_up_transparent)
+        } else {
+            ContextCompat.getColor(priceView.context, R.color.color_price_down_transparent)
+        }
+
+        val parentView = priceView.parent as View
+        parentView.setBackgroundColor(endColor)
+        parentView.postDelayed({
+            parentView.setBackgroundColor(startColor)
+        }, 200)
+    }
+
+    @JvmStatic
+    @BindingAdapter(value = ["prevPrice", "currentPrice"], requireAll = true)
+    fun bindTickerItemColor(view: ConstraintLayout, prevPrice: String, currentPrice: String) {
+        if (prevPrice.toFloat() == currentPrice.toFloat()) return
+
+        val startColor = ContextCompat.getColor(view.context, R.color.color_background_regular2)
+        val endColor = if (prevPrice.toFloat() < currentPrice.toFloat()) {
+            ContextCompat.getColor(view.context, R.color.color_price_up_transparent)
+        } else {
+            ContextCompat.getColor(view.context, R.color.color_price_down_transparent)
+        }
+
+        view.setBackgroundColor(endColor)
+        view.postDelayed({
+            view.setBackgroundColor(startColor)
+        }, 200)
     }
 }

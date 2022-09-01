@@ -29,7 +29,6 @@ class TickerMapperProviderImpl @Inject constructor() : TickerMapperProvider {
             Ticker(
                 symbol = splitCode[1],
                 currencyType = currencyType,
-                prevPrice = trade_price.toString(),
                 currentPrice = trade_price.toString(),
                 decimalCurrentPrice = decimalCurrentPrice,
                 changePricePrevDay = changePricePrevDay,

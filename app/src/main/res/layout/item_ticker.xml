@@ -14,8 +14,10 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_ticker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/color_background_regular2"
         android:padding="10dp">
 
         <androidx.constraintlayout.widget.Guideline
@@ -84,6 +86,7 @@
         <TextView
             android:id="@+id/tv_price"
             changeRatePrevDay="@{ticker.rate}"
+            currentPrice="@{ticker.currentPrice}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/_6sdp"

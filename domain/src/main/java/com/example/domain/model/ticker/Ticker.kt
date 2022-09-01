@@ -3,7 +3,6 @@ package com.example.domain.model.ticker
 data class Ticker(
     var symbol: String,
     var currencyType: Currency,
-    var prevPrice: String,
     var currentPrice: String,
     var decimalCurrentPrice: String,
     var changePricePrevDay: String,

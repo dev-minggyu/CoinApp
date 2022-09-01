@@ -4,7 +4,7 @@
     <color name="color_primary_variant">#2196F3</color>
 
     <color name="color_background_regular1">#000000</color>
-    <color name="color_background_regular2">#646464</color>
+    <color name="color_background_regular2">#121212</color>
 
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
@@ -18,4 +18,6 @@
     <color name="color_price_same">#FFFFFF</color>
     <color name="color_price_up">#FF0000</color>
     <color name="color_price_down">#008EFF</color>
+    <color name="color_price_up_transparent">#4DFF0000</color>
+    <color name="color_price_down_transparent">#4D008EFF</color>
 </resources>
