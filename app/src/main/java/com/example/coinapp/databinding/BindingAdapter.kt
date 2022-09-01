@@ -1,7 +1,10 @@
 package com.example.coinapp.databinding
 
+import android.widget.TextView
 import android.widget.ToggleButton
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import com.example.coinapp.R
 import com.example.coinapp.ui.custom.SortButton
 import com.example.coinapp.ui.home.adapter.TickerListAdapter
 import com.example.domain.model.ticker.SortModel
@@ -55,5 +58,23 @@ object BindingAdapter {
                 favoriteClickListener.onDeleteFavorite(symbol)
             }
         }
+    }
+
+    @JvmStatic
+    @BindingAdapter("changeRatePrevDay")
+    fun bindTickerPriceColor(
+        view: TextView,
+        changeRatePrevDay: String
+    ) {
+        val color: Int = when {
+            changeRatePrevDay.toFloat() > 0 -> {
+                ContextCompat.getColor(view.context, R.color.color_price_up)
+            }
+            changeRatePrevDay.toFloat() < 0 -> {
+                ContextCompat.getColor(view.context, R.color.color_price_down)
+            }
+            else -> ContextCompat.getColor(view.context, R.color.color_price_same)
+        }
+        view.setTextColor(color)
     }
 }
