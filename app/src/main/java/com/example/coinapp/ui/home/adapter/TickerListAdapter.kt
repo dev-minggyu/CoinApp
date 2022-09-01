@@ -1,10 +1,13 @@
 package com.example.coinapp.ui.home.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.coinapp.R
 import com.example.coinapp.databinding.ItemTickerBinding
 import com.example.domain.model.ticker.Ticker
 
@@ -13,7 +16,7 @@ class TickerListAdapter(val favoriteClickListener: FavoriteClickListener?) :
 
     override fun onBindViewHolder(holder: TickerViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item)
+        holder.bind(holder.itemView, item)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TickerViewHolder {
@@ -29,6 +32,33 @@ class TickerListAdapter(val favoriteClickListener: FavoriteClickListener?) :
             binding.ticker = item
             binding.favoriteClickListener = favoriteClickListener
             binding.executePendingBindings()
+        }
+
+        fun bind(itemView: View, item: Ticker) {
+            val prevSymbol = binding.tvTicker.text.toString()
+            val currentSymbol = item.symbol
+            if (prevSymbol != currentSymbol) {
+                bind(item)
+                return
+            }
+
+            val prevPrice = binding.tvPrice.text.toString().replace(",", "").toFloat()
+            val currentPrice = item.currentPrice.toFloat()
+            if (prevPrice != currentPrice) {
+                itemView.apply {
+                    val startColor = ContextCompat.getColor(context, R.color.color_background_regular2)
+                    val endColor = if (prevPrice < currentPrice) {
+                        ContextCompat.getColor(context, R.color.color_price_up_transparent)
+                    } else {
+                        ContextCompat.getColor(context, R.color.color_price_down_transparent)
+                    }
+                    setBackgroundColor(endColor)
+                    postDelayed({
+                        setBackgroundColor(startColor)
+                    }, 200)
+                }
+            }
+            bind(item)
         }
     }
 
