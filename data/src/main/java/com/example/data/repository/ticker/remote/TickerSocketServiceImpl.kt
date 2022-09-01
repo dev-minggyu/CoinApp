@@ -43,14 +43,20 @@ class TickerSocketServiceImpl @Inject constructor(
     }
 
     override suspend fun closeSession() {
-        socketSession?.close()
-        socketSession = null
+        try {
+            socketSession?.close()
+            socketSession = null
+            atomicTickerList.clear()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override fun observeData(): Flow<Resource<Unit>> = flow {
         val json = Json { ignoreUnknownKeys = true }
         try {
             socketSession?.incoming?.consumeEach { frame ->
+                if (socketSession == null) throw Exception()
                 if (frame is Frame.Binary) {
                     val tickerResponse = json.decodeFromString<TickerResponse>(String(frame.readBytes()))
                     atomicTickerList.updateTicker(

@@ -5,9 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.domain.model.ticker.SortModel
 import com.example.domain.model.ticker.Ticker
 import com.example.domain.usecase.favoriteticker.FavoriteTickerUseCase
-import com.example.domain.usecase.ticker.TickerDataUseCase
-import com.example.domain.usecase.ticker.TickerSearchUseCase
-import com.example.domain.usecase.ticker.TickerSortUseCase
+import com.example.domain.usecase.ticker.*
 import com.example.domain.utils.TickerResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +18,9 @@ class HomeViewModel @Inject constructor(
     private val tickerDataUseCase: TickerDataUseCase,
     private val tickerSortUseCase: TickerSortUseCase,
     private val tickerSearchUseCase: TickerSearchUseCase,
-    private val favoriteTickerUseCase: FavoriteTickerUseCase
+    private val favoriteTickerUseCase: FavoriteTickerUseCase,
+    private val subscribeTickerUseCase: SubscribeTickerUseCase,
+    private val unsubscribeTickerUseCase: UnsubscribeTickerUseCase
 ) : ViewModel() {
     private val _tickerList: MutableStateFlow<List<Ticker>?> = MutableStateFlow(null)
     val tickerList: StateFlow<List<Ticker>?>
@@ -84,6 +84,18 @@ class HomeViewModel @Inject constructor(
                     tickerSearchUseCase.execute(it)
                 }
             }
+        }
+    }
+
+    fun subscribeTicker() {
+        viewModelScope.launch {
+            subscribeTickerUseCase.execute()
+        }
+    }
+
+    fun unsubscribeTicker() {
+        viewModelScope.launch {
+            unsubscribeTickerUseCase.execute()
         }
     }
 }

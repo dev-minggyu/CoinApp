@@ -87,6 +87,9 @@ dependencies {
     // Leak Canary
     debugImplementation deps.leakcanary.android
 
+    // Lifecycle Extension
+    implementation deps.lifecycle_extension
+
     testImplementation deps.junit
     androidTestImplementation deps.ext_junit
     androidTestImplementation deps.espresso_core

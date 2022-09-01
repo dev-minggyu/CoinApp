@@ -68,7 +68,9 @@ class TickerRepositoryImpl @Inject constructor(
                                     delay(receiveDelayMillis)
                                 }
                             }
-                            else -> _tickerSocketData.emit(TickerResource.Error(null))
+                            else -> {
+                                _tickerSocketData.emit(TickerResource.Error(null))
+                            }
                         }
                     }.launchIn(_coroutineScope)
 

@@ -3,7 +3,7 @@ package com.example.coinapp.ui.home
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.*
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.example.coinapp.R
 import com.example.coinapp.base.BaseFragment
@@ -16,7 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
+class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home), LifecycleEventObserver {
     private val _homeViewModel: HomeViewModel by viewModels()
 
     private var _tickerListAdapter: TickerListAdapter? = null
@@ -25,6 +25,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
 
         binding.vm = _homeViewModel
 
@@ -80,6 +82,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     private fun setTickerList(list: List<Ticker>?) = _tickerListAdapter?.submitList(list)
+
+    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+        when (event) {
+            Lifecycle.Event.ON_START -> _homeViewModel.subscribeTicker()
+            Lifecycle.Event.ON_STOP -> _homeViewModel.unsubscribeTicker()
+            else -> {}
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        ProcessLifecycleOwner.get().lifecycle.removeObserver(this)
+    }
 
     companion object {
         fun newInstance() = HomeFragment()
