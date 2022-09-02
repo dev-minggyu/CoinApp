@@ -32,16 +32,13 @@ class HomeViewModel @Inject constructor(
 
     val sortModel: MutableStateFlow<SortModel?> = MutableStateFlow(null)
 
-    val onSortChanged = { sortModel: SortModel ->
-        sortTickerList(sortModel)
-    }
-
     private val _errorSubscribeTicker: MutableStateFlow<String?> = MutableStateFlow(null)
     val errorSubscribeTicker = _errorSubscribeTicker.asStateFlow()
 
     init {
         observeTickerList()
         observeSearchText()
+        observeSortModel()
     }
 
     private fun observeTickerList() {
@@ -76,17 +73,21 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun sortTickerList(sortModel: SortModel) {
-        viewModelScope.launch {
-            tickerSortUseCase.execute(sortModel)
-        }
-    }
-
     private fun observeSearchText() {
         viewModelScope.launch {
             searchText.collect {
                 it?.let {
                     tickerSearchUseCase.execute(it)
+                }
+            }
+        }
+    }
+
+    private fun observeSortModel() {
+        viewModelScope.launch {
+            sortModel.collect {
+                it?.let {
+                    tickerSortUseCase.execute(it)
                 }
             }
         }

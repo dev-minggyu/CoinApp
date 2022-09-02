@@ -4,6 +4,8 @@ import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import androidx.databinding.InverseBindingAdapter
+import androidx.databinding.InverseBindingListener
 import com.example.coinapp.R
 import com.example.coinapp.ui.custom.SortButton
 import com.example.coinapp.ui.home.adapter.TickerListAdapter
@@ -23,18 +25,6 @@ object BindingAdapter {
     }
 
     @JvmStatic
-    @BindingAdapter("onSortChanged")
-    fun bindOnSortChanged(
-        view: SortButton, function: (SortModel) -> Unit
-    ) {
-        view.setOnSortChangedListener(object : SortButton.OnSortChangedListener {
-            override fun onChanged(sortModel: SortModel) {
-                function(sortModel)
-            }
-        })
-    }
-
-    @JvmStatic
     @BindingAdapter("sortState")
     fun bindSortState(
         view: SortButton, sortModel: SortModel?
@@ -42,6 +32,22 @@ object BindingAdapter {
         sortModel?.let {
             view.setSortState(it)
         }
+    }
+
+    @JvmStatic
+    @InverseBindingAdapter(attribute = "sortState", event = "sortStateAttrChanged")
+    fun inverseBindSortState(view: SortButton): SortModel = view.getSortState()
+
+    @JvmStatic
+    @BindingAdapter("sortStateAttrChanged")
+    fun bindOnSortChanged(
+        view: SortButton, listener: InverseBindingListener?
+    ) {
+        view.setOnSortChangedListener(object : SortButton.OnSortChangedListener {
+            override fun onChanged() {
+                listener?.onChange()
+            }
+        })
     }
 
     @JvmStatic

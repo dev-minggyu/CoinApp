@@ -71,7 +71,7 @@ class SortButton(context: Context?, attrs: AttributeSet?) : LinearLayout(context
                 }
                 _sortModel.category = _sortCategory
             }
-            _onSortChangedListener?.onChanged(_sortModel.copy())
+            _onSortChangedListener?.onChanged()
         }
     }
 
@@ -89,11 +89,13 @@ class SortButton(context: Context?, attrs: AttributeSet?) : LinearLayout(context
         }
     }
 
+    fun getSortState(): SortModel = _sortModel.copy()
+
     fun setOnSortChangedListener(listener: OnSortChangedListener) {
         _onSortChangedListener = listener
     }
 
     interface OnSortChangedListener {
-        fun onChanged(sortModel: SortModel)
+        fun onChanged()
     }
 }
