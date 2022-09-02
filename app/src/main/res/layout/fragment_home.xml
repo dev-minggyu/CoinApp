@@ -53,14 +53,24 @@
                 android:id="@+id/rv_ticker"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="@{vm.errorSubscribeTicker == null ? View.VISIBLE : View.GONE}"
+                android:visibility="@{vm.loadingTicker ? View.GONE :View.VISIBLE}"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
             <include
                 android:id="@+id/layout_error"
                 layout="@layout/layout_error"
-                android:visibility="@{vm.errorSubscribeTicker == null ? View.GONE : View.VISIBLE}"
+                android:visibility="@{vm.errorTicker == null ? View.GONE : View.VISIBLE}"
                 app:vm="@{vm}" />
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminateTint="@color/color_primary"
+                android:visibility="@{vm.loadingTicker ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

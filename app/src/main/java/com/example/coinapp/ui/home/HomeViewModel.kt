@@ -32,8 +32,11 @@ class HomeViewModel @Inject constructor(
 
     val sortModel: MutableStateFlow<SortModel?> = MutableStateFlow(null)
 
-    private val _errorSubscribeTicker: MutableStateFlow<String?> = MutableStateFlow(null)
-    val errorSubscribeTicker = _errorSubscribeTicker.asStateFlow()
+    private val _errorTicker: MutableStateFlow<String?> = MutableStateFlow(null)
+    val errorTicker = _errorTicker.asStateFlow()
+
+    private val _loadingTicker: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val loadingTicker = _loadingTicker.asStateFlow()
 
     init {
         observeTickerList()
@@ -47,14 +50,17 @@ class HomeViewModel @Inject constructor(
                 .collect {
                     when (it) {
                         is TickerResource.Update -> {
+                            _loadingTicker.value = false
                             _tickerList.value = it.data.tickerList
                             sortModel.value = it.data.sortModel
                         }
                         is TickerResource.Refresh -> {
+                            _loadingTicker.value = false
                             _tickerList.value = null
                             _tickerList.value = it.data.tickerList
                             sortModel.value = it.data.sortModel
                         }
+                        is TickerResource.Error -> _errorTicker.value = App.getString(R.string.error_network)
                         else -> {}
                     }
                 }
@@ -95,9 +101,13 @@ class HomeViewModel @Inject constructor(
 
     fun subscribeTicker() {
         viewModelScope.launch {
+            _loadingTicker.value = true
             when (subscribeTickerUseCase.execute()) {
-                is Resource.Success -> _errorSubscribeTicker.value = null
-                is Resource.Error -> _errorSubscribeTicker.value = App.getString(R.string.error_network)
+                is Resource.Success -> _errorTicker.value = null
+                is Resource.Error -> {
+                    _loadingTicker.value = false
+                    _errorTicker.value = App.getString(R.string.error_network)
+                }
                 else -> {}
             }
         }
