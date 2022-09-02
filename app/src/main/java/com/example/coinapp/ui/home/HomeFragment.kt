@@ -75,13 +75,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home), 
     private fun setListOfCategory(categoryId: Int) {
         when (categoryId) {
             R.id.btn_krw ->
-                setTickerList(_tickerList?.filter { it.currencyType == Currency.KRW })
+                _tickerListAdapter?.submitList(_tickerList?.filter { it.currencyType == Currency.KRW })
             R.id.btn_favorite ->
-                setTickerList(_tickerList?.filter { it.isFavorite })
+                _tickerListAdapter?.submitList(_tickerList?.filter { it.isFavorite })
         }
     }
-
-    private fun setTickerList(list: List<Ticker>?) = _tickerListAdapter?.submitList(list)
 
     override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
         when (event) {
