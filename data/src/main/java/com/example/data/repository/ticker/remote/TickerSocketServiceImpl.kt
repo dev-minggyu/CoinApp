@@ -46,7 +46,6 @@ class TickerSocketServiceImpl @Inject constructor(
         try {
             socketSession?.close()
             socketSession = null
-            atomicTickerList.clear()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -56,7 +55,10 @@ class TickerSocketServiceImpl @Inject constructor(
         val json = Json { ignoreUnknownKeys = true }
         try {
             socketSession?.incoming?.consumeEach { frame ->
-                if (socketSession == null) throw Exception()
+                if (socketSession == null) {
+                    atomicTickerList.clear()
+                    throw Exception()
+                }
                 if (frame is Frame.Binary) {
                     val tickerResponse = json.decodeFromString<TickerResponse>(String(frame.readBytes()))
                     atomicTickerList.updateTicker(
