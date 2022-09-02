@@ -105,7 +105,7 @@ class HomeViewModel @Inject constructor(
     fun subscribeTicker() {
         viewModelScope.launch {
             _loadingTicker.value = true
-            when (subscribeTickerUseCase.execute()) {
+            when (subscribeTickerUseCase.execute(300L)) {
                 is Resource.Success -> _errorTicker.value = null
                 is Resource.Error -> {
                     _loadingTicker.value = false
