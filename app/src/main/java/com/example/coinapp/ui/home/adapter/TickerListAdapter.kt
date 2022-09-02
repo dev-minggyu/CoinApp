@@ -41,8 +41,7 @@ class TickerListAdapter(val favoriteClickListener: FavoriteClickListener?) :
                 bind(item)
                 return
             }
-
-            val prevPrice = binding.tvPrice.text.toString().replace(",", "").toFloat()
+            val prevPrice = binding.tvPrice.tag.toString().toFloat()
             val currentPrice = item.currentPrice.toFloat()
             if (prevPrice != currentPrice) {
                 itemView.apply {
