@@ -60,7 +60,10 @@ class HomeViewModel @Inject constructor(
                             _tickerList.value = it.data.tickerList
                             sortModel.value = it.data.sortModel
                         }
-                        is TickerResource.Error -> _errorTicker.value = App.getString(R.string.error_network)
+                        is TickerResource.Error -> {
+                            _loadingTicker.value = false
+                            _errorTicker.value = App.getString(R.string.error_network)
+                        }
                         else -> {}
                     }
                 }
