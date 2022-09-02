@@ -17,20 +17,31 @@ class TickerMapperProviderImpl @Inject constructor() : TickerMapperProvider {
 
             var decimalCurrentPrice = ""
             var changePricePrevDay = ""
-            currencyType.currencyFormat?.let { format ->
-                val priceFormat = DecimalFormat(format)
-                decimalCurrentPrice = priceFormat.format(trade_price)
-                changePricePrevDay = priceFormat.format(signed_change_price)
-            }
-
             var formattedVolume = ""
-            currencyType.volumeDivider?.let { divider ->
-                val dividedValue = (acc_trade_price_24h / divider).toInt()
-                formattedVolume = DecimalFormat("#,###").format(dividedValue)
-                formattedVolume += if (dividedValue < 1) {
-                    App.getString(R.string.unit_won)
-                } else {
-                    App.getString(R.string.unit_million)
+            when (currencyType) {
+                Currency.KRW -> {
+                    val priceFormat = DecimalFormat(currencyType.currencyFormat)
+                    decimalCurrentPrice = priceFormat.format(trade_price)
+                    changePricePrevDay = priceFormat.format(signed_change_price)
+
+                    val dividedValue = (acc_trade_price_24h / 1_000_000).toInt()
+                    formattedVolume = DecimalFormat(currencyType.volumeFormat).format(dividedValue)
+                    formattedVolume += if (dividedValue < 1) {
+                        App.getString(R.string.unit_won)
+                    } else {
+                        App.getString(R.string.unit_million)
+                    }
+                }
+                Currency.BTC -> {
+                    decimalCurrentPrice = String.format(currencyType.currencyFormat, trade_price)
+                    changePricePrevDay = String.format(currencyType.currencyFormat, signed_change_price)
+                    formattedVolume = String.format(currencyType.volumeFormat, acc_trade_price_24h)
+                }
+                Currency.USDT -> {
+                    val priceFormat = DecimalFormat(Currency.USDT.currencyFormat)
+                    decimalCurrentPrice = priceFormat.format(trade_price)
+                    changePricePrevDay = priceFormat.format(signed_change_price)
+                    formattedVolume = DecimalFormat(currencyType.volumeFormat).format(acc_trade_price_24h)
                 }
             }
 

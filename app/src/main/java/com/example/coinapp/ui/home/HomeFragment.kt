@@ -25,16 +25,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home), 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
 
         binding.vm = _homeViewModel
 
         setupRecyclerView()
-
-        setupObserver()
-
         setupListCategoryButton()
+        setupObserver()
     }
 
     private fun setupObserver() {
@@ -68,6 +65,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home), 
 
     private fun setupListCategoryButton() {
         binding.layoutListCategory.radioGroupCatecory.setOnCheckedChangeListener { _, id ->
+            _tickerListAdapter?.submitList(null)
             setListOfCategory(id)
         }
     }
@@ -76,6 +74,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home), 
         when (categoryId) {
             R.id.btn_krw ->
                 _tickerListAdapter?.submitList(_tickerList?.filter { it.currencyType == Currency.KRW })
+            R.id.btn_btc ->
+                _tickerListAdapter?.submitList(_tickerList?.filter { it.currencyType == Currency.BTC })
+            R.id.btn_usdt ->
+                _tickerListAdapter?.submitList(_tickerList?.filter { it.currencyType == Currency.USDT })
             R.id.btn_favorite ->
                 _tickerListAdapter?.submitList(_tickerList?.filter { it.isFavorite })
         }

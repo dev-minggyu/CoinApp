@@ -35,6 +35,26 @@
                 android:textAlignment="center" />
 
             <RadioButton
+                android:id="@+id/btn_btc"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:background="@drawable/radio_button_category"
+                android:button="@null"
+                android:text="@string/list_category_btc"
+                android:textAlignment="center" />
+
+            <RadioButton
+                android:id="@+id/btn_usdt"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:background="@drawable/radio_button_category"
+                android:button="@null"
+                android:text="@string/list_category_usdt"
+                android:textAlignment="center" />
+
+            <RadioButton
                 android:id="@+id/btn_favorite"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_30sdp"
