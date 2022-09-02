@@ -19,4 +19,7 @@
     <string name="app_theme_dark">다크</string>
     <string name="list_category_krw">KRW</string>
     <string name="list_category_favorite">관심</string>
+
+    <string name="error_network">네트워크 오류가 발생했습니다.</string>
+    <string name="retry">재시도</string>
 </resources>

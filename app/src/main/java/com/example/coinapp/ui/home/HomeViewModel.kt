@@ -2,14 +2,17 @@ package com.example.coinapp.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.coinapp.App
+import com.example.coinapp.R
 import com.example.domain.model.ticker.SortModel
 import com.example.domain.model.ticker.Ticker
 import com.example.domain.usecase.favoriteticker.FavoriteTickerUseCase
 import com.example.domain.usecase.ticker.*
+import com.example.domain.utils.Resource
 import com.example.domain.utils.TickerResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,8 +26,7 @@ class HomeViewModel @Inject constructor(
     private val unsubscribeTickerUseCase: UnsubscribeTickerUseCase
 ) : ViewModel() {
     private val _tickerList: MutableStateFlow<List<Ticker>?> = MutableStateFlow(null)
-    val tickerList: StateFlow<List<Ticker>?>
-        get() = _tickerList
+    val tickerList = _tickerList.asStateFlow()
 
     val searchText: MutableStateFlow<String?> = MutableStateFlow(null)
 
@@ -33,6 +35,9 @@ class HomeViewModel @Inject constructor(
     val onSortChanged = { sortModel: SortModel ->
         sortTickerList(sortModel)
     }
+
+    private val _errorSubscribeTicker: MutableStateFlow<String?> = MutableStateFlow(null)
+    val errorSubscribeTicker = _errorSubscribeTicker.asStateFlow()
 
     init {
         observeTickerList()
@@ -89,7 +94,11 @@ class HomeViewModel @Inject constructor(
 
     fun subscribeTicker() {
         viewModelScope.launch {
-            subscribeTickerUseCase.execute()
+            when (subscribeTickerUseCase.execute()) {
+                is Resource.Success -> _errorSubscribeTicker.value = null
+                is Resource.Error -> _errorSubscribeTicker.value = App.getString(R.string.error_network)
+                else -> {}
+            }
         }
     }
 

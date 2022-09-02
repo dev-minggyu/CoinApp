@@ -4,6 +4,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="vm"
             type="com.example.coinapp.ui.home.HomeViewModel" />
@@ -51,7 +53,14 @@
                 android:id="@+id/rv_ticker"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:visibility="@{vm.errorSubscribeTicker == null ? View.VISIBLE : View.GONE}"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+            <include
+                android:id="@+id/layout_error"
+                layout="@layout/layout_error"
+                android:visibility="@{vm.errorSubscribeTicker == null ? View.GONE : View.VISIBLE}"
+                app:vm="@{vm}" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

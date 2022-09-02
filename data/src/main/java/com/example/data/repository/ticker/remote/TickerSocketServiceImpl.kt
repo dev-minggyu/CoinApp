@@ -25,7 +25,7 @@ class TickerSocketServiceImpl @Inject constructor(
 ) : TickerSocketService {
     override var socketSession: WebSocketSession? = null
 
-    override fun isAlreadyOpen(): Boolean = socketSession == null
+    override fun isAlreadyOpen(): Boolean = socketSession != null
 
     override suspend fun openSession(): Boolean {
         return try {

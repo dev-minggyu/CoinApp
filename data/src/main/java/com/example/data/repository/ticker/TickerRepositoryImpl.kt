@@ -34,7 +34,7 @@ class TickerRepositoryImpl @Inject constructor(
 
     override suspend fun subscribeTicker(receiveDelayMillis: Long): Resource<Unit> =
         withContext(Dispatchers.IO) {
-            if (tickerSocketService.isAlreadyOpen()) Resource.Success(Unit)
+            if (tickerSocketService.isAlreadyOpen()) return@withContext Resource.Success(Unit)
             if (tickerSocketService.openSession()) {
                 /**
                  * 서버에 요청할 전체 Symbol 리스트 준비
@@ -90,9 +90,9 @@ class TickerRepositoryImpl @Inject constructor(
                         )
                     )
                 )
-                Resource.Success(Unit)
+                return@withContext Resource.Success(Unit)
             } else {
-                Resource.Error(null)
+                return@withContext Resource.Error(null)
             }
         }
 
