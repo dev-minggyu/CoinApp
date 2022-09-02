@@ -24,7 +24,7 @@ class AtomicTickerListImpl @Inject constructor() : AtomicTickerList {
                 changePricePrevDay = element.changePricePrevDay
                 rate = element.rate
                 volume = element.volume
-                dividedVolume = element.dividedVolume
+                formattedVolume = element.formattedVolume
             } ?: run {
                 list.add(element)
             }

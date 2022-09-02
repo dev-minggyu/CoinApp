@@ -1,5 +1,7 @@
 package com.example.coinapp.provider
 
+import com.example.coinapp.App
+import com.example.coinapp.R
 import com.example.data.model.ticker.TickerResponse
 import com.example.data.provider.TickerMapperProvider
 import com.example.domain.model.ticker.Currency
@@ -21,9 +23,15 @@ class TickerMapperProviderImpl @Inject constructor() : TickerMapperProvider {
                 changePricePrevDay = priceFormat.format(signed_change_price)
             }
 
-            var dividedVolume = ""
+            var formattedVolume = ""
             currencyType.volumeDivider?.let { divider ->
-                dividedVolume = DecimalFormat("#,###").format((acc_trade_price_24h / divider).toInt())
+                val dividedValue = (acc_trade_price_24h / divider).toInt()
+                formattedVolume = DecimalFormat("#,###").format(dividedValue)
+                formattedVolume += if (dividedValue < 1) {
+                    App.getString(R.string.unit_won)
+                } else {
+                    App.getString(R.string.unit_million)
+                }
             }
 
             Ticker(
@@ -35,7 +43,7 @@ class TickerMapperProviderImpl @Inject constructor() : TickerMapperProvider {
                 decimalPrevPrice = prev_closing_price.toString(),
                 rate = String.format("%.2f", signed_change_rate * 100),
                 volume = acc_trade_price_24h.toString(),
-                dividedVolume = dividedVolume
+                formattedVolume = formattedVolume
             )
         }
     }

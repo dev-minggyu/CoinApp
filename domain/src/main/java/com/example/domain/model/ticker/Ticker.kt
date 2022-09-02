@@ -9,6 +9,6 @@ data class Ticker(
     var decimalPrevPrice: String,
     var rate: String,
     var volume: String,
-    var dividedVolume: String,
+    var formattedVolume: String,
     var isFavorite: Boolean = false
 )
