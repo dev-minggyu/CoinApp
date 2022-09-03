@@ -1,5 +1,6 @@
 package com.example.data.repository.ticker
 
+import com.example.data.mapper.ticker.TickerSymbolMapper
 import com.example.data.model.ticker.TickerRequest
 import com.example.data.model.ticker.TickerSymbolResponse
 import com.example.data.repository.favoriteticker.local.FavoriteTickerLocalDataSource
@@ -38,10 +39,16 @@ class TickerRepositoryImpl @Inject constructor(
             if (tickerSocketService.openSession()) {
                 /**
                  * 서버에 요청할 전체 Symbol 리스트 준비
+                 * AtomicTickerList에 한글/영어 Symbol 사전 셋팅
                  */
                 val symbolList = mutableListOf<TickerSymbolResponse>()
                 when (val symbolResponse = tickerSymbolRemoteDataSource.getTickerSymbolList()) {
                     is Resource.Success -> {
+                        symbolResponse.data.forEach {
+                            atomicTickerList.updateTicker(
+                                TickerSymbolMapper.toTicker(it)
+                            )
+                        }
                         symbolList.addAll(symbolResponse.data)
                     }
                     else -> Resource.Error(null)
@@ -51,19 +58,20 @@ class TickerRepositoryImpl @Inject constructor(
                  * TickerSocketService의 데이터를 옵저빙 하는 작업.
                  * 해당 작업은 withContext()의 Scope가 아닌, 별도의 Scope를 사용해야한다.
                  */
-                var requireFavoriteSetup = true
+                var requireSizeCheck = true
                 tickerSocketService.observeData()
                     .conflate()
                     .onEach { tickerResponse ->
                         when (tickerResponse) {
                             is Resource.Success -> {
-                                if (atomicTickerList.getSize() == symbolList.size) {
-                                    if (requireFavoriteSetup) {
+                                if (requireSizeCheck) {
+                                    if (atomicTickerList.getValidTickerSize() == symbolList.size) {
                                         favoriteTickerLocalDataSource.getFavoriteTickerList().map {
                                             atomicTickerList.updateFavorite(it.symbol, true)
                                         }
-                                        requireFavoriteSetup = false
+                                        requireSizeCheck = false
                                     }
+                                } else {
                                     _tickerSocketData.emit(TickerResource.Update(atomicTickerList.getList()))
                                     delay(receiveDelayMillis)
                                 }

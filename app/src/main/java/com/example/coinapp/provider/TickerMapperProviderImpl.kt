@@ -3,7 +3,7 @@ package com.example.coinapp.provider
 import com.example.coinapp.App
 import com.example.coinapp.R
 import com.example.data.model.ticker.TickerResponse
-import com.example.data.provider.TickerMapperProvider
+import com.example.data.mapper.ticker.TickerMapperProvider
 import com.example.domain.model.ticker.Currency
 import com.example.domain.model.ticker.Ticker
 import java.text.DecimalFormat

@@ -19,7 +19,7 @@ interface AtomicTickerList {
 
     fun sortList()
 
-    fun getSize(): Int
+    fun getValidTickerSize(): Int
 
     suspend fun clear()
 }

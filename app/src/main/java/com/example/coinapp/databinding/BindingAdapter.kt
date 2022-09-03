@@ -10,7 +10,9 @@ import com.example.coinapp.R
 import com.example.coinapp.ui.custom.SortButton
 import com.example.coinapp.ui.home.adapter.TickerListAdapter
 import com.example.domain.model.ticker.SortModel
+import com.example.domain.model.ticker.Ticker
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import java.util.*
 
 object BindingAdapter {
     @JvmStatic
@@ -82,5 +84,18 @@ object BindingAdapter {
             else -> ContextCompat.getColor(view.context, R.color.color_price_same)
         }
         view.setTextColor(color)
+    }
+
+    @JvmStatic
+    @BindingAdapter("textTickerSymbol")
+    fun bindTextTickerSymbol(
+        view: TextView,
+        ticker: Ticker
+    ) {
+        if (Locale.getDefault().language == "ko") {
+            view.text = ticker.koreanSymbol
+        } else {
+            view.text = ticker.englishSymbol
+        }
     }
 }

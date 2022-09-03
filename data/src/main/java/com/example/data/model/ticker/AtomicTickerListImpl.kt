@@ -86,7 +86,10 @@ class AtomicTickerListImpl @Inject constructor() : AtomicTickerList {
         }
     }
 
-    override fun getSize(): Int = list.size
+    override fun getValidTickerSize(): Int =
+        list.count {
+            it.currentPrice.isNotEmpty()
+        }
 
     override suspend fun clear() {
         mutex.withLock {

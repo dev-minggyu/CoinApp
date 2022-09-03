@@ -1,4 +1,4 @@
-package com.example.data.provider
+package com.example.data.mapper.ticker
 
 import com.example.data.model.ticker.TickerResponse
 import com.example.domain.model.ticker.Ticker
