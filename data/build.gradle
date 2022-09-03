@@ -60,4 +60,7 @@ dependencies {
     // Kotlin Serialization
     implementation deps.kotlin_serialization_json
     implementation deps.kotlin_serialization_converter
+
+    // Preference
+    implementation deps.preference
 }

@@ -1,6 +1,8 @@
 package com.example.data.di
 
 import android.content.Context
+import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
 import androidx.room.Room
 import com.example.data.BuildConfig
 import com.example.data.api.ApiService
@@ -73,4 +75,9 @@ object DataModule {
             install(WebSockets)
         }
     }
+
+    @Provides
+    @Singleton
+    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences =
+        PreferenceManager.getDefaultSharedPreferences(context)
 }

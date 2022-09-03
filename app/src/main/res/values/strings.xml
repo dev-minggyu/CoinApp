@@ -12,7 +12,8 @@
     <string name="hint_search_ticker">코인명 검색</string>
 
     <string name="settings_app_theme">테마</string>
-    <string name="key_pref_app_theme">app_theme</string>
+    <string name="key_pref_app_theme">KEY_APP_THEME</string>
+    <string name="key_pref_ticker_change_color">KEY_TICKER_CHANGE_COLOR</string>
 
     <string name="app_theme_system">시스템</string>
     <string name="app_theme_light">라이트</string>
@@ -27,4 +28,5 @@
 
     <string name="unit_million">백만</string>
     <string name="unit_won">원</string>
+    <string name="settings_ticker_change_color">종목 가격 변화에 따른 색상 변경</string>
 </resources>

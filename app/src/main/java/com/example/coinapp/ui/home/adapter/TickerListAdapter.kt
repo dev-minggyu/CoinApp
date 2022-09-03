@@ -14,9 +14,19 @@ import com.example.domain.model.ticker.Ticker
 class TickerListAdapter(val favoriteClickListener: FavoriteClickListener?) :
     ListAdapter<Ticker, TickerListAdapter.TickerViewHolder>(TickerDiffCallback()) {
 
+    private var tickerChangeColor = true
+
+    fun setTickerChangeColor(value: Boolean) {
+        tickerChangeColor = value
+    }
+
     override fun onBindViewHolder(holder: TickerViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(holder.itemView, item)
+        if (tickerChangeColor) {
+            holder.bind(holder.itemView, item)
+        } else {
+            holder.bind(item)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TickerViewHolder {

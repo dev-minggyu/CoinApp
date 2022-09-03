@@ -2,6 +2,7 @@ package com.example.coinapp.ui.home
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -10,6 +11,7 @@ import com.example.coinapp.base.BaseFragment
 import com.example.coinapp.databinding.FragmentHomeBinding
 import com.example.coinapp.extension.collectWithLifecycle
 import com.example.coinapp.ui.home.adapter.TickerListAdapter
+import com.example.coinapp.ui.main.MainSettingViewModel
 import com.example.domain.model.ticker.Currency
 import com.example.domain.model.ticker.Ticker
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,6 +20,8 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home), LifecycleEventObserver {
     private val _homeViewModel: HomeViewModel by viewModels()
+
+    private val _settingViewModel: MainSettingViewModel by activityViewModels()
 
     private var _tickerListAdapter: TickerListAdapter? = null
 
@@ -39,6 +43,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home), 
             _homeViewModel.tickerList.collectWithLifecycle(lifecycle) { tickerList ->
                 _tickerList = tickerList
                 setListOfCategory(binding.layoutListCategory.radioGroupCatecory.checkedRadioButtonId)
+            }
+        }
+
+        lifecycleScope.launch {
+            _settingViewModel.tickerChangeColor.collectWithLifecycle(lifecycle) {
+                _tickerListAdapter?.setTickerChangeColor(it)
             }
         }
     }

@@ -7,4 +7,9 @@
         android:key="@string/key_pref_app_theme"
         android:summary="%s"
         android:title="@string/settings_app_theme" />
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="@string/key_pref_ticker_change_color"
+        android:title="@string/settings_ticker_change_color" />
 </PreferenceScreen>
