@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.data.BuildConfig
 import com.example.data.api.ApiService
+import com.example.data.api.ErrorInterceptor
 import com.example.data.db.AppDatabase
 import com.example.data.db.favoriteticker.FavoriteTickerDao
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -43,12 +44,13 @@ object DataModule {
     @Singleton
     @Provides
     fun provideRetrofitClient(): Retrofit {
-        val okHttpClient = OkHttpClient.Builder()
-
-        if (BuildConfig.DEBUG) {
-            val loggingInterceptor = HttpLoggingInterceptor()
-            loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-            okHttpClient.addInterceptor(loggingInterceptor)
+        val okHttpClient = OkHttpClient.Builder().apply {
+            if (BuildConfig.DEBUG) {
+                val loggingInterceptor = HttpLoggingInterceptor()
+                loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+                addInterceptor(loggingInterceptor)
+            }
+            addInterceptor(ErrorInterceptor())
         }
 
         return Retrofit.Builder()
