@@ -54,7 +54,10 @@ class AtomicTickerListImpl @Inject constructor() : AtomicTickerList {
 
         var result = copyTickerList()
         if (this.searchSymbol.isNotEmpty()) {
-            result = result.filter { it.symbol.startsWith(this.searchSymbol, true) }
+            result = result.filter {
+                it.symbol.startsWith(this.searchSymbol, true)
+                        || it.koreanSymbol.startsWith(this.searchSymbol)
+            }
         }
 
         TickerListModel(result, this.sortModel.copy())
