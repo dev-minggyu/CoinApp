@@ -45,8 +45,8 @@ class TickerListAdapter(val favoriteClickListener: FavoriteClickListener?) :
         }
 
         fun bind(itemView: View, item: Ticker) {
-            val prevSymbol = binding.tvTicker.text.toString()
-            val currentSymbol = item.symbol
+            val prevSymbol = binding.tvCurrency.text.toString()
+            val currentSymbol = item.symbol + "/" + item.currencyType.name
             if (prevSymbol != currentSymbol) {
                 bind(item)
                 return
