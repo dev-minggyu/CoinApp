@@ -17,7 +17,6 @@ object TickerSymbolMapper {
             "",
             "",
             "",
-            "",
             ""
         )
     }

@@ -8,7 +8,6 @@ data class Ticker(
     var currentPrice: String,
     var decimalCurrentPrice: String,
     var changePricePrevDay: String,
-    var decimalPrevPrice: String,
     var rate: String,
     var volume: String,
     var formattedVolume: String,

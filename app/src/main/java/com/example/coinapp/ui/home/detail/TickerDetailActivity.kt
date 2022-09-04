@@ -3,6 +3,7 @@ package com.example.coinapp.ui.home.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -46,6 +47,11 @@ class TickerDetailActivity : BaseActivity<ActivityTickerDetailBinding>(R.layout.
                 it.getSerializableExtra("currency") as Currency
             )
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.ticker_detail_toolbar_menu, menu)
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

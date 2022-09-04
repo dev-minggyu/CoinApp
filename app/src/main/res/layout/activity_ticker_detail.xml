@@ -13,6 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/color_background_regular2"
         tools:context=".ui.home.detail.TickerDetailActivity">
 
         <androidx.appcompat.widget.Toolbar
@@ -33,10 +34,11 @@
 
             <TextView
                 android:id="@+id/tv_symbol"
+                textDetailTickerSymbol="@{ticker}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:text="@{ticker.symbol}"
+                android:textColor="@color/color_text"
                 android:textSize="@dimen/_20sdp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -47,10 +49,32 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{ticker.decimalCurrentPrice}"
+                android:textColor="@color/color_text"
                 android:textSize="@dimen/_25sdp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_symbol"
                 tools:text="1,000" />
+
+            <TextView
+                android:id="@+id/tv_title_prev_change"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:text="@string/price_compared_prev_day"
+                android:textColor="@color/color_text"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_price" />
+
+            <TextView
+                android:id="@+id/tv_prev_change"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:text="@{ticker.changePricePrevDay + ` (` + ticker.rate + `%)`}"
+                android:textColor="@color/color_text"
+                app:layout_constraintStart_toEndOf="@id/tv_title_prev_change"
+                app:layout_constraintTop_toTopOf="@id/tv_title_prev_change"
+                tools:text="100 (0.00%)" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

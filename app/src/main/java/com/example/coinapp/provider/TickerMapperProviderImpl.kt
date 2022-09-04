@@ -2,8 +2,8 @@ package com.example.coinapp.provider
 
 import com.example.coinapp.App
 import com.example.coinapp.R
-import com.example.data.model.ticker.TickerResponse
 import com.example.data.mapper.ticker.TickerMapperProvider
+import com.example.data.model.ticker.TickerResponse
 import com.example.domain.model.ticker.Currency
 import com.example.domain.model.ticker.Ticker
 import java.text.DecimalFormat
@@ -22,7 +22,11 @@ class TickerMapperProviderImpl @Inject constructor() : TickerMapperProvider {
                 Currency.KRW -> {
                     val priceFormat = DecimalFormat(currencyType.currencyFormat)
                     decimalCurrentPrice = priceFormat.format(trade_price)
-                    changePricePrevDay = priceFormat.format(signed_change_price)
+
+                    val signedPriceFormat = DecimalFormat(currencyType.currencyFormat)
+                    signedPriceFormat.positivePrefix = "+"
+                    signedPriceFormat.negativePrefix = "-"
+                    changePricePrevDay = signedPriceFormat.format(signed_change_price)
 
                     val dividedValue = (acc_trade_price_24h / 1_000_000).toInt()
                     formattedVolume = DecimalFormat(currencyType.volumeFormat).format(dividedValue)
@@ -51,7 +55,6 @@ class TickerMapperProviderImpl @Inject constructor() : TickerMapperProvider {
                 currentPrice = trade_price.toString(),
                 decimalCurrentPrice = decimalCurrentPrice,
                 changePricePrevDay = changePricePrevDay,
-                decimalPrevPrice = prev_closing_price.toString(),
                 rate = String.format("%.2f", signed_change_rate * 100),
                 volume = acc_trade_price_24h.toString(),
                 formattedVolume = formattedVolume

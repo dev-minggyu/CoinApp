@@ -1,5 +1,6 @@
 package com.example.coinapp.databinding
 
+import android.annotation.SuppressLint
 import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.core.content.ContextCompat
@@ -90,12 +91,30 @@ object BindingAdapter {
     @BindingAdapter("textTickerSymbol")
     fun bindTextTickerSymbol(
         view: TextView,
-        ticker: Ticker
+        ticker: Ticker?
     ) {
-        if (Locale.getDefault().language == "ko") {
-            view.text = ticker.koreanSymbol
-        } else {
-            view.text = ticker.englishSymbol
+        ticker?.let {
+            if (Locale.getDefault().language == "ko") {
+                view.text = ticker.koreanSymbol
+            } else {
+                view.text = ticker.englishSymbol
+            }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    @JvmStatic
+    @BindingAdapter("textDetailTickerSymbol")
+    fun bindTextDetailTickerSymbol(
+        view: TextView,
+        ticker: Ticker?
+    ) {
+        ticker?.let {
+            if (Locale.getDefault().language == "ko") {
+                view.text = "${ticker.koreanSymbol} (${ticker.symbol})"
+            } else {
+                view.text = "${ticker.englishSymbol} (${ticker.symbol})"
+            }
         }
     }
 }
