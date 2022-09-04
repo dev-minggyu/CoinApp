@@ -9,6 +9,7 @@ import com.example.data.api.ApiService
 import com.example.data.api.ErrorInterceptor
 import com.example.data.db.AppDatabase
 import com.example.data.db.favoriteticker.FavoriteTickerDao
+import com.example.data.db.myasset.MyAssetDao
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -41,6 +42,12 @@ object DataModule {
     @Provides
     fun provideFavoriteTickerDao(appDB: AppDatabase): FavoriteTickerDao {
         return appDB.favoriteTickerDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideMyAssetDao(appDB: AppDatabase): MyAssetDao {
+        return appDB.myAssetDao()
     }
 
     @Singleton

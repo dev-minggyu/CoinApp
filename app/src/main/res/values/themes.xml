@@ -9,11 +9,19 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/color_background_regular1</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+
+        <!-- BottomSheetDialog -->
+        <item name="bottomSheetDialogTheme">@style/CustomBottomSheetDialogTheme</item>
     </style>
 
     <style name="Theme.CoinApp.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/color_background_regular1</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
         <item name="postSplashScreenTheme">@style/Theme.CoinApp</item>
+    </style>
+
+    <style name="CustomBottomSheetDialogTheme" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 </resources>

@@ -17,9 +17,6 @@
         android:theme="@style/Theme.CoinApp"
         tools:targetApi="31">
         <activity
-            android:name="com.example.coinapp.ui.home.detail.TickerDetailActivity"
-            android:exported="false" />
-        <activity
             android:name="com.example.coinapp.ui.splash.InitActivity"
             android:exported="true"
             android:theme="@style/Theme.CoinApp.Splash">
@@ -31,6 +28,9 @@
         </activity>
         <activity
             android:name="com.example.coinapp.ui.main.MainActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.coinapp.ui.home.detail.TickerDetailActivity"
             android:exported="false" />
     </application>
 

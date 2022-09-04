@@ -5,19 +5,22 @@ import com.example.domain.model.myasset.MyTicker
 import com.example.domain.model.ticker.Currency
 
 object MyTickerMapper {
-    fun toMyTicker(myTickerEntity: MyTickerEntity): MyTicker {
-        val splitSymbol = myTickerEntity.symbol.split("-")
-        return MyTicker(
-            splitSymbol[1],
-            currencyType = Currency.valueOf(splitSymbol[0]),
+    fun toMyTicker(myTickerEntity: MyTickerEntity): MyTicker =
+        MyTicker(
+            symbol = myTickerEntity.symbol,
+            currencyType = Currency.valueOf(myTickerEntity.currency),
+            koreanSymbol = myTickerEntity.koreanSymbol,
+            englishSymbol = myTickerEntity.englishSymbol,
             amount = myTickerEntity.amount,
             averagePrice = myTickerEntity.averagePrice
         )
-    }
 
     fun toMyTickerEntity(myTicker: MyTicker): MyTickerEntity =
         MyTickerEntity(
-            symbol = myTicker.currencyType.name + "-" + myTicker.symbol,
+            symbol = myTicker.symbol,
+            currency = myTicker.currencyType.name,
+            koreanSymbol = myTicker.koreanSymbol,
+            englishSymbol = myTicker.englishSymbol,
             amount = myTicker.amount,
             averagePrice = myTicker.averagePrice
         )

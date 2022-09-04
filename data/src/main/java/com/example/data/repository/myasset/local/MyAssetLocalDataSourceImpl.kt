@@ -14,6 +14,11 @@ class MyAssetLocalDataSourceImpl @Inject constructor(
             myAssetDao.getMyAssetList()
         }
 
+    override suspend fun getMyAssetTicker(symbol: String, currency: String): MyTickerEntity? =
+        withContext(Dispatchers.IO) {
+            myAssetDao.getMyAssetTicker(symbol, currency)
+        }
+
     override suspend fun insertMyTicker(tickerEntity: MyTickerEntity) {
         withContext(Dispatchers.IO) {
             myAssetDao.insertMyTicker(tickerEntity)

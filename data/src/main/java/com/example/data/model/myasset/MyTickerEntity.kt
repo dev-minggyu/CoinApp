@@ -16,11 +16,14 @@ data class MyTickerEntity(
     @ColumnInfo(name = "symbol")
     var symbol: String,
 
+    @ColumnInfo(name = "currency")
+    var currency: String,
+
     @ColumnInfo(name = "koreanSymbol")
-    val koreanSymbol: String = "",
+    val koreanSymbol: String,
 
     @ColumnInfo(name = "englishSymbol")
-    val englishSymbol: String = "",
+    val englishSymbol: String,
 
     @ColumnInfo(name = "amount")
     var amount: String,

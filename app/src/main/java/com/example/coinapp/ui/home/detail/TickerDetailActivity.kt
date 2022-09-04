@@ -11,13 +11,16 @@ import com.example.coinapp.R
 import com.example.coinapp.base.BaseActivity
 import com.example.coinapp.databinding.ActivityTickerDetailBinding
 import com.example.coinapp.extension.collectWithLifecycle
-import com.example.domain.model.ticker.Currency
+import com.example.coinapp.model.MyTickerInfo
+import com.example.coinapp.ui.myasset.dialog.AddMyAssetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class TickerDetailActivity : BaseActivity<ActivityTickerDetailBinding>(R.layout.activity_ticker_detail) {
     private val _tickerDetailViewModel: TickerDetailViewModel by viewModels()
+
+    private var _myTickerInfo: MyTickerInfo? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +30,8 @@ class TickerDetailActivity : BaseActivity<ActivityTickerDetailBinding>(R.layout.
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
         }
+
+        _myTickerInfo = intent.getParcelableExtra(KEY_MY_TICKER)
 
         setupObserver()
         observeTicker()
@@ -41,10 +46,10 @@ class TickerDetailActivity : BaseActivity<ActivityTickerDetailBinding>(R.layout.
     }
 
     private fun observeTicker() {
-        intent?.let {
+        _myTickerInfo?.let {
             _tickerDetailViewModel.observeTicker(
-                it.getStringExtra("symbol")!!,
-                it.getSerializableExtra("currency") as Currency
+                it.symbol,
+                it.currency
             )
         }
     }
@@ -57,20 +62,23 @@ class TickerDetailActivity : BaseActivity<ActivityTickerDetailBinding>(R.layout.
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_add_my_asset -> {
-
+                _myTickerInfo?.let {
+                    AddMyAssetDialogFragment.newInstance(it).show(supportFragmentManager, null)
+                }
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
     companion object {
-        fun startActivity(context: Context?, symbol: String, currency: Currency) {
+        fun startActivity(context: Context?, ticker: MyTickerInfo) {
             context?.let {
                 val intent = Intent(context, TickerDetailActivity::class.java)
-                intent.putExtra("symbol", symbol)
-                intent.putExtra("currency", currency)
+                intent.putExtra(KEY_MY_TICKER, ticker)
                 it.startActivity(intent)
             }
         }
+
+        private const val KEY_MY_TICKER = "KEY_MY_TICKER"
     }
 }

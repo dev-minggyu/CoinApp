@@ -11,7 +11,10 @@ interface MyAssetDao {
     @Query("SELECT * FROM my_asset")
     suspend fun getMyAssetList(): List<MyTickerEntity>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Query("SELECT * FROM my_asset WHERE symbol = :symbol and currency = :currency")
+    suspend fun getMyAssetTicker(symbol: String, currency: String): MyTickerEntity?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMyTicker(ticker: MyTickerEntity): Long
 
     @Query("DELETE FROM my_asset WHERE symbol = :symbol")

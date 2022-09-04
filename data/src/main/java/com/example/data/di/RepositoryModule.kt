@@ -4,6 +4,9 @@ import com.example.data.model.ticker.AtomicTickerListImpl
 import com.example.data.repository.favoriteticker.FavoriteTickerRepositoryImpl
 import com.example.data.repository.favoriteticker.local.FavoriteTickerLocalDataSource
 import com.example.data.repository.favoriteticker.local.FavoriteTickerLocalDataSourceImpl
+import com.example.data.repository.myasset.MyAssetRepositoryImpl
+import com.example.data.repository.myasset.local.MyAssetLocalDataSource
+import com.example.data.repository.myasset.local.MyAssetLocalDataSourceImpl
 import com.example.data.repository.setting.SettingRepositoryImpl
 import com.example.data.repository.setting.local.SettingLocalDataSource
 import com.example.data.repository.setting.local.SettingLocalDataSourceImpl
@@ -14,6 +17,7 @@ import com.example.data.repository.ticker.remote.TickerSymbolRemoteDataSource
 import com.example.data.repository.ticker.remote.TickerSymbolRemoteDataSourceImpl
 import com.example.domain.model.ticker.AtomicTickerList
 import com.example.domain.repository.favoriteticker.FavoriteTickerRepository
+import com.example.domain.repository.myasset.MyAssetRepository
 import com.example.domain.repository.setting.SettingRepository
 import com.example.domain.repository.ticker.TickerRepository
 import dagger.Binds
@@ -56,4 +60,12 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindSettingRepository(settingRepositoryImpl: SettingRepositoryImpl): SettingRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindMyAssetLocalDataSource(myAssetLocalDataSourceImpl: MyAssetLocalDataSourceImpl): MyAssetLocalDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindMyAssetRepository(myAssetRepositoryImpl: MyAssetRepositoryImpl): MyAssetRepository
 }

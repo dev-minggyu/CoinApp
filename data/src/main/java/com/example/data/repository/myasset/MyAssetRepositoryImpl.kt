@@ -14,6 +14,11 @@ class MyAssetRepositoryImpl @Inject constructor(
             MyTickerMapper.toMyTicker(it)
         }
 
+    override suspend fun getMyAssetTicker(ticker: MyTicker): MyTicker? =
+        myAssetLocalDataSource.getMyAssetTicker(ticker.symbol, ticker.currencyType.name)?.let {
+            MyTickerMapper.toMyTicker(it)
+        }
+
     override suspend fun insertMyTicker(ticker: MyTicker) {
         myAssetLocalDataSource.insertMyTicker(
             MyTickerMapper.toMyTickerEntity(ticker)
