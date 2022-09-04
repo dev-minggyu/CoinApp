@@ -11,8 +11,10 @@ import com.example.coinapp.R
 import com.example.coinapp.databinding.ItemTickerBinding
 import com.example.domain.model.ticker.Ticker
 
-class TickerListAdapter(val favoriteClickListener: FavoriteClickListener?) :
-    ListAdapter<Ticker, TickerListAdapter.TickerViewHolder>(TickerDiffCallback()) {
+class TickerListAdapter(
+    private val favoriteClickListener: FavoriteClickListener?,
+    private val tickerClickListener: (Ticker) -> Unit
+) : ListAdapter<Ticker, TickerListAdapter.TickerViewHolder>(TickerDiffCallback()) {
 
     private var tickerChangeColor = true
 
@@ -22,6 +24,9 @@ class TickerListAdapter(val favoriteClickListener: FavoriteClickListener?) :
 
     override fun onBindViewHolder(holder: TickerViewHolder, position: Int) {
         val item = getItem(position)
+        holder.itemView.setOnClickListener {
+            tickerClickListener.invoke(item)
+        }
         if (tickerChangeColor) {
             holder.bind(holder.itemView, item)
         } else {

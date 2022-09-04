@@ -7,6 +7,7 @@ import com.example.data.repository.favoriteticker.local.FavoriteTickerLocalDataS
 import com.example.data.repository.ticker.remote.TickerSocketService
 import com.example.data.repository.ticker.remote.TickerSymbolRemoteDataSource
 import com.example.domain.model.ticker.AtomicTickerList
+import com.example.domain.model.ticker.Currency
 import com.example.domain.model.ticker.SortModel
 import com.example.domain.model.ticker.TickerListModel
 import com.example.domain.repository.ticker.TickerRepository
@@ -125,4 +126,19 @@ class TickerRepositoryImpl @Inject constructor(
                 )
             )
         }
+
+    override suspend fun observeSingleTicker(symbol: String, currency: Currency) = flow {
+        tickerSocketData.collect {
+            when (it) {
+                is TickerResource.Update -> {
+                    it.data.tickerList.find { ticker ->
+                        ticker.symbol == symbol && ticker.currencyType == currency
+                    }?.run {
+                        emit(this)
+                    }
+                }
+                else -> {}
+            }
+        }
+    }.flowOn(Dispatchers.Default)
 }

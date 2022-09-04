@@ -11,6 +11,7 @@ import com.example.coinapp.base.BaseFragment
 import com.example.coinapp.databinding.FragmentHomeBinding
 import com.example.coinapp.extension.collectWithLifecycle
 import com.example.coinapp.ui.home.adapter.TickerListAdapter
+import com.example.coinapp.ui.home.detail.TickerDetailActivity
 import com.example.coinapp.ui.main.MainSettingViewModel
 import com.example.domain.model.ticker.Currency
 import com.example.domain.model.ticker.Ticker
@@ -63,7 +64,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home), 
                 _homeViewModel.deleteFavoriteTicker(symbol)
             }
         }
-        _tickerListAdapter = TickerListAdapter(favoriteClickListener)
+        _tickerListAdapter = TickerListAdapter(favoriteClickListener) { ticker ->
+            TickerDetailActivity.startActivity(context, ticker.symbol, ticker.currencyType)
+        }
 
         binding.rvTicker.apply {
             setHasFixedSize(true)

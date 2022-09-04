@@ -29,4 +29,5 @@
     <string name="unit_million">백만</string>
     <string name="unit_won">원</string>
     <string name="settings_ticker_change_color">종목 가격 변화에 따른 색상 변경</string>
+    <string name="add_my_asset">자산 추가</string>
 </resources>
