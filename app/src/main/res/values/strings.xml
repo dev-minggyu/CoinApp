@@ -18,6 +18,7 @@
     <string name="app_theme_system">시스템</string>
     <string name="app_theme_light">라이트</string>
     <string name="app_theme_dark">다크</string>
+
     <string name="list_category_krw">KRW</string>
     <string name="list_category_btc">BTC</string>
     <string name="list_category_usdt">USDT</string>
@@ -29,10 +30,17 @@
     <string name="unit_million">백만</string>
     <string name="unit_won">원</string>
     <string name="settings_ticker_change_color">종목 가격 변화에 따른 색상 변경</string>
-    <string name="add_my_asset">자산 추가</string>
-    <string name="modify_my_asset">자산 수정</string>
-    <string name="price_compared_prev_day">전일대비</string>
 
-    <string name="hold_quantity">보유수량</string>
-    <string name="buy_price">매수금액</string>
+    <string name="ticker_detail_add_my_asset">자산 추가</string>
+    <string name="ticker_detail_modify_my_asset">자산 수정</string>
+    <string name="ticker_detail_price_compared_prev_day">전일대비</string>
+
+    <string name="my_asset_hold_quantity">보유수량</string>
+    <string name="my_asset_buy_price">매수금액</string>
+    <string name="my_asset_profit_and_loss_percent">수익률</string>
+    <string name="my_asset_profit_and_loss">평가손익</string>
+    <string name="my_asset_total_value">총 보유자산</string>
+    <string name="my_asset_total_buy">총 매수</string>
+    <string name="my_asset_value">평가금액</string>
+    <string name="my_asset_average_buy_price">매수평균가</string>
 </resources>

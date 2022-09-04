@@ -8,5 +8,6 @@ data class MyTicker(
     val englishSymbol: String,
     var currencyType: Currency,
     var amount: String,
-    var averagePrice: String
+    var averagePrice: String,
+    var currentPrice: String = ""
 )

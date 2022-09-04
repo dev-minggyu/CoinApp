@@ -17,7 +17,7 @@
             android:id="@+id/tv_title_amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/hold_quantity"
+            android:text="@string/my_asset_hold_quantity"
             android:textColor="@color/color_text"
             android:textSize="@dimen/_20sdp"
             app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_15sdp"
-            android:text="@string/buy_price"
+            android:text="@string/my_asset_buy_price"
             android:textColor="@color/color_text"
             android:textSize="@dimen/_20sdp"
             app:layout_constraintStart_toStartOf="parent"
@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10sdp"
-            android:text="@string/add_my_asset"
+            android:text="@string/ticker_detail_add_my_asset"
             android:textSize="@dimen/_15sdp"
             app:layout_constraintTop_toBottomOf="@id/et_average_price" />
 

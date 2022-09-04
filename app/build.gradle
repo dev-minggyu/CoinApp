@@ -90,6 +90,9 @@ dependencies {
 
     // Lifecycle Extension
     implementation deps.lifecycle_extension
+    
+    // MP Chart
+    implementation deps.mpchart
 
     testImplementation deps.junit
     androidTestImplementation deps.ext_junit

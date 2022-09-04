@@ -47,7 +47,7 @@ class AddMyAssetDialogFragment : BaseBottomSheetDialogFragment<FragmentDialogAdd
         lifecycleScope.launch {
             _addMyAssetDialogViewModel.myAssetTicker.collectWithLifecycle(lifecycle) {
                 it?.let {
-                    binding.btnAddAsset.setText(R.string.modify_my_asset)
+                    binding.btnAddAsset.setText(R.string.ticker_detail_modify_my_asset)
                     binding.etAmount.setText(it.amount)
                     binding.etAveragePrice.setText(it.averagePrice)
                 }

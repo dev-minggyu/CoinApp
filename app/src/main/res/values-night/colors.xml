@@ -12,6 +12,7 @@
     <color name="yellow">#FFFF00</color>
 
     <color name="color_text">#FFFFFF</color>
+    <color name="color_text_pale">#C3C3C3</color>
 
     <color name="color_button_stroke">#FFFFFF</color>
 
