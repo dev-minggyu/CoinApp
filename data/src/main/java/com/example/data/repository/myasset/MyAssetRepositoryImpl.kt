@@ -14,8 +14,8 @@ class MyAssetRepositoryImpl @Inject constructor(
             MyTickerMapper.toMyTicker(it)
         }
 
-    override suspend fun getMyAssetTicker(ticker: MyTicker): MyTicker? =
-        myAssetLocalDataSource.getMyAssetTicker(ticker.symbol, ticker.currencyType.name)?.let {
+    override suspend fun getMyAssetTicker(symbol: String, currency: String): MyTicker? =
+        myAssetLocalDataSource.getMyAssetTicker(symbol, currency)?.let {
             MyTickerMapper.toMyTicker(it)
         }
 
@@ -25,8 +25,8 @@ class MyAssetRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun deleteMyTicker(symbol: String) {
-        myAssetLocalDataSource.deleteMyTicker(symbol)
+    override suspend fun deleteMyTicker(symbol: String, currency: String) {
+        myAssetLocalDataSource.deleteMyTicker(symbol, currency)
     }
 
     override suspend fun deleteAllMyTicker() {

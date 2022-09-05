@@ -28,26 +28,39 @@ class AddMyAssetDialogFragment : BaseBottomSheetDialogFragment<FragmentDialogAdd
 
         checkMyAssetTicker()
 
-        binding.btnAddAsset.setOnClickListener {
-            _myTickerInfo?.let {
-                _addMyAssetDialogViewModel.addAsset(
-                    MyTicker(
-                        symbol = it.symbol,
-                        koreanSymbol = it.koreanSymbol,
-                        englishSymbol = it.englishSymbol,
-                        currencyType = it.currency,
-                        binding.etAmount.text.toString(),
-                        averagePrice = binding.etAveragePrice.text.toString()
+        setupListener()
+    }
+
+    private fun setupListener() {
+        binding.apply {
+            btnAddAsset.setOnClickListener {
+                _myTickerInfo?.let {
+                    _addMyAssetDialogViewModel.addAsset(
+                        MyTicker(
+                            symbol = it.symbol,
+                            koreanSymbol = it.koreanSymbol,
+                            englishSymbol = it.englishSymbol,
+                            currencyType = it.currency,
+                            binding.etAmount.text.toString(),
+                            averagePrice = binding.etAveragePrice.text.toString()
+                        )
                     )
-                )
-                dismiss()
+                    dismiss()
+                }
+            }
+
+            btnDeleteAsset.setOnClickListener {
+                _myTickerInfo?.let {
+                    _addMyAssetDialogViewModel.deleteAsset(it.symbol, it.currency.name)
+                    dismiss()
+                }
             }
         }
     }
 
     private fun checkMyAssetTicker() {
         _myTickerInfo?.let {
-            _addMyAssetDialogViewModel.checkMyAssetTicker(it)
+            _addMyAssetDialogViewModel.checkMyAssetTicker(it.symbol, it.currency.name)
         }
     }
 
@@ -56,6 +69,7 @@ class AddMyAssetDialogFragment : BaseBottomSheetDialogFragment<FragmentDialogAdd
             _addMyAssetDialogViewModel.myAssetTicker.collectWithLifecycle(lifecycle) {
                 it?.let {
                     binding.btnAddAsset.setText(R.string.ticker_detail_modify_my_asset)
+                    binding.btnDeleteAsset.visibility = View.VISIBLE
                     binding.etAmount.setText(it.amount)
                     binding.etAveragePrice.setText(it.averagePrice)
                 }

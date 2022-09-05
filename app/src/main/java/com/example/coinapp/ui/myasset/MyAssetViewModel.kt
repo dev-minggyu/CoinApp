@@ -53,6 +53,7 @@ class MyAssetViewModel @Inject constructor(
             if (list.isEmpty()) {
                 _myAssetList.value = listOf()
             } else {
+                _assetList.clear()
                 list.forEach { myTicker ->
                     _assetList.find {
                         it.symbol == myTicker.symbol && it.currencyType == myTicker.currencyType

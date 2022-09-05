@@ -9,7 +9,7 @@ interface MyAssetLocalDataSource {
 
     suspend fun insertMyTicker(tickerEntity: MyTickerEntity)
 
-    suspend fun deleteMyTicker(symbol: String)
+    suspend fun deleteMyTicker(symbol: String, currency: String)
 
     suspend fun deleteAllMyTicker()
 }

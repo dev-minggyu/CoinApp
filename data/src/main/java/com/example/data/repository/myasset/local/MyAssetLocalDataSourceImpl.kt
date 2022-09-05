@@ -25,9 +25,9 @@ class MyAssetLocalDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteMyTicker(symbol: String) {
+    override suspend fun deleteMyTicker(symbol: String, currency: String) {
         withContext(Dispatchers.IO) {
-            myAssetDao.deleteMyTicker(symbol)
+            myAssetDao.deleteMyTicker(symbol, currency)
         }
     }
 
