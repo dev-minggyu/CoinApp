@@ -19,7 +19,7 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
+import java.text.NumberFormat
 
 @AndroidEntryPoint
 class MyAssetFragment : BaseFragment<FragmentMyAssetBinding>(R.layout.fragment_my_asset) {
@@ -72,10 +72,10 @@ class MyAssetFragment : BaseFragment<FragmentMyAssetBinding>(R.layout.fragment_m
     @SuppressLint("SetTextI18n")
     private fun bindAssetList(list: List<MyTicker>) {
         binding.apply {
-            val priceFormat = DecimalFormat("#,###")
+            val priceFormat = NumberFormat.getInstance()
             val totalAsset = list.sumOf { it.amount.toDouble() * it.currentPrice.toDouble() }
             val totalBuy = list.sumOf { it.amount.toDouble() * it.averagePrice.toDouble() }
-
+            
             val header = MyAssetHeader(
                 totalAsset = totalAsset,
                 decimalTotalAsset = priceFormat.format(totalAsset),
