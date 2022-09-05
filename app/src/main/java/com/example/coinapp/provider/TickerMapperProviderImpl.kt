@@ -41,7 +41,7 @@ class TickerMapperProviderImpl @Inject constructor() : TickerMapperProvider {
                 }
                 Currency.BTC -> {
                     decimalCurrentPrice = priceFormat.format(trade_price)
-                    changePricePrevDay = priceFormat.format(signed_change_price)
+                    changePricePrevDay = priceFormat.formatWithPlusSignPrefix(signed_change_price)
                     formattedVolume = volumeFormat.format(acc_trade_price_24h)
                 }
                 Currency.USDT -> {
