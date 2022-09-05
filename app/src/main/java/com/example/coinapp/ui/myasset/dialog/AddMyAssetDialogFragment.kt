@@ -7,7 +7,9 @@ import androidx.lifecycle.lifecycleScope
 import com.example.coinapp.R
 import com.example.coinapp.base.BaseBottomSheetDialogFragment
 import com.example.coinapp.databinding.FragmentDialogAddMyAssetBinding
+import com.example.coinapp.extension.addNumberFormatter
 import com.example.coinapp.extension.collectWithLifecycle
+import com.example.coinapp.extension.getTextWithoutComma
 import com.example.coinapp.model.MyTickerInfo
 import com.example.domain.model.myasset.MyTicker
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,14 +27,15 @@ class AddMyAssetDialogFragment : BaseBottomSheetDialogFragment<FragmentDialogAdd
         _myTickerInfo = arguments?.getParcelable(KEY_MY_TICKER)
 
         setupObserver()
-
         checkMyAssetTicker()
-
         setupListener()
     }
 
     private fun setupListener() {
         binding.apply {
+            etAmount.addNumberFormatter()
+            etAveragePrice.addNumberFormatter()
+
             btnAddAsset.setOnClickListener {
                 _myTickerInfo?.let {
                     _addMyAssetDialogViewModel.addAsset(
@@ -41,8 +44,8 @@ class AddMyAssetDialogFragment : BaseBottomSheetDialogFragment<FragmentDialogAdd
                             koreanSymbol = it.koreanSymbol,
                             englishSymbol = it.englishSymbol,
                             currencyType = it.currency,
-                            binding.etAmount.text.toString(),
-                            averagePrice = binding.etAveragePrice.text.toString()
+                            binding.etAmount.getTextWithoutComma(),
+                            averagePrice = binding.etAveragePrice.getTextWithoutComma()
                         )
                     )
                     dismiss()
