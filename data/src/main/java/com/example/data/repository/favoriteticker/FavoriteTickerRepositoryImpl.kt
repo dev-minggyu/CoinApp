@@ -16,7 +16,7 @@ class FavoriteTickerRepositoryImpl @Inject constructor(
     override suspend fun getFavoriteTickerList(): List<FavoriteTicker> =
         withContext(Dispatchers.IO) {
             favoriteTickerLocalDataSource.getFavoriteTickerList().map {
-                FavoriteTickerMapper.mapperToFavoriteTicker(it)
+                FavoriteTickerMapper.toFavoriteTicker(it)
             }
         }
 
@@ -24,7 +24,7 @@ class FavoriteTickerRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             atomicTickerList.updateFavorite(symbol, true)
             favoriteTickerLocalDataSource.insertFavoriteTicker(
-                FavoriteTickerMapper.mapperToFavoriteTickerEntity(symbol)
+                FavoriteTickerMapper.toFavoriteTickerEntity(symbol)
             )
         }
 
