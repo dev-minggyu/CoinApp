@@ -71,7 +71,7 @@ fun EditText.addNumberFormatter() {
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             val text = s.toString()
-            if (text != current) {
+            if (text.isNotEmpty() && text != current) {
                 var strNumber: String
                 var strDecimal = ""
                 if (text.contains(".")) {
