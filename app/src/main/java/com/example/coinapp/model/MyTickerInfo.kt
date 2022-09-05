@@ -21,8 +21,8 @@ data class MyTickerInfo(
                 koreanSymbol = myTickerInfo.koreanSymbol,
                 englishSymbol = myTickerInfo.englishSymbol,
                 currencyType = myTickerInfo.currency,
-                amount = myTickerInfo.amount,
-                averagePrice = myTickerInfo.averagePrice
+                "",
+                ""
             )
     }
 }

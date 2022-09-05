@@ -10,6 +10,8 @@ import com.example.coinapp.R
 import com.example.coinapp.base.BaseFragment
 import com.example.coinapp.databinding.FragmentMyAssetBinding
 import com.example.coinapp.extension.collectWithLifecycle
+import com.example.coinapp.model.MyTickerInfo
+import com.example.coinapp.ui.home.detail.TickerDetailActivity
 import com.example.coinapp.ui.myasset.adpater.MyAssetListAdapter
 import com.example.domain.model.myasset.MyTicker
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,12 +42,20 @@ class MyAssetFragment : BaseFragment<FragmentMyAssetBinding>(R.layout.fragment_m
     }
 
     private fun setupRecyclerView() {
-        _myAssetListAdapter = MyAssetListAdapter()
+        _myAssetListAdapter = MyAssetListAdapter {
+            TickerDetailActivity.startActivity(
+                requireContext(), MyTickerInfo(symbol = it.symbol, currency = it.currencyType, it.koreanSymbol, it.englishSymbol)
+            )
+        }
         binding.rvAsset.apply {
             itemAnimator = null
-//            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             adapter = _myAssetListAdapter
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        _myAssetViewModel.refreshAssetList()
     }
 
     override fun onHiddenChanged(hidden: Boolean) {

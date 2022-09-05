@@ -9,6 +9,7 @@ import com.example.coinapp.base.BaseBottomSheetDialogFragment
 import com.example.coinapp.databinding.FragmentDialogAddMyAssetBinding
 import com.example.coinapp.extension.collectWithLifecycle
 import com.example.coinapp.model.MyTickerInfo
+import com.example.domain.model.myasset.MyTicker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -29,9 +30,16 @@ class AddMyAssetDialogFragment : BaseBottomSheetDialogFragment<FragmentDialogAdd
 
         binding.btnAddAsset.setOnClickListener {
             _myTickerInfo?.let {
-                it.amount = binding.etAmount.text.toString()
-                it.averagePrice = binding.etAveragePrice.text.toString()
-                _addMyAssetDialogViewModel.addAsset(it)
+                _addMyAssetDialogViewModel.addAsset(
+                    MyTicker(
+                        symbol = it.symbol,
+                        koreanSymbol = it.koreanSymbol,
+                        englishSymbol = it.englishSymbol,
+                        currencyType = it.currency,
+                        binding.etAmount.text.toString(),
+                        averagePrice = binding.etAveragePrice.text.toString()
+                    )
+                )
                 dismiss()
             }
         }

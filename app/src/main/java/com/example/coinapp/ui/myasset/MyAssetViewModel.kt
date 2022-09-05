@@ -20,7 +20,7 @@ class MyAssetViewModel @Inject constructor(
     private val _myAssetList: MutableStateFlow<List<MyTicker>?> = MutableStateFlow(null)
     val myAssetList = _myAssetList.asStateFlow()
 
-    private var _assetList: List<MyTicker>? = null
+    private var _assetList: MutableList<MyTicker> = mutableListOf()
 
     init {
         observeTickerList()
@@ -28,17 +28,16 @@ class MyAssetViewModel @Inject constructor(
 
     private fun observeTickerList() {
         viewModelScope.launch {
-            _assetList = getMyAssetListUseCase.execute()
             tickerDataUseCase.execute()
                 .collect { tickerResource ->
                     when (tickerResource) {
                         is TickerResource.Update -> {
-                            _assetList?.forEach { myTicker ->
+                            _assetList.forEach { myTicker ->
                                 myTicker.currentPrice = tickerResource.data.tickerList.find { ticker ->
                                     ticker.symbol == myTicker.symbol && ticker.currencyType == myTicker.currencyType
                                 }?.currentPrice ?: "0"
                             }
-                            _myAssetList.value = _assetList?.map {
+                            _myAssetList.value = _assetList.map {
                                 it.copy()
                             }
                         }
@@ -54,16 +53,15 @@ class MyAssetViewModel @Inject constructor(
             if (list.isEmpty()) {
                 _myAssetList.value = listOf()
             } else {
-                _assetList?.forEach { myTicker ->
-                    list.find {
+                list.forEach { myTicker ->
+                    _assetList.find {
                         it.symbol == myTicker.symbol && it.currencyType == myTicker.currencyType
-                    }?.run {
-                        myTicker.amount = amount
-                        myTicker.averagePrice = averagePrice
+                    }?.apply {
+                        amount = myTicker.amount
+                        averagePrice = myTicker.averagePrice
+                    } ?: run {
+                        _assetList.add(myTicker)
                     }
-                }
-                _myAssetList.value = _assetList?.map {
-                    it.copy()
                 }
             }
         }

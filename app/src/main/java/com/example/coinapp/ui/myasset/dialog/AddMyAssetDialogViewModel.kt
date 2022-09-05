@@ -28,11 +28,9 @@ class AddMyAssetDialogViewModel @Inject constructor(
         }
     }
 
-    fun addAsset(myTickerInfo: MyTickerInfo) {
+    fun addAsset(myTicker: MyTicker) {
         viewModelScope.launch {
-            addMyAssetUseCase.execute(
-                MyTickerInfo.toMyTicker(myTickerInfo)
-            )
+            addMyAssetUseCase.execute(myTicker)
         }
     }
 }

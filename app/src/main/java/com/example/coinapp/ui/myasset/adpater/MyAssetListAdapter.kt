@@ -1,7 +1,6 @@
 package com.example.coinapp.ui.myasset.adpater
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -13,9 +12,14 @@ import com.example.coinapp.databinding.ItemAssetBinding
 import com.example.domain.model.myasset.MyTicker
 import java.text.DecimalFormat
 
-class MyAssetListAdapter : ListAdapter<MyTicker, MyAssetListAdapter.MyAssetViewHolder>(TickerDiffCallback()) {
+class MyAssetListAdapter(
+    private val assetClickListener: (MyTicker) -> Unit
+) : ListAdapter<MyTicker, MyAssetListAdapter.MyAssetViewHolder>(TickerDiffCallback()) {
     override fun onBindViewHolder(holder: MyAssetViewHolder, position: Int) {
         val item = getItem(position)
+        holder.itemView.setOnClickListener {
+            assetClickListener.invoke(item)
+        }
         holder.bind(item)
     }
 
