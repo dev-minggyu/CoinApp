@@ -44,4 +44,5 @@
     <string name="my_asset_value">평가금액</string>
     <string name="my_asset_average_buy_price">매수평균가</string>
     <string name="ticker_detail_delete_my_asset">자산 삭제</string>
+    <string name="my_asset_chart_center_text">보유 비중</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.example.coinapp.ui.myasset
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -14,6 +15,12 @@ import com.example.coinapp.model.MyTickerInfo
 import com.example.coinapp.ui.home.detail.TickerDetailActivity
 import com.example.coinapp.ui.myasset.adpater.MyAssetListAdapter
 import com.example.domain.model.myasset.MyTicker
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.formatter.PercentFormatter
+import com.github.mikephil.charting.utils.ColorTemplate
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
@@ -28,7 +35,26 @@ class MyAssetFragment : BaseFragment<FragmentMyAssetBinding>(R.layout.fragment_m
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
+        setupChart()
         setupObserver()
+    }
+
+    private fun setupChart() {
+        binding.chartAsset.apply {
+            setUsePercentValues(true)
+            description.isEnabled = false
+            centerText = context.getString(R.string.my_asset_chart_center_text)
+            isRotationEnabled = false
+            setEntryLabelTextSize(12f)
+            setEntryLabelColor(Color.WHITE)
+            isHighlightPerTapEnabled = false
+            legend.apply {
+                verticalAlignment = Legend.LegendVerticalAlignment.CENTER
+                horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
+                orientation = Legend.LegendOrientation.VERTICAL
+                textColor = ContextCompat.getColor(requireContext(), R.color.color_text)
+            }
+        }
     }
 
     private fun setupObserver() {
@@ -98,9 +124,29 @@ class MyAssetFragment : BaseFragment<FragmentMyAssetBinding>(R.layout.fragment_m
                 }
             )
             tvPnlPercent.text = String.format("%.2f", ((totalAsset - totalBuy) / totalBuy) * 100) + "%"
-        }
 
-        _myAssetListAdapter.submitList(list)
+            // 차트
+            chartAsset.data = PieData(
+                PieDataSet(
+                    list.map {
+                        PieEntry(
+                            it.amount.toFloat() * it.currentPrice.toFloat(),
+                            it.symbol
+                        )
+                    }, ""
+                ).apply {
+                    colors = ColorTemplate.COLORFUL_COLORS.toList()
+                }
+            ).apply {
+                setValueFormatter(PercentFormatter(binding.chartAsset))
+                setValueTextSize(12f)
+                setValueTextColor(Color.WHITE)
+            }
+            chartAsset.invalidate()
+
+            // 자산 리스트
+            _myAssetListAdapter.submitList(list)
+        }
     }
 
     companion object {
