@@ -48,6 +48,7 @@ class MyAssetFragment : BaseFragment<FragmentMyAssetBinding>(R.layout.fragment_m
             )
         }
         binding.rvAsset.apply {
+            setHasFixedSize(true)
             itemAnimator = null
             adapter = _myAssetListAdapter
         }
