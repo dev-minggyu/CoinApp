@@ -1,8 +1,8 @@
 package com.example.data.repository.ticker.remote
 
+import com.example.data.mapper.ticker.TickerMapperProvider
 import com.example.data.model.ticker.TickerRequest
 import com.example.data.model.ticker.TickerResponse
-import com.example.data.mapper.ticker.TickerMapperProvider
 import com.example.domain.model.ticker.AtomicTickerList
 import com.example.domain.utils.Resource
 import io.ktor.client.*

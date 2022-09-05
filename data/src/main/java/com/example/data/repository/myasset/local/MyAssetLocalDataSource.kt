@@ -1,7 +1,6 @@
 package com.example.data.repository.myasset.local;
 
 import com.example.data.model.myasset.MyTickerEntity
-import com.example.domain.model.myasset.MyTicker
 
 interface MyAssetLocalDataSource {
     suspend fun getMyAssetList(): List<MyTickerEntity>
