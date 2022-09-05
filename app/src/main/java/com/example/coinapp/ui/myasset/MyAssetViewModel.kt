@@ -32,13 +32,15 @@ class MyAssetViewModel @Inject constructor(
                 .collect { tickerResource ->
                     when (tickerResource) {
                         is TickerResource.Update -> {
-                            _assetList.forEach { myTicker ->
-                                myTicker.currentPrice = tickerResource.data.tickerList.find { ticker ->
-                                    ticker.symbol == myTicker.symbol && ticker.currencyType == myTicker.currencyType
-                                }?.currentPrice ?: "0"
-                            }
-                            _myAssetList.value = _assetList.map {
-                                it.copy()
+                            if (_assetList.isNotEmpty()) {
+                                _assetList.forEach { myTicker ->
+                                    myTicker.currentPrice = tickerResource.data.tickerList.find { ticker ->
+                                        ticker.symbol == myTicker.symbol && ticker.currencyType == myTicker.currencyType
+                                    }?.currentPrice ?: "0"
+                                }
+                                _myAssetList.value = _assetList.map {
+                                    it.copy()
+                                }
                             }
                         }
                         else -> {}
@@ -51,6 +53,7 @@ class MyAssetViewModel @Inject constructor(
         viewModelScope.launch {
             val list = getMyAssetListUseCase.execute()
             if (list.isEmpty()) {
+                _assetList.clear()
                 _myAssetList.value = listOf()
             } else {
                 _assetList.clear()

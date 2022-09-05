@@ -38,6 +38,7 @@ class MyAssetFragment : BaseFragment<FragmentMyAssetBinding>(R.layout.fragment_m
         lifecycleScope.launch {
             _myAssetViewModel.myAssetList.collectWithLifecycle(lifecycle) {
                 it?.let {
+                    binding.isNoData = it.isEmpty()
                     bindAssetList(it)
                 }
             }
