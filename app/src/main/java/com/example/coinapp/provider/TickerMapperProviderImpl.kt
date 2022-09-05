@@ -2,11 +2,12 @@ package com.example.coinapp.provider
 
 import com.example.coinapp.App
 import com.example.coinapp.R
+import com.example.coinapp.extension.formatWithPlusSignPrefix
 import com.example.data.mapper.ticker.TickerMapperProvider
 import com.example.data.model.ticker.TickerResponse
 import com.example.domain.model.ticker.Currency
 import com.example.domain.model.ticker.Ticker
-import java.text.DecimalFormat
+import java.text.NumberFormat
 import javax.inject.Inject
 
 class TickerMapperProviderImpl @Inject constructor() : TickerMapperProvider {
@@ -18,18 +19,20 @@ class TickerMapperProviderImpl @Inject constructor() : TickerMapperProvider {
             var decimalCurrentPrice = ""
             var changePricePrevDay = ""
             var formattedVolume = ""
+
+            val priceFormat = NumberFormat.getInstance().apply {
+                maximumFractionDigits = currencyType.priceDecimalDigits
+            }
+            val volumeFormat = NumberFormat.getInstance().apply {
+                maximumFractionDigits = currencyType.volumeDecimalDigits
+            }
+
             when (currencyType) {
                 Currency.KRW -> {
-                    val priceFormat = DecimalFormat(currencyType.currencyFormat)
                     decimalCurrentPrice = priceFormat.format(trade_price)
-
-                    val signedPriceFormat = DecimalFormat(currencyType.currencyFormat)
-                    signedPriceFormat.positivePrefix = "+"
-                    signedPriceFormat.negativePrefix = "-"
-                    changePricePrevDay = signedPriceFormat.format(signed_change_price)
-
+                    changePricePrevDay = priceFormat.formatWithPlusSignPrefix(signed_change_price)
                     val dividedValue = (acc_trade_price_24h / 1_000_000).toInt()
-                    formattedVolume = DecimalFormat(currencyType.volumeFormat).format(dividedValue)
+                    formattedVolume = volumeFormat.format(dividedValue)
                     formattedVolume += if (dividedValue < 1) {
                         App.getString(R.string.unit_won)
                     } else {
@@ -37,15 +40,14 @@ class TickerMapperProviderImpl @Inject constructor() : TickerMapperProvider {
                     }
                 }
                 Currency.BTC -> {
-                    decimalCurrentPrice = String.format(currencyType.currencyFormat, trade_price)
-                    changePricePrevDay = String.format(currencyType.currencyFormat, signed_change_price)
-                    formattedVolume = String.format(currencyType.volumeFormat, acc_trade_price_24h)
-                }
-                Currency.USDT -> {
-                    val priceFormat = DecimalFormat(Currency.USDT.currencyFormat)
                     decimalCurrentPrice = priceFormat.format(trade_price)
                     changePricePrevDay = priceFormat.format(signed_change_price)
-                    formattedVolume = DecimalFormat(currencyType.volumeFormat).format(acc_trade_price_24h)
+                    formattedVolume = volumeFormat.format(acc_trade_price_24h)
+                }
+                Currency.USDT -> {
+                    decimalCurrentPrice = priceFormat.format(trade_price)
+                    changePricePrevDay = priceFormat.formatWithPlusSignPrefix(signed_change_price)
+                    formattedVolume = volumeFormat.format(acc_trade_price_24h)
                 }
             }
 

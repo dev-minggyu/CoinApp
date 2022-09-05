@@ -91,3 +91,11 @@ fun EditText.addNumberFormatter() {
 }
 
 fun EditText.getTextWithoutComma(): String = text.toString().replace(",", "")
+
+fun NumberFormat.formatWithPlusSignPrefix(number: Double): String {
+    var result = ""
+    if (number > 0) {
+        result = "+"
+    }
+    return result + format(number)
+}
