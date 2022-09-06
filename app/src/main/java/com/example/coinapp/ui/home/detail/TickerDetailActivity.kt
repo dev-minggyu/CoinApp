@@ -1,17 +1,19 @@
 package com.example.coinapp.ui.home.detail
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.webkit.WebViewClient
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.coinapp.R
 import com.example.coinapp.base.BaseActivity
 import com.example.coinapp.databinding.ActivityTickerDetailBinding
 import com.example.coinapp.extension.collectWithLifecycle
-import com.example.coinapp.model.MyTickerInfo
+import com.example.coinapp.model.myasset.MyTickerInfo
 import com.example.coinapp.ui.myasset.dialog.AddMyAssetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -25,16 +27,30 @@ class TickerDetailActivity : BaseActivity<ActivityTickerDetailBinding>(R.layout.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        _myTickerInfo = intent.getParcelableExtra(KEY_MY_TICKER)
+
+        setupActionBar()
+        setupWebView()
+        setupObserver()
+        observeTicker()
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun setupWebView() {
+        _myTickerInfo?.let {
+            val symbol = it.symbol + it.currency.name
+            binding.webviewChart.webViewClient = WebViewClient()
+            binding.webviewChart.settings.javaScriptEnabled = true
+            binding.webviewChart.loadUrl("https://tradingview.com/chart/?symbol=UPBIT:$symbol")
+        }
+    }
+
+    private fun setupActionBar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
         }
-
-        _myTickerInfo = intent.getParcelableExtra(KEY_MY_TICKER)
-
-        setupObserver()
-        observeTicker()
     }
 
     private fun setupObserver() {

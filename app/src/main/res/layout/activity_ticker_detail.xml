@@ -46,6 +46,7 @@
 
             <TextView
                 android:id="@+id/tv_price"
+                changeColorBySign="@{ticker.rate}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{ticker.decimalCurrentPrice}"
@@ -67,14 +68,23 @@
 
             <TextView
                 android:id="@+id/tv_prev_change"
+                changeColorBySign="@{ticker.rate}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginStart="@dimen/_10sdp"
                 android:text="@{ticker.changePricePrevDay + ` (` + ticker.rate + `%)`}"
                 android:textColor="@color/color_text"
                 app:layout_constraintStart_toEndOf="@id/tv_title_prev_change"
                 app:layout_constraintTop_toTopOf="@id/tv_title_prev_change"
                 tools:text="100 (0.00%)" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <WebView
+            android:id="@+id/webview_chart"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/_25sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_ticker" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

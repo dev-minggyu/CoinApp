@@ -70,21 +70,23 @@ object BindingAdapter {
     }
 
     @JvmStatic
-    @BindingAdapter("changeRatePrevDay")
+    @BindingAdapter("changeColorBySign")
     fun bindTickerPriceColor(
         view: TextView,
-        changeRatePrevDay: String
+        value: String?
     ) {
-        val color: Int = when {
-            changeRatePrevDay.toFloat() > 0 -> {
-                ContextCompat.getColor(view.context, R.color.color_price_up)
+        value?.let {
+            val color: Int = when {
+                it.toFloat() > 0 -> {
+                    ContextCompat.getColor(view.context, R.color.color_price_up)
+                }
+                it.toFloat() < 0 -> {
+                    ContextCompat.getColor(view.context, R.color.color_price_down)
+                }
+                else -> ContextCompat.getColor(view.context, R.color.color_price_same)
             }
-            changeRatePrevDay.toFloat() < 0 -> {
-                ContextCompat.getColor(view.context, R.color.color_price_down)
-            }
-            else -> ContextCompat.getColor(view.context, R.color.color_price_same)
+            view.setTextColor(color)
         }
-        view.setTextColor(color)
     }
 
     @JvmStatic
