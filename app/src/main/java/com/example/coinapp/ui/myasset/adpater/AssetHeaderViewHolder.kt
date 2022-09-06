@@ -6,7 +6,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coinapp.R
 import com.example.coinapp.databinding.ItemAssetHeaderBinding
-import com.example.coinapp.model.MyAssetHeader
+import com.example.coinapp.model.myasset.MyAssetHeader
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.formatter.PercentFormatter

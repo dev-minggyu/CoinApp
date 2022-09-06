@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coinapp.databinding.ItemAssetHeaderBinding
 import com.example.coinapp.databinding.ItemAssetTickerBinding
-import com.example.coinapp.model.MyAssetItem
+import com.example.coinapp.model.myasset.MyAssetItem
 import com.example.domain.model.myasset.MyTicker
 
 class MyAssetListAdapter(

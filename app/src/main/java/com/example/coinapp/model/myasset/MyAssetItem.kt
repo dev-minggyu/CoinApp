@@ -1,4 +1,4 @@
-package com.example.coinapp.model
+package com.example.coinapp.model.myasset
 
 import com.example.domain.model.myasset.MyTicker
 

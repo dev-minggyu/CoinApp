@@ -9,9 +9,9 @@ import com.example.coinapp.R
 import com.example.coinapp.base.BaseFragment
 import com.example.coinapp.databinding.FragmentMyAssetBinding
 import com.example.coinapp.extension.collectWithLifecycle
-import com.example.coinapp.model.MyAssetHeader
-import com.example.coinapp.model.MyAssetItem
-import com.example.coinapp.model.MyTickerInfo
+import com.example.coinapp.model.myasset.MyAssetHeader
+import com.example.coinapp.model.myasset.MyAssetItem
+import com.example.coinapp.model.myasset.MyTickerInfo
 import com.example.coinapp.ui.home.detail.TickerDetailActivity
 import com.example.coinapp.ui.myasset.adpater.MyAssetListAdapter
 import com.example.domain.model.myasset.MyTicker
@@ -75,7 +75,7 @@ class MyAssetFragment : BaseFragment<FragmentMyAssetBinding>(R.layout.fragment_m
             val priceFormat = NumberFormat.getInstance()
             val totalAsset = list.sumOf { it.amount.toDouble() * it.currentPrice.toDouble() }
             val totalBuy = list.sumOf { it.amount.toDouble() * it.averagePrice.toDouble() }
-            
+
             val header = MyAssetHeader(
                 totalAsset = totalAsset,
                 decimalTotalAsset = priceFormat.format(totalAsset),

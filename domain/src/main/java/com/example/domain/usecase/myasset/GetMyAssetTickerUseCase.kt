@@ -1,6 +1,5 @@
 package com.example.domain.usecase.myasset
 
-import com.example.domain.model.myasset.MyTicker
 import com.example.domain.repository.myasset.MyAssetRepository
 import javax.inject.Inject
 

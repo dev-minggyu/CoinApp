@@ -10,7 +10,7 @@ import com.example.coinapp.databinding.FragmentDialogAddMyAssetBinding
 import com.example.coinapp.extension.addNumberFormatter
 import com.example.coinapp.extension.collectWithLifecycle
 import com.example.coinapp.extension.getTextWithoutComma
-import com.example.coinapp.model.MyTickerInfo
+import com.example.coinapp.model.myasset.MyTickerInfo
 import com.example.domain.model.myasset.MyTicker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

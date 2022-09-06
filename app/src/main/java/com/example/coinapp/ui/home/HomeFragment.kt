@@ -10,7 +10,7 @@ import com.example.coinapp.R
 import com.example.coinapp.base.BaseFragment
 import com.example.coinapp.databinding.FragmentHomeBinding
 import com.example.coinapp.extension.collectWithLifecycle
-import com.example.coinapp.model.MyTickerInfo
+import com.example.coinapp.model.myasset.MyTickerInfo
 import com.example.coinapp.ui.home.adapter.TickerListAdapter
 import com.example.coinapp.ui.home.detail.TickerDetailActivity
 import com.example.coinapp.ui.main.MainSettingViewModel
