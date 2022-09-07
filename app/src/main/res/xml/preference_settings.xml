@@ -1,15 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <ListPreference
-        android:defaultValue="system"
-        android:entries="@array/app_theme"
-        android:entryValues="@array/app_theme_value"
-        android:key="@string/key_pref_app_theme"
-        android:summary="%s"
-        android:title="@string/settings_app_theme" />
+    <PreferenceCategory android:title="@string/settings_title_ui">
+        <ListPreference
+            android:defaultValue="system"
+            android:entries="@array/app_theme"
+            android:entryValues="@array/app_theme_value"
+            android:key="@string/key_pref_app_theme"
+            android:summary="%s"
+            android:title="@string/settings_app_theme" />
 
-    <SwitchPreference
-        android:defaultValue="true"
-        android:key="@string/key_pref_ticker_change_color"
-        android:title="@string/settings_ticker_change_color" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_pref_ticker_change_color"
+            android:title="@string/settings_ticker_change_color" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/settings_title_floating_window">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_pref_enable_floating_window"
+            android:title="@string/settings_enable_floating_window" />
+
+        <Preference
+            android:key="@string/settings_btn_select_ticker"
+            android:title="@string/settings_select_ticker" />
+    </PreferenceCategory>
 </PreferenceScreen>

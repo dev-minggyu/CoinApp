@@ -21,5 +21,7 @@ interface AtomicTickerList {
 
     fun getValidTickerSize(): Int
 
+    suspend fun getSymbolList(): List<TickerSymbol>
+
     suspend fun clear()
 }

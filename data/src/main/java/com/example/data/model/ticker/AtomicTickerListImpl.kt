@@ -1,5 +1,6 @@
 package com.example.data.model.ticker
 
+import com.example.data.mapper.ticker.TickerSymbolMapper
 import com.example.domain.model.ticker.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -93,6 +94,13 @@ class AtomicTickerListImpl @Inject constructor() : AtomicTickerList {
         list.count {
             it.currentPrice.isNotEmpty()
         }
+
+    override suspend fun getSymbolList(): List<TickerSymbol> = mutex.withLock {
+        val result = copyTickerList().sortedBy { it.symbol }
+        result.map {
+            TickerSymbolMapper.fromTicker(it)
+        }
+    }
 
     override suspend fun clear() {
         mutex.withLock {
