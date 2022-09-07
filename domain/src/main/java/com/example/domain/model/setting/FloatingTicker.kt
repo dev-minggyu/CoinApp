@@ -1,4 +1,4 @@
-package com.example.domain.model.ticker
+package com.example.domain.model.setting
 
 data class FloatingTicker(
     val symbol: String,

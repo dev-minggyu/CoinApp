@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coinapp.databinding.ItemCheckSymbolBinding
-import com.example.domain.model.ticker.FloatingTicker
+import com.example.domain.model.setting.FloatingTicker
 
 class CheckSymbolListAdapter : ListAdapter<FloatingTicker, CheckSymbolListAdapter.SymbolViewHolder>(SymbolDiffCallback()) {
     override fun onBindViewHolder(holder: SymbolViewHolder, position: Int) {

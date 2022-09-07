@@ -27,7 +27,7 @@ class SettingFloatingSymbolActivity : BaseActivity<ActivitySettingFloatingSymbol
         setupObserver()
         setupListener()
 
-        _settingFloatingSymbolViewModel.getSymbolList()
+        _settingFloatingSymbolViewModel.getFloatingSymbolList()
     }
 
     private fun setupListener() {
@@ -36,11 +36,12 @@ class SettingFloatingSymbolActivity : BaseActivity<ActivitySettingFloatingSymbol
                 ticker.isChecked
             }?.map { ticker ->
                 ticker.symbol
-            }
-            result?.let {
-                _settingFloatingSymbolViewModel.setFloatingTickerList(it)
-                setResult(RESULT_OK, Intent().putStringArrayListExtra("test", ArrayList(it)))
-            }
+            } ?: listOf()
+            _settingFloatingSymbolViewModel.setFloatingTickerList(result)
+            setResult(
+                SettingFragment.REQUEST_CHECKED_FLOATING_SYMBOL,
+                Intent().putStringArrayListExtra(KEY_CHECKED_FLOATING_SYMBOL_LIST, ArrayList(result))
+            )
             finish()
         }
     }
@@ -66,6 +67,8 @@ class SettingFloatingSymbolActivity : BaseActivity<ActivitySettingFloatingSymbol
     }
 
     companion object {
+        const val KEY_CHECKED_FLOATING_SYMBOL_LIST = "KEY_CHECKED_FLOATING_SYMBOL_LIST"
+
         fun createIntent(context: Context?): Intent =
             Intent(context, SettingFloatingSymbolActivity::class.java)
     }

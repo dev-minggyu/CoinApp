@@ -1,13 +1,15 @@
 package com.example.data.repository.ticker
 
-import android.util.Log
 import com.example.data.mapper.ticker.TickerSymbolMapper
 import com.example.data.model.ticker.TickerRequest
 import com.example.data.model.ticker.TickerSymbolResponse
 import com.example.data.repository.favoriteticker.local.FavoriteTickerLocalDataSource
 import com.example.data.repository.ticker.remote.TickerSocketService
 import com.example.data.repository.ticker.remote.TickerSymbolRemoteDataSource
-import com.example.domain.model.ticker.*
+import com.example.domain.model.ticker.AtomicTickerList
+import com.example.domain.model.ticker.Currency
+import com.example.domain.model.ticker.SortModel
+import com.example.domain.model.ticker.TickerListModel
 import com.example.domain.repository.ticker.TickerRepository
 import com.example.domain.utils.Resource
 import com.example.domain.utils.TickerResource
@@ -139,9 +141,4 @@ class TickerRepositoryImpl @Inject constructor(
             }
         }
     }.flowOn(Dispatchers.Default)
-
-    override suspend fun getSymbolList(): List<FloatingTicker> =
-        withContext(Dispatchers.Default) {
-            atomicTickerList.getSymbolList()
-        }
 }

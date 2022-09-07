@@ -1,6 +1,5 @@
 package com.example.coinapp.ui.setting
 
-import android.app.Activity
 import android.content.ComponentName
 import android.content.ServiceConnection
 import android.content.SharedPreferences
@@ -32,8 +31,8 @@ class SettingFragment : PreferenceFragmentCompat(),
 
     private val activityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         when (result.resultCode) {
-            Activity.RESULT_OK -> {
-                result.data?.getStringArrayListExtra("test")?.let {
+            REQUEST_CHECKED_FLOATING_SYMBOL -> {
+                result.data?.getStringArrayListExtra(SettingFloatingSymbolActivity.KEY_CHECKED_FLOATING_SYMBOL_LIST)?.let {
                     _floatingWindowService?.setFloatingList(it.toList())
                 }
             }
@@ -57,7 +56,9 @@ class SettingFragment : PreferenceFragmentCompat(),
 
     override fun onStop() {
         super.onStop()
-        FloatingWindowService.unbindService(requireContext(), _serviceConnection)
+        _floatingWindowService?.let {
+            FloatingWindowService.unbindService(requireContext(), _serviceConnection)
+        }
     }
 
     private fun setListener() {
@@ -107,6 +108,8 @@ class SettingFragment : PreferenceFragmentCompat(),
     }
 
     companion object {
+        const val REQUEST_CHECKED_FLOATING_SYMBOL = 0
+
         fun newInstance() = SettingFragment()
     }
 }

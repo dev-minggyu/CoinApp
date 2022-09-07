@@ -26,10 +26,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class FloatingWindowService : Service() {
-    private var _windowView: FloatingViewBinding? = null
-    private var _viewPosX = 0f
-    private var _viewPosY = 0f
-
     @Inject
     lateinit var _tickerDataUseCase: TickerDataUseCase
 
@@ -39,9 +35,13 @@ class FloatingWindowService : Service() {
     private val _serviceJob: Job = Job()
     private val _serviceScope = CoroutineScope(_serviceJob + Dispatchers.Default)
 
+    private var _windowView: FloatingViewBinding? = null
+    private var _viewPosX = 0f
+    private var _viewPosY = 0f
+
     private var _binder = FloatingWindowServiceBinder(this)
 
-    private var _floatingList = listOf<String>("BTCKRW")
+    private var _floatingList = listOf<String>()
 
     private var _floatingListAdapter: FloatingListAdapter? = null
 
@@ -80,7 +80,7 @@ class FloatingWindowService : Service() {
             layoutParams.gravity = Gravity.CENTER
             windowManager.addView(binding.root, layoutParams)
 
-            binding.rvTicker.setOnTouchListener { _, motionEvent ->
+            binding.layoutOverlay.setOnTouchListener { _, motionEvent ->
                 when (motionEvent.action) {
                     MotionEvent.ACTION_DOWN -> {
                         _viewPosX = layoutParams.x - motionEvent.rawX
@@ -123,12 +123,11 @@ class FloatingWindowService : Service() {
             _tickerDataUseCase.execute().collect {
                 when (it) {
                     is TickerResource.Update -> {
-                        if (_floatingList.isNotEmpty()) {
-                            val list = it.data.tickerList.filter { ticker ->
+                        _floatingListAdapter?.submitList(
+                            it.data.tickerList.filter { ticker ->
                                 _floatingList.contains(ticker.symbol + ticker.currencyType.name)
                             }
-                            _floatingListAdapter?.submitList(list)
-                        }
+                        )
                     }
                     else -> {}
                 }
@@ -140,9 +139,7 @@ class FloatingWindowService : Service() {
         serviceConnection?.let {
             context.unbindService(it)
         }
-        context.stopService(
-            Intent(context, FloatingWindowService::class.java)
-        )
+        stopSelf()
     }
 
     companion object {

@@ -3,6 +3,7 @@ package com.example.data.mapper.ticker
 import com.example.data.model.ticker.TickerSymbolResponse
 import com.example.domain.model.ticker.Currency
 import com.example.domain.model.ticker.Ticker
+import com.example.domain.model.ticker.TickerSymbol
 
 object TickerSymbolMapper {
     fun toTicker(tickerSymbolResponse: TickerSymbolResponse): Ticker {
@@ -20,4 +21,12 @@ object TickerSymbolMapper {
             ""
         )
     }
+
+    fun fromTicker(ticker: Ticker): TickerSymbol =
+        TickerSymbol(
+            symbol = ticker.symbol,
+            currency = ticker.currencyType,
+            koreanSymbol = ticker.koreanSymbol,
+            englishSymbol = ticker.englishSymbol
+        )
 }
