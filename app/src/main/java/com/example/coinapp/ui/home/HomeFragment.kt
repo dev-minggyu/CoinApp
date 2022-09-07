@@ -10,7 +10,9 @@ import com.example.coinapp.R
 import com.example.coinapp.base.BaseFragment
 import com.example.coinapp.databinding.FragmentHomeBinding
 import com.example.coinapp.extension.collectWithLifecycle
+import com.example.coinapp.extension.isServiceRunning
 import com.example.coinapp.model.myasset.MyTickerInfo
+import com.example.coinapp.ui.floating.FloatingWindowService
 import com.example.coinapp.ui.home.adapter.TickerListAdapter
 import com.example.coinapp.ui.home.detail.TickerDetailActivity
 import com.example.coinapp.ui.main.MainSettingViewModel
@@ -108,7 +110,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home), 
         when (event) {
             Lifecycle.Event.ON_START -> _homeViewModel.subscribeTicker()
             Lifecycle.Event.ON_STOP -> {
-                if (!_homeViewModel.isEnabledFloatingWindow()) {
+                if (requireContext().isServiceRunning(FloatingWindowService::class.java)) {
                     _homeViewModel.unsubscribeTicker()
                 }
             }

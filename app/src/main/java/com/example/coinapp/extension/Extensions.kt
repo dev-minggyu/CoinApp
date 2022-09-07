@@ -1,6 +1,9 @@
 package com.example.coinapp.extension
 
 import android.app.Activity
+import android.app.ActivityManager
+import android.content.Context
+import android.content.Context.ACTIVITY_SERVICE
 import android.content.res.TypedArray
 import android.text.Editable
 import android.text.TextWatcher
@@ -98,4 +101,11 @@ fun NumberFormat.formatWithPlusSignPrefix(number: Double): String {
         result = "+"
     }
     return result + format(number)
+}
+
+@Suppress("DEPRECATION")
+fun <T> Context.isServiceRunning(service: Class<T>): Boolean {
+    return (getSystemService(ACTIVITY_SERVICE) as ActivityManager)
+        .getRunningServices(Integer.MAX_VALUE)
+        .any { it.service.className == service.name }
 }

@@ -123,6 +123,4 @@ class HomeViewModel @Inject constructor(
             unsubscribeTickerUseCase.execute()
         }
     }
-
-    fun isEnabledFloatingWindow() = settingFloatingWindowUseCase.get()
 }
