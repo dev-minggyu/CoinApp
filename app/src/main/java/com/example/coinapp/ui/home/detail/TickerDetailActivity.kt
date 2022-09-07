@@ -15,6 +15,8 @@ import com.example.coinapp.databinding.ActivityTickerDetailBinding
 import com.example.coinapp.extension.collectWithLifecycle
 import com.example.coinapp.model.myasset.MyTickerInfo
 import com.example.coinapp.ui.myasset.dialog.AddMyAssetDialogFragment
+import com.example.coinapp.utils.AppThemeManager
+import com.example.coinapp.utils.TradingViewUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -41,7 +43,12 @@ class TickerDetailActivity : BaseActivity<ActivityTickerDetailBinding>(R.layout.
             val symbol = it.symbol + it.currency.name
             binding.webviewChart.webViewClient = WebViewClient()
             binding.webviewChart.settings.javaScriptEnabled = true
-            binding.webviewChart.loadUrl("https://tradingview.com/chart/?symbol=UPBIT:$symbol")
+            binding.webviewChart.loadData(
+                TradingViewUtil.getScript(
+                    symbol = symbol,
+                    isDarkMode = AppThemeManager.isDarkMode(resources)
+                ), "text/html", "base64"
+            )
         }
     }
 
