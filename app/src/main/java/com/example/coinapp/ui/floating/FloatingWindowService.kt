@@ -135,13 +135,6 @@ class FloatingWindowService : Service() {
         }
     }
 
-    fun stopService(context: Context, serviceConnection: ServiceConnection? = null) {
-        serviceConnection?.let {
-            context.unbindService(it)
-        }
-        stopSelf()
-    }
-
     companion object {
         fun startService(context: Context, serviceConnection: ServiceConnection? = null) {
             val intent = Intent(context, FloatingWindowService::class.java)
@@ -149,6 +142,15 @@ class FloatingWindowService : Service() {
             serviceConnection?.let {
                 context.bindService(intent, it, Context.BIND_AUTO_CREATE)
             }
+        }
+
+        fun stopService(context: Context, serviceConnection: ServiceConnection? = null) {
+            serviceConnection?.let {
+                context.unbindService(it)
+            }
+            context.stopService(
+                Intent(context, FloatingWindowService::class.java)
+            )
         }
 
         fun unbindService(context: Context, serviceConnection: ServiceConnection) {

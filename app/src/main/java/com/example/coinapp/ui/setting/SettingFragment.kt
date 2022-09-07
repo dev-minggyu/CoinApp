@@ -99,7 +99,7 @@ class SettingFragment : PreferenceFragmentCompat(),
                     FloatingWindowService.startService(requireContext(), _serviceConnection)
                 } else {
                     _floatingWindowService?.let {
-                        _floatingWindowService?.stopService(requireContext(), _serviceConnection)
+                        FloatingWindowService.stopService(requireContext(), _serviceConnection)
                         _floatingWindowService = null
                     }
                 }
