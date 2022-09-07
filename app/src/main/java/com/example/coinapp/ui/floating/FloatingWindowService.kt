@@ -16,6 +16,7 @@ import com.example.coinapp.databinding.FloatingViewBinding
 import com.example.coinapp.ui.floating.adapter.FloatingListAdapter
 import com.example.coinapp.utils.NotificationUtil
 import com.example.domain.usecase.setting.SettingFloatingTickerListUseCase
+import com.example.domain.usecase.setting.SettingFloatingTransparentUseCase
 import com.example.domain.usecase.ticker.TickerDataUseCase
 import com.example.domain.utils.TickerResource
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,6 +33,9 @@ class FloatingWindowService : Service() {
 
     @Inject
     lateinit var _settingFloatingTickerListUseCase: SettingFloatingTickerListUseCase
+
+    @Inject
+    lateinit var _settingFloatingTransparentUseCase: SettingFloatingTransparentUseCase
 
     private val _serviceJob: Job = Job()
     private val _serviceScope = CoroutineScope(_serviceJob + Dispatchers.Default)
@@ -108,6 +112,7 @@ class FloatingWindowService : Service() {
             }
         }
 
+        setTransparent(_settingFloatingTransparentUseCase.get())
         observeTickerData()
     }
 

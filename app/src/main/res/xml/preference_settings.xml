@@ -24,5 +24,11 @@
         <Preference
             android:key="@string/settings_btn_select_ticker"
             android:title="@string/settings_select_ticker" />
+
+        <SeekBarPreference
+            android:defaultValue="127"
+            android:key="@string/key_pref_floating_window_transparent"
+            android:max="255"
+            android:title="@string/settings_floating_window_transparent" />
     </PreferenceCategory>
 </PreferenceScreen>

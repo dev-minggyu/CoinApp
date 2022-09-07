@@ -66,7 +66,7 @@ class SettingFragment : PreferenceFragmentCompat(),
             SettingFloatingSymbolActivity.createIntent(requireContext()).also {
                 activityResult.launch(it)
             }
-            return@setOnPreferenceClickListener true
+            return@setOnPreferenceClickListener false
         }
     }
 
@@ -103,6 +103,9 @@ class SettingFragment : PreferenceFragmentCompat(),
                         _floatingWindowService = null
                     }
                 }
+            }
+            getString(R.string.key_pref_floating_window_transparent) -> {
+                _floatingWindowService?.setTransparent(pref.getInt(key, 127))
             }
         }
     }

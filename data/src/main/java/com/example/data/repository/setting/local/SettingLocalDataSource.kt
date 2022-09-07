@@ -10,4 +10,6 @@ interface SettingLocalDataSource {
     fun setSettingFloatingTickerList(list: List<String>)
 
     fun getSettingFloatingTickerList(): List<String>
+
+    fun getSettingFloatingTransparent(): Int
 }

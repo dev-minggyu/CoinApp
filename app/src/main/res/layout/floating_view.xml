@@ -6,7 +6,7 @@
         android:id="@+id/layout_overlay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/color_trasparent_black">
+        android:background="@color/black">
 
         <TextView
             android:id="@+id/tv_app"

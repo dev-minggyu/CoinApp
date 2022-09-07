@@ -55,4 +55,6 @@
 
     <string name="guide_require_add_asset">홈 화면에서 코인을 선택하여 자산에 추가해주세요.</string>
     <string name="confirm">확인</string>
+    <string name="key_pref_floating_window_transparent">KEY_PREF_FLOATING_WINDOW_TRANSPARENT</string>
+    <string name="settings_floating_window_transparent">플로팅 윈도우 투명도</string>
 </resources>

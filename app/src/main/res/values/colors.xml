@@ -21,6 +21,4 @@
     <color name="color_price_down">#008EFF</color>
     <color name="color_price_up_transparent">#26FF0000</color>
     <color name="color_price_down_transparent">#26008EFF</color>
-
-    <color name="color_trasparent_black">#80000000</color>
 </resources>

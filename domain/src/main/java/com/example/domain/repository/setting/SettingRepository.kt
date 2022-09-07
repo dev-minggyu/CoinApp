@@ -14,4 +14,6 @@ interface SettingRepository {
     fun getSettingFloatingTickerList(): List<String>
 
     suspend fun getFloatingTickerList(): List<FloatingTicker>
+
+    fun getSettingFloatingTransparent(): Int
 }

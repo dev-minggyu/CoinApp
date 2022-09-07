@@ -20,9 +20,12 @@ class SettingLocalDataSourceImpl @Inject constructor(
 
     override fun getSettingFloatingTickerList(): List<String> = preferences.getStringSet(KEY_PREF_FLOATING_TICKER_SET, setOf())!!.toList()
 
+    override fun getSettingFloatingTransparent(): Int = preferences.getInt(KEY_PREF_FLOATING_WINDOW_TRANSPARENT, 127)
+
     companion object {
         private const val KEY_TICKER_CHANGE_COLOR = "KEY_TICKER_CHANGE_COLOR"
         private const val KEY_PREF_ENABLE_FLOATING_WINDOW = "KEY_PREF_ENABLE_FLOATING_WINDOW"
         private const val KEY_PREF_FLOATING_TICKER_SET = "KEY_PREF_FLOATING_TICKER_SET"
+        private const val KEY_PREF_FLOATING_WINDOW_TRANSPARENT = "KEY_PREF_FLOATING_WINDOW_TRANSPARENT"
     }
 }
