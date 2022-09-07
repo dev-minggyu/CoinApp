@@ -14,6 +14,7 @@ import android.view.MotionEvent
 import android.view.WindowManager
 import com.example.coinapp.databinding.FloatingViewBinding
 import com.example.coinapp.ui.floating.adapter.FloatingListAdapter
+import com.example.coinapp.utils.NotificationUtil
 import com.example.domain.usecase.setting.SettingFloatingTickerListUseCase
 import com.example.domain.usecase.ticker.TickerDataUseCase
 import com.example.domain.utils.TickerResource
@@ -48,6 +49,9 @@ class FloatingWindowService : Service() {
     override fun onBind(intent: Intent): IBinder = _binder
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForeground(this.hashCode(), NotificationUtil.notification(applicationContext))
+        }
         createView()
         return START_STICKY
     }

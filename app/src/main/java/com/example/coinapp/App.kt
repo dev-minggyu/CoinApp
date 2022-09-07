@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.preference.PreferenceManager
 import com.example.coinapp.ui.floating.FloatingWindowService
 import com.example.coinapp.utils.AppThemeManager
+import com.example.coinapp.utils.NotificationUtil
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
@@ -14,6 +15,7 @@ class App : Application() {
 
         initTheme()
         initOverlayService()
+        NotificationUtil.createNotificationChannel(applicationContext)
     }
 
     private fun initTheme() {
