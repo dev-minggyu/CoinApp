@@ -12,4 +12,10 @@ class SettingRepositoryImpl @Inject constructor(
     override fun setSettingTickerChangeColor(value: Boolean) {
         settingLocalDataSourceImpl.setSettingTickerChangeColor(value)
     }
+
+    override fun getSettingFloatingWindow(): Boolean = settingLocalDataSourceImpl.getSettingFloatingWindow()
+
+    override fun setSettingFloatingTickerList(list: List<String>) = settingLocalDataSourceImpl.setSettingFloatingTickerList(list)
+
+    override fun getSettingFloatingTickerList(): List<String> = settingLocalDataSourceImpl.getSettingFloatingTickerList()
 }

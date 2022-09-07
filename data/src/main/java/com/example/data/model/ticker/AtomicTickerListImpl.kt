@@ -94,6 +94,18 @@ class AtomicTickerListImpl @Inject constructor() : AtomicTickerList {
             it.currentPrice.isNotEmpty()
         }
 
+    override suspend fun getSymbolList(): List<FloatingTicker> = mutex.withLock {
+        val result = copyTickerList().sortedBy { it.symbol }
+        result.map {
+            FloatingTicker(
+                symbol = it.symbol + it.currencyType.name,
+                koreanSymbol = it.koreanSymbol,
+                englishSymbol = it.englishSymbol,
+                isChecked = false
+            )
+        }
+    }
+
     override suspend fun clear() {
         mutex.withLock {
             list.clear()

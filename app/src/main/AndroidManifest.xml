@@ -4,6 +4,7 @@
     package="com.example.coinapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:name="com.example.coinapp.App"
@@ -16,6 +17,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CoinApp"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.setting.SettingFloatingSymbolActivity"
+            android:exported="false" />
+
+        <service
+            android:name=".ui.floating.FloatingWindowService"
+            android:exported="false" />
+
         <activity
             android:name="com.example.coinapp.ui.splash.InitActivity"
             android:exported="true"

@@ -107,7 +107,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home), 
     override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
         when (event) {
             Lifecycle.Event.ON_START -> _homeViewModel.subscribeTicker()
-            Lifecycle.Event.ON_STOP -> _homeViewModel.unsubscribeTicker()
+            Lifecycle.Event.ON_STOP -> {
+                if (!_homeViewModel.isEnabledFloatingWindow()) {
+                    _homeViewModel.unsubscribeTicker()
+                }
+            }
             else -> {}
         }
     }

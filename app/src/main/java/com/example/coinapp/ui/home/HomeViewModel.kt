@@ -7,6 +7,7 @@ import com.example.coinapp.R
 import com.example.domain.model.ticker.SortModel
 import com.example.domain.model.ticker.Ticker
 import com.example.domain.usecase.favoriteticker.FavoriteTickerUseCase
+import com.example.domain.usecase.setting.SettingFloatingWindowUseCase
 import com.example.domain.usecase.ticker.*
 import com.example.domain.utils.Resource
 import com.example.domain.utils.TickerResource
@@ -23,7 +24,8 @@ class HomeViewModel @Inject constructor(
     private val tickerSearchUseCase: TickerSearchUseCase,
     private val favoriteTickerUseCase: FavoriteTickerUseCase,
     private val subscribeTickerUseCase: SubscribeTickerUseCase,
-    private val unsubscribeTickerUseCase: UnsubscribeTickerUseCase
+    private val unsubscribeTickerUseCase: UnsubscribeTickerUseCase,
+    private val settingFloatingWindowUseCase: SettingFloatingWindowUseCase
 ) : ViewModel() {
     private val _tickerList: MutableStateFlow<List<Ticker>?> = MutableStateFlow(null)
     val tickerList = _tickerList.asStateFlow()
@@ -121,4 +123,6 @@ class HomeViewModel @Inject constructor(
             unsubscribeTickerUseCase.execute()
         }
     }
+
+    fun isEnabledFloatingWindow() = settingFloatingWindowUseCase.get()
 }
