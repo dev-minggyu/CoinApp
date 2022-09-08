@@ -9,6 +9,8 @@ interface SettingRepository {
 
     fun getSettingFloatingWindow(): Boolean
 
+    fun setSettingFloatingWindow(isEnable: Boolean)
+
     fun setSettingFloatingTickerList(list: List<String>)
 
     fun getSettingFloatingTickerList(): List<String>
@@ -16,4 +18,10 @@ interface SettingRepository {
     suspend fun getFloatingTickerList(): List<FloatingTicker>
 
     fun getSettingFloatingTransparent(): Int
+
+    fun setSettingFloatingTransparent(value: Int)
+
+    fun getSettingAppTheme(): String
+
+    fun setSettingAppTheme(theme: String)
 }

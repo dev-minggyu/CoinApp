@@ -1,118 +1,58 @@
 package com.example.coinapp.ui.setting
 
-import android.content.ComponentName
-import android.content.ServiceConnection
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.IBinder
-import androidx.activity.result.contract.ActivityResultContracts
+import android.view.View
 import androidx.fragment.app.activityViewModels
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
+import androidx.fragment.app.viewModels
 import com.example.coinapp.R
-import com.example.coinapp.ui.floating.FloatingWindowService
-import com.example.coinapp.ui.floating.FloatingWindowServiceBinder
-import com.example.coinapp.ui.main.MainSettingViewModel
-import com.example.coinapp.utils.AppThemeManager
+import com.example.coinapp.base.BaseFragment
+import com.example.coinapp.databinding.FragmentSettingBinding
+import com.example.coinapp.extension.showThemeDialog
+import com.example.coinapp.ui.main.ShareSettingViewModel
+import com.example.coinapp.ui.setting.floatingwindow.FloatingWindowSettingActivity
+import dagger.hilt.android.AndroidEntryPoint
 
-class SettingFragment : PreferenceFragmentCompat(),
-    SharedPreferences.OnSharedPreferenceChangeListener {
-    private val _settingViewModel: MainSettingViewModel by activityViewModels()
 
-    private var _floatingWindowService: FloatingWindowService? = null
+@AndroidEntryPoint
+class SettingFragment : BaseFragment<FragmentSettingBinding>(R.layout.fragment_setting) {
+    private val _settingViewModel: SettingViewModel by viewModels()
 
-    private val _serviceConnection = object : ServiceConnection {
-        override fun onServiceConnected(componentName: ComponentName?, binder: IBinder?) {
-            _floatingWindowService = (binder as FloatingWindowServiceBinder).getService()
-        }
+    private val _shareSettingViewModel: ShareSettingViewModel by activityViewModels()
 
-        override fun onServiceDisconnected(p0: ComponentName?) {}
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.fragment = this
+
+        loadSettings()
     }
 
-    private val activityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        when (result.resultCode) {
-            REQUEST_CHECKED_FLOATING_SYMBOL -> {
-                result.data?.getStringArrayListExtra(SettingFloatingSymbolActivity.KEY_CHECKED_FLOATING_SYMBOL_LIST)?.let {
-                    _floatingWindowService?.setFloatingList(it.toList())
+    private fun loadSettings() {
+        binding.switchChangeTickerColor.isChecked = _shareSettingViewModel.getChangeTickerColor()
+    }
+
+    fun settingMenuClick(id: Int) {
+        when (id) {
+            R.id.tv_theme -> {
+                showThemeDialog(_settingViewModel.getAppTheme()) { theme ->
+                    _settingViewModel.setAppTheme(theme)
                 }
             }
-        }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setListener()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        preferenceManager.sharedPreferences?.run {
-            if (getBoolean(getString(R.string.key_pref_enable_floating_window), false)) {
-                FloatingWindowService.startService(requireContext(), _serviceConnection)
+            R.id.tv_floating_window_setting -> {
+                FloatingWindowSettingActivity.startActivity(requireContext())
             }
         }
     }
 
-    override fun onStop() {
-        super.onStop()
-        _floatingWindowService?.let {
-            FloatingWindowService.unbindService(requireContext(), _serviceConnection)
-        }
-    }
-
-    private fun setListener() {
-        findPreference<Preference>(getString(R.string.settings_btn_select_ticker))?.setOnPreferenceClickListener {
-            SettingFloatingSymbolActivity.createIntent(requireContext()).also {
-                activityResult.launch(it)
-            }
-            return@setOnPreferenceClickListener false
-        }
-    }
-
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.preference_settings, rootKey)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        preferenceScreen.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        preferenceScreen.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
-    }
-
-    override fun onSharedPreferenceChanged(pref: SharedPreferences, key: String?) {
-        when (key) {
-            getString(R.string.key_pref_app_theme) -> {
-                val theme = pref.getString(key, AppThemeManager.THEME_SYSTEM)!!
-                AppThemeManager.applyTheme(theme)
-            }
-            getString(R.string.key_pref_ticker_change_color) -> {
-                val tickerChangeColor = pref.getBoolean(key, true)
-                _settingViewModel.setTickerChangeColor(tickerChangeColor)
-            }
-            getString(R.string.key_pref_enable_floating_window) -> {
-                if (pref.getBoolean(key, false)) {
-                    FloatingWindowService.startService(requireContext(), _serviceConnection)
-                } else {
-                    _floatingWindowService?.let {
-                        FloatingWindowService.stopService(requireContext(), _serviceConnection)
-                        _floatingWindowService = null
-                    }
-                }
-            }
-            getString(R.string.key_pref_floating_window_transparent) -> {
-                _floatingWindowService?.setTransparent(pref.getInt(key, 127))
+    fun settingSwitchClick(id: Int, isChecked: Boolean) {
+        when (id) {
+            R.id.switch_change_ticker_color -> {
+                _shareSettingViewModel.setChangeTickerColor(isChecked)
             }
         }
     }
 
     companion object {
-        const val REQUEST_CHECKED_FLOATING_SYMBOL = 0
-
         fun newInstance() = SettingFragment()
     }
 }

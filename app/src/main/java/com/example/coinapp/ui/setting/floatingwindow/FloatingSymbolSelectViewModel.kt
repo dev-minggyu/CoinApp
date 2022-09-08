@@ -1,4 +1,4 @@
-package com.example.coinapp.ui.setting
+package com.example.coinapp.ui.setting.floatingwindow
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingFloatingSymbolViewModel @Inject constructor(
+class FloatingSymbolSelectViewModel @Inject constructor(
     private val settingFloatingTickerListUseCase: SettingFloatingTickerListUseCase,
     private val allFloatingTickerListUseCase: AllFloatingTickerListUseCase
 ) : ViewModel() {

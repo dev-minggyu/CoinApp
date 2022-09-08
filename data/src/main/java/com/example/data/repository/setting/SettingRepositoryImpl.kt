@@ -21,6 +21,8 @@ class SettingRepositoryImpl @Inject constructor(
 
     override fun getSettingFloatingWindow(): Boolean = settingLocalDataSource.getSettingFloatingWindow()
 
+    override fun setSettingFloatingWindow(isEnable: Boolean) = settingLocalDataSource.setSettingFloatingWindow(isEnable)
+
     override fun setSettingFloatingTickerList(list: List<String>) = settingLocalDataSource.setSettingFloatingTickerList(list)
 
     override fun getSettingFloatingTickerList(): List<String> = settingLocalDataSource.getSettingFloatingTickerList()
@@ -49,4 +51,12 @@ class SettingRepositoryImpl @Inject constructor(
         }
 
     override fun getSettingFloatingTransparent(): Int = settingLocalDataSource.getSettingFloatingTransparent()
+
+    override fun setSettingFloatingTransparent(value: Int) {
+        settingLocalDataSource.setSettingFloatingTransparent(value)
+    }
+
+    override fun getSettingAppTheme(): String = settingLocalDataSource.getSettingAppTheme()
+
+    override fun setSettingAppTheme(theme: String) = settingLocalDataSource.setSettingAppTheme(theme)
 }

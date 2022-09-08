@@ -94,12 +94,10 @@ class TickerDetailActivity : BaseActivity<ActivityTickerDetailBinding>(R.layout.
     }
 
     companion object {
-        fun startActivity(context: Context?, ticker: MyTickerInfo) {
-            context?.let {
-                val intent = Intent(context, TickerDetailActivity::class.java)
-                intent.putExtra(KEY_MY_TICKER, ticker)
-                it.startActivity(intent)
-            }
+        fun startActivity(context: Context, ticker: MyTickerInfo) {
+            val intent = Intent(context, TickerDetailActivity::class.java)
+            intent.putExtra(KEY_MY_TICKER, ticker)
+            context.startActivity(intent)
         }
 
         private const val KEY_MY_TICKER = "KEY_MY_TICKER"

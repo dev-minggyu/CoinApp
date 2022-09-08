@@ -1,25 +1,28 @@
 package com.example.coinapp.ui.splash
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import com.example.domain.usecase.setting.SettingFloatingWindowUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class InitViewModel @Inject constructor() : ViewModel() {
-    private val _isLoadCompleted = MutableStateFlow(false)
-    val isLoadCompleted = _isLoadCompleted.asStateFlow()
+class InitViewModel @Inject constructor(
+    private val settingFloatingWindowUseCase: SettingFloatingWindowUseCase
+) : ViewModel() {
+    private val _isEnableFloatingWindow = MutableStateFlow(false)
+    val isEnableFloatingWindow = _isEnableFloatingWindow.asStateFlow()
 
     init {
-        loading()
+        isEnabledFloatingWindow()
     }
 
-    private fun loading() {
-        viewModelScope.launch {
-            _isLoadCompleted.value = true
-        }
+    private fun isEnabledFloatingWindow() {
+        _isEnableFloatingWindow.value = settingFloatingWindowUseCase.get()
+    }
+
+    fun disableFloatingWindow() {
+        settingFloatingWindowUseCase.set(false)
     }
 }

@@ -8,18 +8,20 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class MainSettingViewModel @Inject constructor(
+class ShareSettingViewModel @Inject constructor(
     private val settingTickerChangeColorUseCase: SettingTickerChangeColorUseCase
 ) : ViewModel() {
     private val _tickerChangeColor = MutableStateFlow(true)
     val tickerChangeColor = _tickerChangeColor.asStateFlow()
 
     fun loadSettings() {
-        _tickerChangeColor.value = settingTickerChangeColorUseCase.get()
+        _tickerChangeColor.value = getChangeTickerColor()
     }
 
-    fun setTickerChangeColor(value: Boolean) {
+    fun setChangeTickerColor(value: Boolean) {
         settingTickerChangeColorUseCase.set(value)
         _tickerChangeColor.value = value
     }
+
+    fun getChangeTickerColor() = settingTickerChangeColorUseCase.get()
 }

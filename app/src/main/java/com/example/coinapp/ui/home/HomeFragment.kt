@@ -15,7 +15,7 @@ import com.example.coinapp.model.myasset.MyTickerInfo
 import com.example.coinapp.ui.floating.FloatingWindowService
 import com.example.coinapp.ui.home.adapter.TickerListAdapter
 import com.example.coinapp.ui.home.detail.TickerDetailActivity
-import com.example.coinapp.ui.main.MainSettingViewModel
+import com.example.coinapp.ui.main.ShareSettingViewModel
 import com.example.domain.model.ticker.Currency
 import com.example.domain.model.ticker.Ticker
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home), LifecycleEventObserver {
     private val _homeViewModel: HomeViewModel by viewModels()
 
-    private val _settingViewModel: MainSettingViewModel by activityViewModels()
+    private val _settingViewModel: ShareSettingViewModel by activityViewModels()
 
     private var _tickerListAdapter: TickerListAdapter? = null
 
@@ -69,7 +69,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home), 
         }
         _tickerListAdapter = TickerListAdapter(favoriteClickListener) { ticker ->
             TickerDetailActivity.startActivity(
-                context, MyTickerInfo(
+                requireContext(), MyTickerInfo(
                     ticker.symbol,
                     ticker.currencyType,
                     ticker.koreanSymbol,

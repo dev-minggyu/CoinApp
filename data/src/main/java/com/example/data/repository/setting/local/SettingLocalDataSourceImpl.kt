@@ -14,6 +14,10 @@ class SettingLocalDataSourceImpl @Inject constructor(
 
     override fun getSettingFloatingWindow(): Boolean = preferences.getBoolean(KEY_PREF_ENABLE_FLOATING_WINDOW, false)
 
+    override fun setSettingFloatingWindow(isEnable: Boolean) {
+        preferences.edit().putBoolean(KEY_PREF_ENABLE_FLOATING_WINDOW, isEnable).commit()
+    }
+
     override fun setSettingFloatingTickerList(list: List<String>) {
         preferences.edit().putStringSet(KEY_PREF_FLOATING_TICKER_SET, list.toSet()).commit()
     }
@@ -22,10 +26,21 @@ class SettingLocalDataSourceImpl @Inject constructor(
 
     override fun getSettingFloatingTransparent(): Int = preferences.getInt(KEY_PREF_FLOATING_WINDOW_TRANSPARENT, 127)
 
+    override fun setSettingFloatingTransparent(value: Int) {
+        preferences.edit().putInt(KEY_PREF_FLOATING_WINDOW_TRANSPARENT, value).commit()
+    }
+
+    override fun getSettingAppTheme(): String = preferences.getString(KEY_APP_THEME, "system")!!
+
+    override fun setSettingAppTheme(theme: String) {
+        preferences.edit().putString(KEY_APP_THEME, theme).commit()
+    }
+
     companion object {
         private const val KEY_TICKER_CHANGE_COLOR = "KEY_TICKER_CHANGE_COLOR"
         private const val KEY_PREF_ENABLE_FLOATING_WINDOW = "KEY_PREF_ENABLE_FLOATING_WINDOW"
         private const val KEY_PREF_FLOATING_TICKER_SET = "KEY_PREF_FLOATING_TICKER_SET"
         private const val KEY_PREF_FLOATING_WINDOW_TRANSPARENT = "KEY_PREF_FLOATING_WINDOW_TRANSPARENT"
+        private const val KEY_APP_THEME = "KEY_APP_THEME"
     }
 }

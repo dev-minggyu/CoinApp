@@ -1,4 +1,4 @@
-package com.example.coinapp.ui.setting
+package com.example.coinapp.ui.setting.floatingwindow
 
 import android.content.Context
 import android.content.Intent
@@ -8,15 +8,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.example.coinapp.R
 import com.example.coinapp.base.BaseActivity
-import com.example.coinapp.databinding.ActivitySettingFloatingSymbolBinding
+import com.example.coinapp.databinding.ActivitySettingFloatingTickerBinding
 import com.example.coinapp.extension.collectWithLifecycle
 import com.example.coinapp.ui.setting.adapter.CheckSymbolListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SettingFloatingSymbolActivity : BaseActivity<ActivitySettingFloatingSymbolBinding>(R.layout.activity_setting_floating_symbol) {
-    private val _settingFloatingSymbolViewModel: SettingFloatingSymbolViewModel by viewModels()
+class FloatingTickerSelectActivity : BaseActivity<ActivitySettingFloatingTickerBinding>(R.layout.activity_setting_floating_ticker) {
+    private val _floatingSymbolSelectViewModel: FloatingSymbolSelectViewModel by viewModels()
 
     private var _checkSymbolListAdapter: CheckSymbolListAdapter? = null
 
@@ -27,7 +27,7 @@ class SettingFloatingSymbolActivity : BaseActivity<ActivitySettingFloatingSymbol
         setupObserver()
         setupListener()
 
-        _settingFloatingSymbolViewModel.getFloatingSymbolList()
+        _floatingSymbolSelectViewModel.getFloatingSymbolList()
     }
 
     private fun setupListener() {
@@ -37,9 +37,9 @@ class SettingFloatingSymbolActivity : BaseActivity<ActivitySettingFloatingSymbol
             }?.map { ticker ->
                 ticker.symbol
             } ?: listOf()
-            _settingFloatingSymbolViewModel.setFloatingTickerList(result)
+            _floatingSymbolSelectViewModel.setFloatingTickerList(result)
             setResult(
-                SettingFragment.REQUEST_CHECKED_FLOATING_SYMBOL,
+                FloatingWindowSettingActivity.REQUEST_CHECKED_FLOATING_SYMBOL,
                 Intent().putStringArrayListExtra(KEY_CHECKED_FLOATING_SYMBOL_LIST, ArrayList(result))
             )
             finish()
@@ -48,7 +48,7 @@ class SettingFloatingSymbolActivity : BaseActivity<ActivitySettingFloatingSymbol
 
     private fun setupObserver() {
         lifecycleScope.launch {
-            _settingFloatingSymbolViewModel.symbolList.collectWithLifecycle(lifecycle) {
+            _floatingSymbolSelectViewModel.symbolList.collectWithLifecycle(lifecycle) {
                 it?.let { list ->
                     _checkSymbolListAdapter?.submitList(list)
                 }
@@ -69,7 +69,7 @@ class SettingFloatingSymbolActivity : BaseActivity<ActivitySettingFloatingSymbol
     companion object {
         const val KEY_CHECKED_FLOATING_SYMBOL_LIST = "KEY_CHECKED_FLOATING_SYMBOL_LIST"
 
-        fun createIntent(context: Context?): Intent =
-            Intent(context, SettingFloatingSymbolActivity::class.java)
+        fun createIntent(context: Context): Intent =
+            Intent(context, FloatingTickerSelectActivity::class.java)
     }
 }

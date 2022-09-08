@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="@dimen/_10sdp"
-        tools:context=".ui.setting.SettingFloatingSymbolActivity">
+        tools:context=".ui.setting.floatingwindow.FloatingTickerSelectActivity">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_symbol"

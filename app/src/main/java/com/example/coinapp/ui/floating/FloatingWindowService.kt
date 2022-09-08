@@ -67,6 +67,7 @@ class FloatingWindowService : Service() {
             _floatingListAdapter = null
             val windowManager = applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
             windowManager.removeView(it.root)
+            _windowView = null
         }
     }
 
