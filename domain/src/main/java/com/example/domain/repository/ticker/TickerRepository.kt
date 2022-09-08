@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.SharedFlow
 interface TickerRepository {
     val tickerSocketData: SharedFlow<TickerResource<TickerListModel>>
 
+    val tickerSocketUnfilteredData: SharedFlow<TickerResource<TickerListModel>>
+
     suspend fun subscribeTicker(receiveDelayMillis: Long): Resource<Unit>
 
     suspend fun unsubscribeTicker()

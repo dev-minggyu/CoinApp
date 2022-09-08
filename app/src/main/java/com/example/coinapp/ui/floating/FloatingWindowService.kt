@@ -17,7 +17,7 @@ import com.example.coinapp.ui.floating.adapter.FloatingListAdapter
 import com.example.coinapp.utils.NotificationUtil
 import com.example.domain.usecase.setting.SettingFloatingTickerListUseCase
 import com.example.domain.usecase.setting.SettingFloatingTransparentUseCase
-import com.example.domain.usecase.ticker.TickerDataUseCase
+import com.example.domain.usecase.ticker.UnfilteredTickerDataUseCase
 import com.example.domain.utils.TickerResource
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -29,7 +29,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class FloatingWindowService : Service() {
     @Inject
-    lateinit var _tickerDataUseCase: TickerDataUseCase
+    lateinit var _unfilteredTickerDataUseCase: UnfilteredTickerDataUseCase
 
     @Inject
     lateinit var _settingFloatingTickerListUseCase: SettingFloatingTickerListUseCase
@@ -130,7 +130,7 @@ class FloatingWindowService : Service() {
     private fun observeTickerData() {
         _floatingList = _settingFloatingTickerListUseCase.get()
         _serviceScope.launch(Dispatchers.Main) {
-            _tickerDataUseCase.execute().collect {
+            _unfilteredTickerDataUseCase.execute().collect {
                 when (it) {
                     is TickerResource.Update -> {
                         _floatingListAdapter?.submitList(

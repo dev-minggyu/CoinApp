@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.model.myasset.MyTicker
 import com.example.domain.usecase.myasset.GetMyAssetListUseCase
-import com.example.domain.usecase.ticker.TickerDataUseCase
+import com.example.domain.usecase.ticker.UnfilteredTickerDataUseCase
 import com.example.domain.utils.TickerResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyAssetViewModel @Inject constructor(
-    private val tickerDataUseCase: TickerDataUseCase,
+    private val unfilteredTickerDataUseCase: UnfilteredTickerDataUseCase,
     private val getMyAssetListUseCase: GetMyAssetListUseCase
 ) : ViewModel() {
     private val _myAssetList: MutableStateFlow<List<MyTicker>?> = MutableStateFlow(null)
@@ -28,7 +28,7 @@ class MyAssetViewModel @Inject constructor(
 
     private fun observeTickerList() {
         viewModelScope.launch {
-            tickerDataUseCase.execute()
+            unfilteredTickerDataUseCase.execute()
                 .collect { tickerResource ->
                     when (tickerResource) {
                         is TickerResource.Update -> {

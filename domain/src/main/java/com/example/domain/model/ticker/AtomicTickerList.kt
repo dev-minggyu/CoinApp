@@ -17,6 +17,8 @@ interface AtomicTickerList {
 
     suspend fun getList(sortModel: SortModel? = null, searchSymbol: String? = null): TickerListModel
 
+    suspend fun getUnfilteredList(): TickerListModel
+
     fun sortList()
 
     fun getValidTickerSize(): Int

@@ -64,6 +64,10 @@ class AtomicTickerListImpl @Inject constructor() : AtomicTickerList {
         TickerListModel(result, this.sortModel.copy())
     }
 
+    override suspend fun getUnfilteredList(): TickerListModel = mutex.withLock {
+        TickerListModel(copyTickerList(), this.sortModel.copy())
+    }
+
     private fun copyTickerList(): List<Ticker> =
         list.map {
             it.copy()

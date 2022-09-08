@@ -34,6 +34,13 @@ class TickerRepositoryImpl @Inject constructor(
     )
     override val tickerSocketData = _tickerSocketData.asSharedFlow()
 
+    private val _tickerSocketUnfilteredData = MutableSharedFlow<TickerResource<TickerListModel>>(
+        replay = 0,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    override val tickerSocketUnfilteredData = _tickerSocketUnfilteredData.asSharedFlow()
+
     override suspend fun subscribeTicker(receiveDelayMillis: Long): Resource<Unit> =
         withContext(Dispatchers.IO) {
             if (tickerSocketService.isAlreadyOpen()) return@withContext Resource.Success(Unit)
@@ -74,11 +81,13 @@ class TickerRepositoryImpl @Inject constructor(
                                     }
                                 } else {
                                     _tickerSocketData.emit(TickerResource.Update(atomicTickerList.getList()))
+                                    _tickerSocketUnfilteredData.emit(TickerResource.Update(atomicTickerList.getUnfilteredList()))
                                     delay(receiveDelayMillis)
                                 }
                             }
                             else -> {
                                 _tickerSocketData.emit(TickerResource.Error(null))
+                                _tickerSocketUnfilteredData.emit(TickerResource.Error(null))
                             }
                         }
                     }.launchIn(_coroutineScope)
