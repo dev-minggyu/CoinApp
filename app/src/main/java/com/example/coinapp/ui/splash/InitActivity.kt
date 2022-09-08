@@ -9,7 +9,7 @@ import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.example.coinapp.R
-import com.example.coinapp.base.BaseActivity
+import com.example.coinapp.ui.base.BaseActivity
 import com.example.coinapp.databinding.ActivityInitBinding
 import com.example.coinapp.extension.collectWithLifecycle
 import com.example.coinapp.ui.floating.FloatingWindowService

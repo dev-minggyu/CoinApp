@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.model.ticker.Currency
 import com.example.domain.model.ticker.Ticker
-import com.example.domain.usecase.detail.TickerDetailUseCase
+import com.example.domain.usecase.ticker.TickerSingleDataUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,14 +13,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TickerDetailViewModel @Inject constructor(
-    private val tickerDetailUseCase: TickerDetailUseCase
+    private val tickerSingleDataUseCase: TickerSingleDataUseCase
 ) : ViewModel() {
     private val _ticker: MutableStateFlow<Ticker?> = MutableStateFlow(null)
     val ticker = _ticker.asStateFlow()
 
     fun observeTicker(symbol: String, currency: Currency) {
         viewModelScope.launch {
-            tickerDetailUseCase.execute(symbol, currency).collect {
+            tickerSingleDataUseCase.execute(symbol, currency).collect {
                 _ticker.value = it
             }
         }

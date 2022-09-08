@@ -1,4 +1,4 @@
-package com.example.domain.repository.tickersymbol
+package com.example.domain.repository.ticker
 
 import com.example.domain.utils.Resource
 

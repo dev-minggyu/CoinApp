@@ -5,7 +5,7 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.coinapp.R
-import com.example.coinapp.base.BaseBottomSheetDialogFragment
+import com.example.coinapp.ui.base.BaseBottomSheetDialogFragment
 import com.example.coinapp.databinding.FragmentDialogAddMyAssetBinding
 import com.example.coinapp.extension.addNumberFormatter
 import com.example.coinapp.extension.collectWithLifecycle

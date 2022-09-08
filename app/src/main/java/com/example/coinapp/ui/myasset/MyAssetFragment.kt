@@ -6,7 +6,7 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.coinapp.R
-import com.example.coinapp.base.BaseFragment
+import com.example.coinapp.ui.base.BaseFragment
 import com.example.coinapp.databinding.FragmentMyAssetBinding
 import com.example.coinapp.extension.collectWithLifecycle
 import com.example.coinapp.model.myasset.MyAssetHeader

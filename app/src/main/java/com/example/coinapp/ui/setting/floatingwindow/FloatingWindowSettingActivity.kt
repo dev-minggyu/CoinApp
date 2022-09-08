@@ -10,7 +10,7 @@ import android.os.IBinder
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import com.example.coinapp.R
-import com.example.coinapp.base.BaseActivity
+import com.example.coinapp.ui.base.BaseActivity
 import com.example.coinapp.databinding.ActivityFloatingWindowSettingBinding
 import com.example.coinapp.ui.floating.FloatingWindowService
 import com.example.coinapp.ui.floating.FloatingWindowServiceBinder

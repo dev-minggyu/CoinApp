@@ -7,7 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.example.coinapp.R
-import com.example.coinapp.base.BaseFragment
+import com.example.coinapp.ui.base.BaseFragment
 import com.example.coinapp.databinding.FragmentHomeBinding
 import com.example.coinapp.extension.collectWithLifecycle
 import com.example.coinapp.extension.isServiceRunning

@@ -10,7 +10,7 @@ import android.webkit.WebViewClient
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.coinapp.R
-import com.example.coinapp.base.BaseActivity
+import com.example.coinapp.ui.base.BaseActivity
 import com.example.coinapp.databinding.ActivityTickerDetailBinding
 import com.example.coinapp.extension.collectWithLifecycle
 import com.example.coinapp.model.myasset.MyTickerInfo

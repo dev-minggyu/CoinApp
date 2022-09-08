@@ -5,7 +5,7 @@ import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.example.coinapp.R
-import com.example.coinapp.base.BaseFragment
+import com.example.coinapp.ui.base.BaseFragment
 import com.example.coinapp.databinding.FragmentSettingBinding
 import com.example.coinapp.extension.showThemeDialog
 import com.example.coinapp.ui.main.ShareSettingViewModel

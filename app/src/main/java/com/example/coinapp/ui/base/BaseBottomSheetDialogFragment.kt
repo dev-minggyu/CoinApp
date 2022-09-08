@@ -1,4 +1,4 @@
-package com.example.coinapp.base
+package com.example.coinapp.ui.base
 
 import android.os.Bundle
 import android.view.LayoutInflater
