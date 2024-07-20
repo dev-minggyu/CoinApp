@@ -15,7 +15,8 @@ import javax.inject.Inject
 class TickerDetailViewModel @Inject constructor(
     private val tickerSingleDataUseCase: TickerSingleDataUseCase
 ) : ViewModel() {
-    private val _ticker: MutableStateFlow<Ticker?> = MutableStateFlow(null)
+    private val _ticker: MutableStateFlow<Ticker?> =
+        MutableStateFlow(null)
     val ticker = _ticker.asStateFlow()
 
     fun observeTicker(symbol: String, currency: Currency) {

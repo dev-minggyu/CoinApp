@@ -40,15 +40,31 @@ class AssetHeaderViewHolder(private val binding: ItemAssetHeaderBinding) :
     private fun ItemAssetHeaderBinding.setupTextViewColor(item: MyAssetHeader) {
         tvPnl.setTextColor(
             when {
-                item.totalAsset - item.totalBuy > 0 -> ContextCompat.getColor(itemView.context, R.color.color_price_up)
-                item.totalAsset - item.totalBuy < 0 -> ContextCompat.getColor(itemView.context, R.color.color_price_down)
+                item.totalAsset - item.totalBuy > 0 -> ContextCompat.getColor(
+                    itemView.context,
+                    R.color.color_price_up
+                )
+
+                item.totalAsset - item.totalBuy < 0 -> ContextCompat.getColor(
+                    itemView.context,
+                    R.color.color_price_down
+                )
+
                 else -> ContextCompat.getColor(itemView.context, R.color.color_price_same)
             }
         )
         tvPnlPercent.setTextColor(
             when {
-                item.totalAsset - item.totalBuy > 0 -> ContextCompat.getColor(itemView.context, R.color.color_price_up)
-                item.totalAsset - item.totalBuy < 0 -> ContextCompat.getColor(itemView.context, R.color.color_price_down)
+                item.totalAsset - item.totalBuy > 0 -> ContextCompat.getColor(
+                    itemView.context,
+                    R.color.color_price_up
+                )
+
+                item.totalAsset - item.totalBuy < 0 -> ContextCompat.getColor(
+                    itemView.context,
+                    R.color.color_price_down
+                )
+
                 else -> ContextCompat.getColor(itemView.context, R.color.color_price_same)
             }
         )

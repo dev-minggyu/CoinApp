@@ -10,15 +10,16 @@ import android.os.IBinder
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import com.example.coinapp.R
-import com.example.coinapp.ui.base.BaseActivity
 import com.example.coinapp.databinding.ActivityFloatingWindowSettingBinding
+import com.example.coinapp.ui.base.BaseActivity
 import com.example.coinapp.ui.floating.FloatingWindowService
 import com.example.coinapp.ui.floating.FloatingWindowServiceBinder
 import com.example.coinapp.utils.ActivityOverlayPermissionManager
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class FloatingWindowSettingActivity : BaseActivity<ActivityFloatingWindowSettingBinding>(R.layout.activity_floating_window_setting) {
+class FloatingWindowSettingActivity :
+    BaseActivity<ActivityFloatingWindowSettingBinding>(R.layout.activity_floating_window_setting) {
     private val _floatingWindowSettingViewModel: FloatingWindowSettingViewModel by viewModels()
 
     private var _floatingWindowService: FloatingWindowService? = null
@@ -33,15 +34,17 @@ class FloatingWindowSettingActivity : BaseActivity<ActivityFloatingWindowSetting
 
     private lateinit var _overlayPermissionManager: ActivityOverlayPermissionManager
 
-    private val activityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        when (result.resultCode) {
-            REQUEST_CHECKED_FLOATING_SYMBOL -> {
-                result.data?.getStringArrayListExtra(FloatingTickerSelectActivity.KEY_CHECKED_FLOATING_SYMBOL_LIST)?.let {
-                    _floatingWindowService?.setFloatingList(it.toList())
+    private val activityResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            when (result.resultCode) {
+                REQUEST_CHECKED_FLOATING_SYMBOL -> {
+                    result.data?.getStringArrayListExtra(FloatingTickerSelectActivity.KEY_CHECKED_FLOATING_SYMBOL_LIST)
+                        ?.let {
+                            _floatingWindowService?.setFloatingList(it.toList())
+                        }
                 }
             }
         }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +64,8 @@ class FloatingWindowSettingActivity : BaseActivity<ActivityFloatingWindowSetting
             if (it) startFloatingWindowService()
         }
 
-        binding.seekbarFloatingWindowTransparent.progress = _floatingWindowSettingViewModel.getFloatingWindowTransparent()
+        binding.seekbarFloatingWindowTransparent.progress =
+            _floatingWindowSettingViewModel.getFloatingWindowTransparent()
     }
 
     fun settingMenuClick(id: Int) {

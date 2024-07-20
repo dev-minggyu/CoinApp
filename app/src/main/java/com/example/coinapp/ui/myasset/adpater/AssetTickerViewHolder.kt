@@ -21,20 +21,37 @@ class AssetTickerViewHolder(private val binding: ItemAssetTickerBinding) :
             ticker = item
             tvPnl.setTextColor(
                 when {
-                    currentValue - buyValue > 0 -> ContextCompat.getColor(itemView.context, R.color.color_price_up)
-                    currentValue - buyValue < 0 -> ContextCompat.getColor(itemView.context, R.color.color_price_down)
+                    currentValue - buyValue > 0 -> ContextCompat.getColor(
+                        itemView.context,
+                        R.color.color_price_up
+                    )
+
+                    currentValue - buyValue < 0 -> ContextCompat.getColor(
+                        itemView.context,
+                        R.color.color_price_down
+                    )
+
                     else -> ContextCompat.getColor(itemView.context, R.color.color_price_same)
                 }
             )
             tvPnlPercent.setTextColor(
                 when {
-                    currentValue - buyValue > 0 -> ContextCompat.getColor(itemView.context, R.color.color_price_up)
-                    currentValue - buyValue < 0 -> ContextCompat.getColor(itemView.context, R.color.color_price_down)
+                    currentValue - buyValue > 0 -> ContextCompat.getColor(
+                        itemView.context,
+                        R.color.color_price_up
+                    )
+
+                    currentValue - buyValue < 0 -> ContextCompat.getColor(
+                        itemView.context,
+                        R.color.color_price_down
+                    )
+
                     else -> ContextCompat.getColor(itemView.context, R.color.color_price_same)
                 }
             )
             tvPnl.text = priceFormat.format(currentValue - buyValue)
-            tvPnlPercent.text = String.format("%.2f", ((currentValue - buyValue) / buyValue) * 100) + "%"
+            tvPnlPercent.text =
+                String.format("%.2f", ((currentValue - buyValue) / buyValue) * 100) + "%"
             tvAmount.text = priceFormat.format(item.amount.toDouble())
             tvAveragePrice.text = priceFormat.format(item.averagePrice.toFloat())
             tvPriceValue.text = priceFormat.format(currentValue)

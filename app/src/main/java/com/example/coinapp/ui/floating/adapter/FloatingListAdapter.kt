@@ -8,7 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.coinapp.databinding.ItemFloatingTickerBinding
 import com.example.domain.model.ticker.Ticker
 
-class FloatingListAdapter : ListAdapter<Ticker, FloatingListAdapter.FloatingViewHolder>(TickerDiffCallback()) {
+class FloatingListAdapter :
+    ListAdapter<Ticker, FloatingListAdapter.FloatingViewHolder>(
+        TickerDiffCallback()
+    ) {
     override fun onBindViewHolder(holder: FloatingViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
@@ -30,11 +33,17 @@ class FloatingListAdapter : ListAdapter<Ticker, FloatingListAdapter.FloatingView
     }
 
     class TickerDiffCallback : DiffUtil.ItemCallback<Ticker>() {
-        override fun areItemsTheSame(oldItem: Ticker, newItem: Ticker): Boolean {
+        override fun areItemsTheSame(
+            oldItem: Ticker,
+            newItem: Ticker
+        ): Boolean {
             return oldItem.symbol == newItem.symbol
         }
 
-        override fun areContentsTheSame(oldItem: Ticker, newItem: Ticker): Boolean {
+        override fun areContentsTheSame(
+            oldItem: Ticker,
+            newItem: Ticker
+        ): Boolean {
             return oldItem == newItem
         }
     }

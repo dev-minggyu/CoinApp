@@ -17,14 +17,15 @@ class ActivityOverlayPermissionManager private constructor(private val activity:
     private var callback: (Boolean) -> Unit = {}
 
     private val permissionCheck =
-        activity.get()?.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            activity.get()?.let {
-                when (Settings.canDrawOverlays(it)) {
-                    true -> sendResultAndCleanUp(true)
-                    false -> sendResultAndCleanUp(false)
+        activity.get()
+            ?.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                activity.get()?.let {
+                    when (Settings.canDrawOverlays(it)) {
+                        true -> sendResultAndCleanUp(true)
+                        false -> sendResultAndCleanUp(false)
+                    }
                 }
             }
-        }
 
     fun checkPermission(callback: (Boolean) -> Unit) {
         this.callback = callback
@@ -61,6 +62,7 @@ class ActivityOverlayPermissionManager private constructor(private val activity:
     }
 
     companion object {
-        fun from(activity: AppCompatActivity) = ActivityOverlayPermissionManager(WeakReference(activity))
+        fun from(activity: AppCompatActivity) =
+            ActivityOverlayPermissionManager(WeakReference(activity))
     }
 }

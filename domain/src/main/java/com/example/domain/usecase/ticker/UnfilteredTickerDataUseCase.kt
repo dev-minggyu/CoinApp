@@ -7,5 +7,6 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class UnfilteredTickerDataUseCase @Inject constructor(private val repository: TickerRepository) {
-    fun execute(): Flow<TickerResource<TickerListModel>> = repository.tickerSocketUnfilteredData
+    fun execute(): Flow<TickerResource<TickerListModel>> =
+        repository.tickerSocketUnfilteredData
 }

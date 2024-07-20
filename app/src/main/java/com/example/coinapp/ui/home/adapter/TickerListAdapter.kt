@@ -14,7 +14,9 @@ import com.example.domain.model.ticker.Ticker
 class TickerListAdapter(
     private val favoriteClickListener: FavoriteClickListener?,
     private val tickerClickListener: (Ticker) -> Unit
-) : ListAdapter<Ticker, TickerListAdapter.TickerViewHolder>(TickerDiffCallback()) {
+) : ListAdapter<Ticker, TickerListAdapter.TickerViewHolder>(
+    TickerDiffCallback()
+) {
 
     private var tickerChangeColor = true
 
@@ -60,7 +62,8 @@ class TickerListAdapter(
             val currentPrice = item.currentPrice.toFloat()
             if (prevPrice != currentPrice) {
                 itemView.apply {
-                    val startColor = ContextCompat.getColor(context, R.color.color_background_regular2)
+                    val startColor =
+                        ContextCompat.getColor(context, R.color.color_background_regular2)
                     val endColor = if (prevPrice < currentPrice) {
                         ContextCompat.getColor(context, R.color.color_price_up_transparent)
                     } else {
@@ -77,11 +80,17 @@ class TickerListAdapter(
     }
 
     class TickerDiffCallback : DiffUtil.ItemCallback<Ticker>() {
-        override fun areItemsTheSame(oldItem: Ticker, newItem: Ticker): Boolean {
+        override fun areItemsTheSame(
+            oldItem: Ticker,
+            newItem: Ticker
+        ): Boolean {
             return oldItem.symbol == newItem.symbol
         }
 
-        override fun areContentsTheSame(oldItem: Ticker, newItem: Ticker): Boolean {
+        override fun areContentsTheSame(
+            oldItem: Ticker,
+            newItem: Ticker
+        ): Boolean {
             return oldItem == newItem
         }
     }

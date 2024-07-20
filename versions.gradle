@@ -1,5 +1,5 @@
 def versions = [:]
-versions.gradle = '7.2.2'
+versions.gradle = '8.5.0'
 versions.kotlin = '1.7.10'
 versions.core_ktx = '1.8.0'
 versions.appcompat = '1.5.0'

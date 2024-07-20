@@ -7,15 +7,16 @@ import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.example.coinapp.R
-import com.example.coinapp.ui.base.BaseActivity
 import com.example.coinapp.databinding.ActivitySettingFloatingTickerBinding
 import com.example.coinapp.extension.collectWithLifecycle
+import com.example.coinapp.ui.base.BaseActivity
 import com.example.coinapp.ui.setting.adapter.CheckSymbolListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class FloatingTickerSelectActivity : BaseActivity<ActivitySettingFloatingTickerBinding>(R.layout.activity_setting_floating_ticker) {
+class FloatingTickerSelectActivity :
+    BaseActivity<ActivitySettingFloatingTickerBinding>(R.layout.activity_setting_floating_ticker) {
     private val _floatingSymbolSelectViewModel: FloatingSymbolSelectViewModel by viewModels()
 
     private var _checkSymbolListAdapter: CheckSymbolListAdapter? = null
@@ -40,7 +41,10 @@ class FloatingTickerSelectActivity : BaseActivity<ActivitySettingFloatingTickerB
             _floatingSymbolSelectViewModel.setFloatingTickerList(result)
             setResult(
                 FloatingWindowSettingActivity.REQUEST_CHECKED_FLOATING_SYMBOL,
-                Intent().putStringArrayListExtra(KEY_CHECKED_FLOATING_SYMBOL_LIST, ArrayList(result))
+                Intent().putStringArrayListExtra(
+                    KEY_CHECKED_FLOATING_SYMBOL_LIST,
+                    ArrayList(result)
+                )
             )
             finish()
         }

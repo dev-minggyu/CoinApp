@@ -8,7 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.coinapp.databinding.ItemCheckSymbolBinding
 import com.example.domain.model.setting.FloatingTicker
 
-class CheckSymbolListAdapter : ListAdapter<FloatingTicker, CheckSymbolListAdapter.SymbolViewHolder>(SymbolDiffCallback()) {
+class CheckSymbolListAdapter :
+    ListAdapter<FloatingTicker, CheckSymbolListAdapter.SymbolViewHolder>(
+        SymbolDiffCallback()
+    ) {
     override fun onBindViewHolder(holder: SymbolViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
@@ -29,12 +32,19 @@ class CheckSymbolListAdapter : ListAdapter<FloatingTicker, CheckSymbolListAdapte
         }
     }
 
-    class SymbolDiffCallback : DiffUtil.ItemCallback<FloatingTicker>() {
-        override fun areItemsTheSame(oldItem: FloatingTicker, newItem: FloatingTicker): Boolean {
+    class SymbolDiffCallback :
+        DiffUtil.ItemCallback<FloatingTicker>() {
+        override fun areItemsTheSame(
+            oldItem: FloatingTicker,
+            newItem: FloatingTicker
+        ): Boolean {
             return oldItem.symbol == newItem.symbol
         }
 
-        override fun areContentsTheSame(oldItem: FloatingTicker, newItem: FloatingTicker): Boolean {
+        override fun areContentsTheSame(
+            oldItem: FloatingTicker,
+            newItem: FloatingTicker
+        ): Boolean {
             return oldItem == newItem
         }
     }

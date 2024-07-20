@@ -1,7 +1,7 @@
 package com.example.coinapp.di
 
+import com.example.network.mapper.ticker.TickerMapperProvider
 import com.example.coinapp.provider.TickerMapperProviderImpl
-import com.example.data.mapper.ticker.TickerMapperProvider
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

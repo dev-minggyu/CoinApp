@@ -17,10 +17,12 @@ class MyAssetViewModel @Inject constructor(
     private val unfilteredTickerDataUseCase: UnfilteredTickerDataUseCase,
     private val getMyAssetListUseCase: GetMyAssetListUseCase
 ) : ViewModel() {
-    private val _myAssetList: MutableStateFlow<List<MyTicker>?> = MutableStateFlow(null)
+    private val _myAssetList: MutableStateFlow<List<MyTicker>?> =
+        MutableStateFlow(null)
     val myAssetList = _myAssetList.asStateFlow()
 
-    private var _assetList: MutableList<MyTicker> = mutableListOf()
+    private var _assetList: MutableList<MyTicker> =
+        mutableListOf()
 
     init {
         observeTickerList()
@@ -34,15 +36,17 @@ class MyAssetViewModel @Inject constructor(
                         is TickerResource.Update -> {
                             if (_assetList.isNotEmpty()) {
                                 _assetList.forEach { myTicker ->
-                                    myTicker.currentPrice = tickerResource.data.tickerList.find { ticker ->
-                                        ticker.symbol == myTicker.symbol && ticker.currencyType == myTicker.currencyType
-                                    }?.currentPrice ?: "0"
+                                    myTicker.currentPrice =
+                                        tickerResource.data.tickerList.find { ticker ->
+                                            ticker.symbol == myTicker.symbol && ticker.currencyType == myTicker.currencyType
+                                        }?.currentPrice ?: "0"
                                 }
                                 _myAssetList.value = _assetList.map {
                                     it.copy()
                                 }
                             }
                         }
+
                         else -> {}
                     }
                 }

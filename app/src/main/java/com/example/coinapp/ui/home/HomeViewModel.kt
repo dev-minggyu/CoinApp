@@ -8,7 +8,11 @@ import com.example.domain.model.ticker.SortModel
 import com.example.domain.model.ticker.Ticker
 import com.example.domain.usecase.favoriteticker.FavoriteTickerUseCase
 import com.example.domain.usecase.setting.SettingFloatingWindowUseCase
-import com.example.domain.usecase.ticker.*
+import com.example.domain.usecase.ticker.SubscribeTickerUseCase
+import com.example.domain.usecase.ticker.TickerDataUseCase
+import com.example.domain.usecase.ticker.TickerSearchUseCase
+import com.example.domain.usecase.ticker.TickerSortUseCase
+import com.example.domain.usecase.ticker.UnsubscribeTickerUseCase
 import com.example.domain.utils.Resource
 import com.example.domain.utils.TickerResource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,12 +31,14 @@ class HomeViewModel @Inject constructor(
     private val unsubscribeTickerUseCase: UnsubscribeTickerUseCase,
     private val settingFloatingWindowUseCase: SettingFloatingWindowUseCase
 ) : ViewModel() {
-    private val _tickerList: MutableStateFlow<List<Ticker>?> = MutableStateFlow(null)
+    private val _tickerList: MutableStateFlow<List<Ticker>?> =
+        MutableStateFlow(null)
     val tickerList = _tickerList.asStateFlow()
 
     val searchText: MutableStateFlow<String?> = MutableStateFlow(null)
 
-    val sortModel: MutableStateFlow<SortModel?> = MutableStateFlow(null)
+    val sortModel: MutableStateFlow<SortModel?> =
+        MutableStateFlow(null)
 
     private val _errorTicker: MutableStateFlow<String?> = MutableStateFlow(null)
     val errorTicker = _errorTicker.asStateFlow()
@@ -56,16 +62,19 @@ class HomeViewModel @Inject constructor(
                             _tickerList.value = it.data.tickerList
                             sortModel.value = it.data.sortModel
                         }
+
                         is TickerResource.Refresh -> {
                             _loadingTicker.value = false
                             _tickerList.value = null
                             _tickerList.value = it.data.tickerList
                             sortModel.value = it.data.sortModel
                         }
+
                         is TickerResource.Error -> {
                             _loadingTicker.value = false
                             _errorTicker.value = App.getString(R.string.error_network)
                         }
+
                         else -> {}
                     }
                 }
@@ -113,6 +122,7 @@ class HomeViewModel @Inject constructor(
                     _loadingTicker.value = false
                     _errorTicker.value = App.getString(R.string.error_network)
                 }
+
                 else -> {}
             }
         }

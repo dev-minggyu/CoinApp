@@ -13,7 +13,7 @@ import com.example.coinapp.ui.home.adapter.TickerListAdapter
 import com.example.domain.model.ticker.SortModel
 import com.example.domain.model.ticker.Ticker
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.util.*
+import java.util.Locale
 
 object BindingAdapter {
     @JvmStatic
@@ -39,7 +39,8 @@ object BindingAdapter {
 
     @JvmStatic
     @InverseBindingAdapter(attribute = "sortState", event = "sortStateAttrChanged")
-    fun inverseBindSortState(view: SortButton): SortModel = view.getSortState()
+    fun inverseBindSortState(view: SortButton): SortModel =
+        view.getSortState()
 
     @JvmStatic
     @BindingAdapter("sortStateAttrChanged")
@@ -80,9 +81,11 @@ object BindingAdapter {
                 it.toFloat() > 0 -> {
                     ContextCompat.getColor(view.context, R.color.color_price_up)
                 }
+
                 it.toFloat() < 0 -> {
                     ContextCompat.getColor(view.context, R.color.color_price_down)
                 }
+
                 else -> ContextCompat.getColor(view.context, R.color.color_price_same)
             }
             view.setTextColor(color)

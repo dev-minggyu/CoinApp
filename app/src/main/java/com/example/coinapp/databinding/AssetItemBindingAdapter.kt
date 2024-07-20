@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.example.domain.model.myasset.MyTicker
-import java.util.*
+import java.util.Locale
 
 object AssetItemBindingAdapter {
     @SuppressLint("SetTextI18n")

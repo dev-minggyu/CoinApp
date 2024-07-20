@@ -22,5 +22,8 @@ interface TickerRepository {
 
     suspend fun searchTickerList(searchSymbol: String)
 
-    suspend fun observeSingleTicker(symbol: String, currency: Currency): Flow<Ticker>
+    suspend fun observeSingleTicker(
+        symbol: String,
+        currency: Currency
+    ): Flow<Ticker>
 }

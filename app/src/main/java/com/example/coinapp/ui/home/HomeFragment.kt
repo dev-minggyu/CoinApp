@@ -4,14 +4,18 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.*
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.example.coinapp.R
-import com.example.coinapp.ui.base.BaseFragment
 import com.example.coinapp.databinding.FragmentHomeBinding
 import com.example.coinapp.extension.collectWithLifecycle
 import com.example.coinapp.extension.isServiceRunning
 import com.example.coinapp.model.myasset.MyTickerInfo
+import com.example.coinapp.ui.base.BaseFragment
 import com.example.coinapp.ui.floating.FloatingWindowService
 import com.example.coinapp.ui.home.adapter.TickerListAdapter
 import com.example.coinapp.ui.home.detail.TickerDetailActivity
@@ -22,7 +26,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home), LifecycleEventObserver {
+class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
+    LifecycleEventObserver {
     private val _homeViewModel: HomeViewModel by viewModels()
 
     private val _settingViewModel: ShareSettingViewModel by activityViewModels()
@@ -97,10 +102,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home), 
         when (categoryId) {
             R.id.btn_krw ->
                 _tickerListAdapter?.submitList(_tickerList?.filter { it.currencyType == Currency.KRW })
+
             R.id.btn_btc ->
                 _tickerListAdapter?.submitList(_tickerList?.filter { it.currencyType == Currency.BTC })
+
             R.id.btn_usdt ->
                 _tickerListAdapter?.submitList(_tickerList?.filter { it.currencyType == Currency.USDT })
+
             R.id.btn_favorite ->
                 _tickerListAdapter?.submitList(_tickerList?.filter { it.isFavorite })
         }
@@ -114,6 +122,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home), 
                     _homeViewModel.unsubscribeTicker()
                 }
             }
+
             else -> {}
         }
     }

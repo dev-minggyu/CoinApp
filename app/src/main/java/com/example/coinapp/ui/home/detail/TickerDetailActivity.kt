@@ -10,10 +10,10 @@ import android.webkit.WebViewClient
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.coinapp.R
-import com.example.coinapp.ui.base.BaseActivity
 import com.example.coinapp.databinding.ActivityTickerDetailBinding
 import com.example.coinapp.extension.collectWithLifecycle
 import com.example.coinapp.model.myasset.MyTickerInfo
+import com.example.coinapp.ui.base.BaseActivity
 import com.example.coinapp.ui.myasset.dialog.AddMyAssetDialogFragment
 import com.example.coinapp.utils.AppThemeManager
 import com.example.coinapp.utils.TradingViewUtil
@@ -21,7 +21,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class TickerDetailActivity : BaseActivity<ActivityTickerDetailBinding>(R.layout.activity_ticker_detail) {
+class TickerDetailActivity :
+    BaseActivity<ActivityTickerDetailBinding>(R.layout.activity_ticker_detail) {
     private val _tickerDetailViewModel: TickerDetailViewModel by viewModels()
 
     private var _myTickerInfo: MyTickerInfo? = null

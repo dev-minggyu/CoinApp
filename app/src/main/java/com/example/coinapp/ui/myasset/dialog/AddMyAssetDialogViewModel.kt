@@ -18,7 +18,8 @@ class AddMyAssetDialogViewModel @Inject constructor(
     private val addMyAssetUseCase: AddMyAssetUseCase,
     private val deleteMyAssetUseCase: DeleteMyAssetUseCase
 ) : ViewModel() {
-    private val _myAssetTicker: MutableStateFlow<MyTicker?> = MutableStateFlow(null)
+    private val _myAssetTicker: MutableStateFlow<MyTicker?> =
+        MutableStateFlow(null)
     val myAssetTicker = _myAssetTicker.asStateFlow()
 
     fun checkMyAssetTicker(symbol: String, currency: String) {

@@ -65,7 +65,8 @@ class FloatingWindowService : Service() {
         _windowView?.let {
             _serviceJob.cancel()
             _floatingListAdapter = null
-            val windowManager = applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            val windowManager =
+                applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
             windowManager.removeView(it.root)
             _windowView = null
         }
@@ -75,7 +76,8 @@ class FloatingWindowService : Service() {
     private fun createView() {
         if (_windowView != null) return
 
-        val layoutInflater = applicationContext.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val layoutInflater =
+            applicationContext.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val windowManager = applicationContext.getSystemService(WINDOW_SERVICE) as WindowManager
 
         _windowView = FloatingViewBinding.inflate(layoutInflater, null, false).also { binding ->
@@ -96,6 +98,7 @@ class FloatingWindowService : Service() {
                         _viewPosY = layoutParams.y - motionEvent.rawY
                         return@setOnTouchListener true
                     }
+
                     MotionEvent.ACTION_MOVE -> {
                         layoutParams.x = (_viewPosX + motionEvent.rawX).toInt()
                         layoutParams.y = (_viewPosY + motionEvent.rawY).toInt()
@@ -139,6 +142,7 @@ class FloatingWindowService : Service() {
                             }
                         )
                     }
+
                     else -> {}
                 }
             }

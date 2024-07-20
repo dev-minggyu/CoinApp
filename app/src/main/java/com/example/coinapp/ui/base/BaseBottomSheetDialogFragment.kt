@@ -9,7 +9,8 @@ import androidx.databinding.ViewDataBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-abstract class BaseBottomSheetDialogFragment<T : ViewDataBinding>(private val layoutId: Int) : BottomSheetDialogFragment() {
+abstract class BaseBottomSheetDialogFragment<T : ViewDataBinding>(private val layoutId: Int) :
+    BottomSheetDialogFragment() {
     private var _binding: T? = null
     val binding get() = _binding!!
 

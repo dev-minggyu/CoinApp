@@ -16,7 +16,8 @@ class FloatingSymbolSelectViewModel @Inject constructor(
     private val settingFloatingTickerListUseCase: SettingFloatingTickerListUseCase,
     private val allFloatingTickerListUseCase: AllFloatingTickerListUseCase
 ) : ViewModel() {
-    private val _symbolList: MutableStateFlow<List<FloatingTicker>?> = MutableStateFlow(null)
+    private val _symbolList: MutableStateFlow<List<FloatingTicker>?> =
+        MutableStateFlow(null)
     val symbolList = _symbolList.asStateFlow()
 
     fun getFloatingSymbolList() {

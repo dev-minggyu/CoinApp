@@ -35,6 +35,7 @@ class MyAssetListAdapter(
                 val item = getItem(position) as MyAssetItem.Header
                 holder.bind(item.header)
             }
+
             is AssetTickerViewHolder -> {
                 val item = getItem(position) as MyAssetItem.Ticker
                 holder.itemView.setOnClickListener {
@@ -51,9 +52,11 @@ class MyAssetListAdapter(
             HEADER -> AssetHeaderViewHolder(
                 ItemAssetHeaderBinding.inflate(layoutInflater, parent, false)
             )
+
             TICKER -> AssetTickerViewHolder(
                 ItemAssetTickerBinding.inflate(layoutInflater, parent, false)
             )
+
             else -> throw IllegalArgumentException("Unknown viewType $viewType")
         }
     }

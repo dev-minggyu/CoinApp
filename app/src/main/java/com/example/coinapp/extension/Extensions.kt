@@ -9,7 +9,10 @@ import androidx.lifecycle.flowWithLifecycle
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.StateFlow
 
-suspend fun <T> StateFlow<T>.collectWithLifecycle(lifecycle: Lifecycle, collector: FlowCollector<T>) =
+suspend fun <T> StateFlow<T>.collectWithLifecycle(
+    lifecycle: Lifecycle,
+    collector: FlowCollector<T>
+) =
     flowWithLifecycle(lifecycle).collect(collector)
 
 inline fun <reified T : Enum<T>> TypedArray.getEnum(index: Int) =

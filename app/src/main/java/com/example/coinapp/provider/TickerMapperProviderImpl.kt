@@ -3,14 +3,15 @@ package com.example.coinapp.provider
 import com.example.coinapp.App
 import com.example.coinapp.R
 import com.example.coinapp.extension.formatWithPlusSignPrefix
-import com.example.data.mapper.ticker.TickerMapperProvider
-import com.example.data.model.ticker.TickerResponse
 import com.example.domain.model.ticker.Currency
 import com.example.domain.model.ticker.Ticker
+import com.example.network.data.response.TickerResponse
+import com.example.network.mapper.ticker.TickerMapperProvider
 import java.text.NumberFormat
 import javax.inject.Inject
 
-class TickerMapperProviderImpl @Inject constructor() : TickerMapperProvider {
+class TickerMapperProviderImpl @Inject constructor() :
+    TickerMapperProvider {
     override fun mapperToTicker(tickerResponse: TickerResponse): Ticker {
         return tickerResponse.run {
             val splitCode = code.split("-")
@@ -39,11 +40,13 @@ class TickerMapperProviderImpl @Inject constructor() : TickerMapperProvider {
                         App.getString(R.string.unit_million)
                     }
                 }
+
                 Currency.BTC -> {
                     decimalCurrentPrice = priceFormat.format(trade_price)
                     changePricePrevDay = priceFormat.formatWithPlusSignPrefix(signed_change_price)
                     formattedVolume = volumeFormat.format(acc_trade_price_24h)
                 }
+
                 Currency.USDT -> {
                     decimalCurrentPrice = priceFormat.format(trade_price)
                     changePricePrevDay = priceFormat.formatWithPlusSignPrefix(signed_change_price)

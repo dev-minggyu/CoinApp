@@ -5,9 +5,9 @@ import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.coinapp.R
-import com.example.coinapp.ui.base.BaseActivity
 import com.example.coinapp.databinding.ActivityMainBinding
 import com.example.coinapp.extension.collectWithLifecycle
+import com.example.coinapp.ui.base.BaseActivity
 import com.example.coinapp.ui.home.HomeFragment
 import com.example.coinapp.ui.myasset.MyAssetFragment
 import com.example.coinapp.ui.setting.SettingFragment
@@ -47,8 +47,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private fun showFragment(fragmentId: Int) {
         when (fragmentId) {
             R.id.home_fragment -> showFragment(TAG_FRAGMENT_HOME, HomeFragment.newInstance())
-            R.id.my_asset_fragment -> showFragment(TAG_FRAGMENT_MY_ASSET, MyAssetFragment.newInstance())
-            R.id.setting_fragment -> showFragment(TAG_FRAGMENT_SETTING, SettingFragment.newInstance())
+            R.id.my_asset_fragment -> showFragment(
+                TAG_FRAGMENT_MY_ASSET,
+                MyAssetFragment.newInstance()
+            )
+
+            R.id.setting_fragment -> showFragment(
+                TAG_FRAGMENT_SETTING,
+                SettingFragment.newInstance()
+            )
         }
     }
 
