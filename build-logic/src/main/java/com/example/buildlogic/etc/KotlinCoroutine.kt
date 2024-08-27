@@ -1,4 +1,4 @@
-package com.example.buildlogic.etc
+package com.mingg.buildlogic.etc
 
 import gradle.kotlin.dsl.accessors._2fb5859a04200edaf14b854c40b2e363.testImplementation
 import org.gradle.api.Project

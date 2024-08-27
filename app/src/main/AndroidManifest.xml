@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
     <application
-        android:name="com.example.coinapp.App"
+        android:name="com.mingg.coinapp.App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -31,13 +31,13 @@
             android:name=".ui.setting.floatingwindow.FloatingTickerSelectActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.coinapp.ui.home.detail.TickerDetailActivity"
+            android:name="com.mingg.coinapp.ui.home.detail.TickerDetailActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.coinapp.ui.main.MainActivity"
+            android:name="com.mingg.coinapp.ui.main.MainActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.coinapp.ui.splash.InitActivity"
+            android:name="com.mingg.coinapp.ui.splash.InitActivity"
             android:exported="true"
             android:theme="@style/Theme.CoinApp.Splash">
             <intent-filter>

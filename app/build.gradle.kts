@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.coinapp"
+    namespace = "com.mingg.coinapp"
 
     signingConfigs {
         create("release") {

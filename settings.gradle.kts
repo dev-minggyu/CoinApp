@@ -1,4 +1,4 @@
-rootProject.name = "CoinApp"
+rootProject.name = "CoinCheck"
 
 gradle.startParameter.excludedTaskNames.addAll(listOf(":build-logic:testClasses"))
 

@@ -1,4 +1,4 @@
-package com.example.buildlogic.etc
+package com.mingg.buildlogic.etc
 
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project

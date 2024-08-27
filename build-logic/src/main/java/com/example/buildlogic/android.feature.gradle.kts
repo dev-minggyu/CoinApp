@@ -1,4 +1,4 @@
-import com.example.buildlogic.etc.configureAndroidHilt
+import com.mingg.buildlogic.etc.configureAndroidHilt
 
 val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
 

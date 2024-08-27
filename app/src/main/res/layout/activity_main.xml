@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.example.coinapp.ui.main.MainViewModel" />
+            type="com.mingg.coinapp.ui.main.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

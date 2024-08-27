@@ -1,4 +1,4 @@
-import com.example.buildlogic.etc.configureCoroutineKotlin
+import com.mingg.buildlogic.etc.configureCoroutineKotlin
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")

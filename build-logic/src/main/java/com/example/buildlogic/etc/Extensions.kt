@@ -1,4 +1,4 @@
-package com.example.buildlogic.etc
+package com.mingg.buildlogic.etc
 
 import com.android.build.gradle.BaseExtension
 import org.gradle.api.Project

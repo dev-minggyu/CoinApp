@@ -6,11 +6,11 @@
 
         <variable
             name="favoriteClickListener"
-            type="com.example.coinapp.ui.home.adapter.TickerListAdapter.FavoriteClickListener" />
+            type="com.mingg.coinapp.ui.home.adapter.TickerListAdapter.FavoriteClickListener" />
 
         <variable
             name="ticker"
-            type="com.example.domain.model.ticker.Ticker" />
+            type="com.mingg.domain.model.ticker.Ticker" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.database"
+    namespace = "com.mingg.database"
 }
 
 dependencies {

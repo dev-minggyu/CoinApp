@@ -1,4 +1,4 @@
-package com.example.buildlogic.etc
+package com.mingg.buildlogic.etc
 
 object Versions {
     const val VERSION_CODE = 1
