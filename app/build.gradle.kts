@@ -55,12 +55,12 @@ dependencies {
 
     implementation(libs.mpchart)
 
-    implementation(libs.leakcanary.android)
-
     implementation(libs.sdp)
     implementation(libs.ssp)
 
     implementation(libs.test.junit)
     implementation(libs.test.junit.extension)
     implementation(libs.test.esspresso.core)
+
+    debugImplementation(libs.leakcanary.android)
 }
