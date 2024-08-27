@@ -8,13 +8,24 @@ plugins {
 android {
     namespace = "com.example.coinapp"
 
+    signingConfigs {
+        create("release") {
+            keyAlias = "key0"
+            keyPassword = "coinapp1"
+            storeFile = file("../../CoinApp_Sign/coinapp1.jks")
+            storePassword = "coinapp1"
+        }
+    }
+
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
