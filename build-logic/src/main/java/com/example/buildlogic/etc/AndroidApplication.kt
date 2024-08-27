@@ -19,6 +19,8 @@ fun Project.configureAndroidApplication() {
         compileSdkVersion(Versions.COMPILE_SDK)
 
         defaultConfig {
+            versionCode = Versions.VERSION_CODE
+            versionName = Versions.VERSION_NAME
             minSdk = Versions.MIN_SDK
             targetSdk = Versions.TARGET_SDK
         }
