@@ -85,6 +85,11 @@ class TickerDetailActivity :
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            android.R.id.home -> {
+                finish();
+                return true;
+            }
+
             R.id.menu_add_my_asset -> {
                 _myTickerInfo?.let {
                     AddMyAssetDialogFragment.newInstance(it).show(supportFragmentManager, null)
