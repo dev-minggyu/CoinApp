@@ -1,8 +1,6 @@
 package com.mingg.repository
 
 import com.mingg.database.favoriteticker.FavoriteTickerLocalDataSource
-import com.mingg.network.ticker.TickerSocketService
-import com.mingg.network.ticker.TickerSymbolRemoteDataSource
 import com.mingg.domain.model.ticker.AtomicTickerList
 import com.mingg.domain.model.ticker.Currency
 import com.mingg.domain.model.ticker.SortModel
@@ -13,6 +11,8 @@ import com.mingg.domain.utils.TickerResource
 import com.mingg.network.data.request.TickerRequest
 import com.mingg.network.data.response.TickerSymbolResponse
 import com.mingg.network.mapper.ticker.TickerSymbolMapper
+import com.mingg.network.ticker.TickerSocketService
+import com.mingg.network.ticker.TickerSymbolRemoteDataSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

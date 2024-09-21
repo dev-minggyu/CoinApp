@@ -6,7 +6,7 @@
 
         <variable
             name="favoriteClickListener"
-            type="com.mingg.coinapp.ui.home.adapter.TickerListAdapter.FavoriteClickListener" />
+            type="com.mingg.coincheck.ui.home.adapter.TickerListAdapter.FavoriteClickListener" />
 
         <variable
             name="ticker"
