@@ -7,7 +7,7 @@
 
         <variable
             name="activity"
-            type="com.example.coinapp.ui.setting.floatingwindow.FloatingWindowSettingActivity" />
+            type="com.mingg.coincheck.ui.setting.floatingwindow.FloatingWindowSettingActivity" />
     </data>
 
     <ScrollView

@@ -5,7 +5,7 @@
 
         <variable
             name="vm"
-            type="com.example.coinapp.ui.home.HomeViewModel" />
+            type="com.mingg.coincheck.ui.home.HomeViewModel" />
     </data>
 
     <LinearLayout

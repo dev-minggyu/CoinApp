@@ -6,7 +6,7 @@
 
         <variable
             name="fragment"
-            type="com.example.coinapp.ui.setting.SettingFragment" />
+            type="com.mingg.coincheck.ui.setting.SettingFragment" />
     </data>
 
     <ScrollView

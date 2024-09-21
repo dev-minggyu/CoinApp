@@ -6,7 +6,7 @@
 
         <variable
             name="vm"
-            type="com.example.coinapp.ui.splash.InitViewModel" />
+            type="com.mingg.coincheck.ui.splash.InitViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
