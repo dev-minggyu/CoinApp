@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CoinCheck</string>
+    <string name="app_name">코인체크</string>
 
     <string name="tab_ticker_list_all">전체</string>
     <string name="tab_ticker_list_favorite">즐겨찾기</string>
