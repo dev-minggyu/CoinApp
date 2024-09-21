@@ -63,11 +63,8 @@ class TickerSocketServiceImpl @Inject constructor(
                     throw Exception()
                 }
                 if (frame is Frame.Binary) {
-                    val tickerResponse =
-                        json.decodeFromString<TickerResponse>(String(frame.readBytes()))
-                    atomicTickerList.updateTicker(
-                        tickerMapperProvider.mapperToTicker(tickerResponse)
-                    )
+                    val tickerResponse = json.decodeFromString<TickerResponse>(String(frame.readBytes()))
+                    atomicTickerList.updateTicker(tickerMapperProvider.mapperToTicker(tickerResponse))
                     emit(Resource.Success(Unit))
                 }
             }
