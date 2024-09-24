@@ -2,13 +2,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
-
-        <variable
-            name="vm"
-            type="com.mingg.coincheck.ui.home.HomeViewModel" />
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -44,8 +37,7 @@
             app:layout_constraintGuide_percent="1" />
 
         <com.mingg.coincheck.ui.custom.SortButton
-            android:id="@+id/tv_sort_name"
-            sortState="@={vm.sortModel}"
+            android:id="@+id/btn_sort_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -57,8 +49,7 @@
             app:sortCategory="name" />
 
         <com.mingg.coincheck.ui.custom.SortButton
-            android:id="@+id/tv_sort_price"
-            sortState="@={vm.sortModel}"
+            android:id="@+id/btn_sort_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -70,8 +61,7 @@
             app:sortCategory="price" />
 
         <com.mingg.coincheck.ui.custom.SortButton
-            android:id="@+id/tv_sort_rate"
-            sortState="@={vm.sortModel}"
+            android:id="@+id/btn_sort_rate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -83,8 +73,7 @@
             app:sortCategory="rate" />
 
         <com.mingg.coincheck.ui.custom.SortButton
-            android:id="@+id/tv_sort_volume"
-            sortState="@={vm.sortModel}"
+            android:id="@+id/btn_sort_volume"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"

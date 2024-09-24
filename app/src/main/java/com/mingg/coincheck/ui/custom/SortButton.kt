@@ -71,7 +71,7 @@ class SortButton(context: Context?, attrs: AttributeSet?) : LinearLayout(context
                 }
                 _sortModel.category = _sortCategory
             }
-            _onSortChangedListener?.onChanged()
+            _onSortChangedListener?.onChanged(_sortModel)
         }
     }
 
@@ -96,6 +96,6 @@ class SortButton(context: Context?, attrs: AttributeSet?) : LinearLayout(context
     }
 
     interface OnSortChangedListener {
-        fun onChanged()
+        fun onChanged(sortModel: SortModel)
     }
 }

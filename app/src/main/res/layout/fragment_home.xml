@@ -2,15 +2,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
-
-        <import type="android.view.View" />
-
-        <variable
-            name="vm"
-            type="com.mingg.coincheck.ui.home.HomeViewModel" />
-    </data>
-
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -29,18 +20,15 @@
 
             <include
                 android:id="@+id/layout_search"
-                layout="@layout/layout_list_search"
-                app:vm="@{vm}" />
+                layout="@layout/layout_list_search" />
 
             <include
                 android:id="@+id/layout_list_category"
-                layout="@layout/layout_list_category"
-                app:vm="@{vm}" />
+                layout="@layout/layout_list_category" />
 
             <include
                 android:id="@+id/layout_sort"
-                layout="@layout/layout_list_sort"
-                app:vm="@{vm}" />
+                layout="@layout/layout_list_sort" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -53,20 +41,17 @@
                 android:id="@+id/rv_ticker"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="@{vm.loadingTicker ? View.GONE :View.VISIBLE}"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
             <include
                 android:id="@+id/layout_error"
-                layout="@layout/layout_error"
-                android:visibility="@{vm.errorTicker == null ? View.GONE : View.VISIBLE}"
-                app:vm="@{vm}" />
+                layout="@layout/layout_error" />
 
             <ProgressBar
+                android:id="@+id/progress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:indeterminateTint="@color/color_primary"
-                android:visibility="@{vm.loadingTicker ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
