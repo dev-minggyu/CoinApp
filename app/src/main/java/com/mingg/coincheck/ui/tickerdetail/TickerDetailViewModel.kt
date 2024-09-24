@@ -1,4 +1,4 @@
-package com.mingg.coincheck.ui.home.detail
+package com.mingg.coincheck.ui.tickerdetail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

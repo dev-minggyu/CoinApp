@@ -12,7 +12,7 @@ import com.mingg.coincheck.model.myasset.MyAssetHeader
 import com.mingg.coincheck.model.myasset.MyAssetItem
 import com.mingg.coincheck.model.myasset.MyTickerInfo
 import com.mingg.coincheck.ui.base.BaseFragment
-import com.mingg.coincheck.ui.home.detail.TickerDetailActivity
+import com.mingg.coincheck.ui.tickerdetail.TickerDetailActivity
 import com.mingg.coincheck.ui.myasset.adpater.MyAssetListAdapter
 import com.mingg.domain.model.myasset.MyTicker
 import com.github.mikephil.charting.data.PieDataSet

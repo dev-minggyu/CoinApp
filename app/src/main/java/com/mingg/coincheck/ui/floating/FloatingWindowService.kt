@@ -53,9 +53,7 @@ class FloatingWindowService : Service() {
     override fun onBind(intent: Intent): IBinder = _binder
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForeground(this.hashCode(), NotificationUtil.notification(applicationContext))
-        }
+        startForeground(this.hashCode(), NotificationUtil.notification(applicationContext))
         createView()
         return START_STICKY
     }

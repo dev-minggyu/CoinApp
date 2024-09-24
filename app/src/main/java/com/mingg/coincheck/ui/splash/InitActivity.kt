@@ -1,10 +1,7 @@
 package com.mingg.coincheck.ui.splash
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.view.View
-import android.view.ViewTreeObserver
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
@@ -24,17 +21,12 @@ class InitActivity : BaseActivity<ActivityInitBinding>(R.layout.activity_init) {
 
     private lateinit var _overlayPermissionManager: ActivityOverlayPermissionManager
 
-    private var _isReady = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            _overlayPermissionManager = ActivityOverlayPermissionManager.from(this)
-        }
+        _overlayPermissionManager = ActivityOverlayPermissionManager.from(this)
 
-        binding.vm = _initViewModel
         setupObserver()
     }
 
@@ -56,36 +48,13 @@ class InitActivity : BaseActivity<ActivityInitBinding>(R.layout.activity_init) {
     }
 
     private fun initOverlayService() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            _overlayPermissionManager
-                .checkPermission {
-                    if (it) {
-                        FloatingWindowService.startService(applicationContext)
-                    } else {
-                        _initViewModel.disableFloatingWindow()
-                    }
-                    gotoMain()
-                }
-        } else {
-            FloatingWindowService.startService(applicationContext)
-        }
-    }
-
-    /**
-     * Animation이 있는 Splash의 경우,
-     * 해당 Animation이 다 그려졌는지 판단하는 코드.
-     */
-    private fun setupSplashScreen() {
-        val content: View = findViewById(android.R.id.content)
-        content.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
-            override fun onPreDraw(): Boolean {
-                return if (_isReady) {
-                    content.viewTreeObserver.removeOnPreDrawListener(this)
-                    true
-                } else {
-                    false
-                }
+        _overlayPermissionManager.checkPermission {
+            if (it) {
+                FloatingWindowService.startService(applicationContext)
+            } else {
+                _initViewModel.disableFloatingWindow()
             }
-        })
+            gotoMain()
+        }
     }
 }

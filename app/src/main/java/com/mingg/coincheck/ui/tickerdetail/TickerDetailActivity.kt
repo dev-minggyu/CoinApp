@@ -1,4 +1,4 @@
-package com.mingg.coincheck.ui.home.detail
+package com.mingg.coincheck.ui.tickerdetail
 
 import android.annotation.SuppressLint
 import android.content.Context

@@ -18,7 +18,7 @@ import com.mingg.coincheck.model.myasset.MyTickerInfo
 import com.mingg.coincheck.ui.base.BaseFragment
 import com.mingg.coincheck.ui.floating.FloatingWindowService
 import com.mingg.coincheck.ui.home.adapter.TickerListAdapter
-import com.mingg.coincheck.ui.home.detail.TickerDetailActivity
+import com.mingg.coincheck.ui.tickerdetail.TickerDetailActivity
 import com.mingg.coincheck.ui.main.ShareSettingViewModel
 import com.mingg.domain.model.ticker.Currency
 import com.mingg.domain.model.ticker.Ticker
