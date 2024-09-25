@@ -27,21 +27,21 @@ class HomeViewModel @Inject constructor(
     private val subscribeTickerUseCase: SubscribeTickerUseCase,
     private val unsubscribeTickerUseCase: UnsubscribeTickerUseCase,
     private val settingFloatingWindowUseCase: SettingFloatingWindowUseCase
-) : BaseViewModel<HomeState, HomeEvent, HomeEffect>() {
+) : BaseViewModel<HomeState, HomeIntent, HomeEffect>() {
 
     override fun createInitialState(): HomeState {
         return HomeState()
     }
 
-    override fun handleEvent(event: HomeEvent) {
+    override fun handleEvent(event: HomeIntent) {
         when (event) {
-            is HomeEvent.LoadTickers -> loadTickers()
-            is HomeEvent.InsertFavorite -> insertFavoriteTicker(event.symbol)
-            is HomeEvent.DeleteFavorite -> deleteFavoriteTicker(event.symbol)
-            is HomeEvent.Search -> searchTickers(event.query)
-            is HomeEvent.Sort -> sortTickers(event.sortModel)
-            is HomeEvent.Subscribe -> subscribeTicker()
-            is HomeEvent.Unsubscribe -> unsubscribeTicker()
+            is HomeIntent.LoadTickers -> loadTickers()
+            is HomeIntent.InsertFavorite -> insertFavoriteTicker(event.symbol)
+            is HomeIntent.DeleteFavorite -> deleteFavoriteTicker(event.symbol)
+            is HomeIntent.Search -> searchTickers(event.query)
+            is HomeIntent.Sort -> sortTickers(event.sortModel)
+            is HomeIntent.Subscribe -> subscribeTicker()
+            is HomeIntent.Unsubscribe -> unsubscribeTicker()
         }
     }
 

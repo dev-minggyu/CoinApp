@@ -48,20 +48,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
         setupListCategoryButton()
         setupObserver()
 
-        homeViewModel.setEvent(HomeEvent.LoadTickers)
+        homeViewModel.setEvent(HomeIntent.LoadTickers)
     }
 
     private fun setupListener() {
         with(binding) {
             layoutError.btnRetry.setOnClickListener {
-                homeViewModel.setEvent(HomeEvent.Unsubscribe)
+                homeViewModel.setEvent(HomeIntent.Unsubscribe)
             }
             layoutSearch.etSearchTicker.doOnTextChanged { text, _, _, _ ->
-                homeViewModel.setEvent(HomeEvent.Search(text.toString()))
+                homeViewModel.setEvent(HomeIntent.Search(text.toString()))
             }
             object : SortButton.OnSortChangedListener {
                 override fun onChanged(sortModel: SortModel) {
-                    homeViewModel.setEvent(HomeEvent.Sort(sortModel))
+                    homeViewModel.setEvent(HomeIntent.Sort(sortModel))
                 }
             }.let {
                 with(layoutSort) {
@@ -77,11 +77,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
     private fun setupRecyclerView() {
         val favoriteClickListener = object : TickerListAdapter.FavoriteClickListener {
             override fun onAddFavorite(symbol: String) {
-                homeViewModel.setEvent(HomeEvent.InsertFavorite(symbol))
+                homeViewModel.setEvent(HomeIntent.InsertFavorite(symbol))
             }
 
             override fun onDeleteFavorite(symbol: String) {
-                homeViewModel.setEvent(HomeEvent.DeleteFavorite(symbol))
+                homeViewModel.setEvent(HomeIntent.DeleteFavorite(symbol))
             }
         }
 
@@ -160,10 +160,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
 
     override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
         when (event) {
-            Lifecycle.Event.ON_START -> homeViewModel.setEvent(HomeEvent.Subscribe)
+            Lifecycle.Event.ON_START -> homeViewModel.setEvent(HomeIntent.Subscribe)
             Lifecycle.Event.ON_STOP -> {
                 if (requireContext().isServiceRunning(FloatingWindowService::class.java)) {
-                    homeViewModel.setEvent(HomeEvent.Unsubscribe)
+                    homeViewModel.setEvent(HomeIntent.Unsubscribe)
                 }
             }
 

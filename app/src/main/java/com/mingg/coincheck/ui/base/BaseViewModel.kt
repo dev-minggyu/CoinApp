@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-abstract class BaseViewModel<State : UiState, Event : UiEvent, Effect : UiEffect> : ViewModel() {
+abstract class BaseViewModel<State : UiState, Intent : UiIntent, Effect : UiEffect> : ViewModel() {
 
     private val initialState: State by lazy { createInitialState() }
 
@@ -24,8 +24,8 @@ abstract class BaseViewModel<State : UiState, Event : UiEvent, Effect : UiEffect
     private val _uiState: MutableStateFlow<State> = MutableStateFlow(initialState)
     val uiState: StateFlow<State> = _uiState.asStateFlow()
 
-    private val _event: MutableSharedFlow<Event> = MutableSharedFlow()
-    val event: SharedFlow<Event> = _event.asSharedFlow()
+    private val _event: MutableSharedFlow<Intent> = MutableSharedFlow()
+    val event: SharedFlow<Intent> = _event.asSharedFlow()
 
     private val _effect: Channel<Effect> = Channel()
     val effect: Flow<Effect> = _effect.receiveAsFlow()
@@ -36,7 +36,7 @@ abstract class BaseViewModel<State : UiState, Event : UiEvent, Effect : UiEffect
 
     abstract fun createInitialState(): State
 
-    abstract fun handleEvent(event: Event)
+    abstract fun handleEvent(event: Intent)
 
     private fun subscribeIntent() {
         viewModelScope.launch {
@@ -46,7 +46,7 @@ abstract class BaseViewModel<State : UiState, Event : UiEvent, Effect : UiEffect
         }
     }
 
-    fun setEvent(event: Event) {
+    fun setEvent(event: Intent) {
         viewModelScope.launch { _event.emit(event) }
     }
 
