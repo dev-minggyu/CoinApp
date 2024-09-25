@@ -4,51 +4,67 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.mingg.coincheck.R
 import com.mingg.coincheck.databinding.FragmentSettingBinding
+import com.mingg.coincheck.extension.collectWithLifecycle
 import com.mingg.coincheck.extension.showThemeDialog
 import com.mingg.coincheck.ui.base.BaseFragment
+import com.mingg.coincheck.ui.main.ShareSettingIntent
 import com.mingg.coincheck.ui.main.ShareSettingViewModel
 import com.mingg.coincheck.ui.setting.floatingwindow.FloatingWindowSettingActivity
+import com.mingg.coincheck.utils.AppThemeManager
 import dagger.hilt.android.AndroidEntryPoint
-
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SettingFragment : BaseFragment<FragmentSettingBinding>(R.layout.fragment_setting) {
     private val _settingViewModel: SettingViewModel by viewModels()
-
-    private val _shareSettingViewModel: ShareSettingViewModel by activityViewModels()
+    private val _shareSettingViewModel: ShareSettingViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.fragment = this
-
-        loadSettings()
+        setupListener()
+        setupObservers()
     }
 
-    private fun loadSettings() {
-        binding.switchChangeTickerColor.isChecked = _shareSettingViewModel.getChangeTickerColor()
-    }
-
-    fun settingMenuClick(id: Int) {
-        when (id) {
-            R.id.tv_theme -> {
-                showThemeDialog(_settingViewModel.getAppTheme()) { theme ->
-                    _settingViewModel.setAppTheme(theme)
-                }
+    private fun setupListener() {
+        with(binding) {
+            tvTheme.setOnClickListener {
+                _settingViewModel.setEvent(SettingIntent.GetAppTheme)
             }
-
-            R.id.tv_floating_window_setting -> {
+            switchChangeTickerColor.setOnCheckedChangeListener { _, isChecked ->
+                _shareSettingViewModel.setEvent(ShareSettingIntent.SetChangeTickerColor(isChecked))
+            }
+            tvFloatingWindowSetting.setOnClickListener {
                 FloatingWindowSettingActivity.startActivity(requireContext())
             }
         }
     }
 
-    fun settingSwitchClick(id: Int, isChecked: Boolean) {
-        when (id) {
-            R.id.switch_change_ticker_color -> {
-                _shareSettingViewModel.setChangeTickerColor(isChecked)
+    private fun setupObservers() {
+        lifecycleScope.launch {
+            _settingViewModel.effect.collect { effect ->
+                when (effect) {
+                    is SettingEffect.ApplyTheme -> {
+                        AppThemeManager.applyTheme(effect.theme)
+                    }
+
+                    is SettingEffect.ShowThemeDialog -> {
+                        showThemeDialog(effect.currentTheme) { selectedTheme ->
+                            _settingViewModel.setEvent(SettingIntent.SetAppTheme(selectedTheme))
+                        }
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            _shareSettingViewModel.uiState.collectWithLifecycle(lifecycle) { state ->
+                with(binding) {
+                    switchChangeTickerColor.isChecked = state.tickerChangeColor
+                }
             }
         }
     }

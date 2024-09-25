@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -21,6 +20,7 @@ import com.mingg.coincheck.ui.base.BaseFragment
 import com.mingg.coincheck.ui.custom.SortButton
 import com.mingg.coincheck.ui.floating.FloatingWindowService
 import com.mingg.coincheck.ui.home.adapter.TickerListAdapter
+import com.mingg.coincheck.ui.main.ShareSettingIntent
 import com.mingg.coincheck.ui.main.ShareSettingViewModel
 import com.mingg.coincheck.ui.tickerdetail.TickerDetailActivity
 import com.mingg.domain.model.ticker.Currency
@@ -34,7 +34,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
     LifecycleEventObserver {
 
     private val homeViewModel: HomeViewModel by viewModels()
-    private val settingViewModel: ShareSettingViewModel by activityViewModels()
+    private val settingViewModel: ShareSettingViewModel by viewModels()
 
     private var tickerListAdapter: TickerListAdapter? = null
     private var tickerList: List<Ticker>? = null
@@ -136,8 +136,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
         }
 
         lifecycleScope.launch {
-            settingViewModel.tickerChangeColor.collectWithLifecycle(lifecycle) {
-                tickerListAdapter?.setTickerChangeColor(it)
+            settingViewModel.uiState.collectWithLifecycle(lifecycle) { state ->
+                tickerListAdapter?.setTickerChangeColor(state.tickerChangeColor)
             }
         }
     }
@@ -155,6 +155,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
 
             R.id.btn_favorite ->
                 tickerListAdapter?.submitList(tickerList?.filter { it.isFavorite })
+        }
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            settingViewModel.setEvent(ShareSettingIntent.LoadSettings)
         }
     }
 

@@ -1,27 +1,43 @@
 package com.mingg.coincheck.ui.main
 
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.mingg.coincheck.ui.base.BaseViewModel
 import com.mingg.domain.usecase.setting.SettingTickerChangeColorUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ShareSettingViewModel @Inject constructor(
     private val settingTickerChangeColorUseCase: SettingTickerChangeColorUseCase
-) : ViewModel() {
-    private val _tickerChangeColor = MutableStateFlow(true)
-    val tickerChangeColor = _tickerChangeColor.asStateFlow()
+) : BaseViewModel<ShareSettingState, ShareSettingIntent, ShareSettingEffect>() {
 
-    fun loadSettings() {
-        _tickerChangeColor.value = getChangeTickerColor()
+    init {
+        loadSettings()
     }
 
-    fun setChangeTickerColor(value: Boolean) {
-        settingTickerChangeColorUseCase.set(value)
-        _tickerChangeColor.value = value
+    override fun createInitialState(): ShareSettingState {
+        return ShareSettingState()
     }
 
-    fun getChangeTickerColor() = settingTickerChangeColorUseCase.get()
+    override fun handleEvent(event: ShareSettingIntent) {
+        when (event) {
+            is ShareSettingIntent.LoadSettings -> loadSettings()
+            is ShareSettingIntent.SetChangeTickerColor -> setChangeTickerColor(event.value)
+        }
+    }
+
+    private fun loadSettings() {
+        viewModelScope.launch {
+            val changeColor = settingTickerChangeColorUseCase.get()
+            setState { copy(tickerChangeColor = changeColor) }
+        }
+    }
+
+    private fun setChangeTickerColor(value: Boolean) {
+        viewModelScope.launch {
+            settingTickerChangeColorUseCase.set(value)
+            setState { copy(tickerChangeColor = value) }
+        }
+    }
 }

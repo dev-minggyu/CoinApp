@@ -18,8 +18,6 @@ import kotlinx.coroutines.launch
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private val _mainViewModel: MainViewModel by viewModels()
 
-    private val _shareSettingViewModel: ShareSettingViewModel by viewModels()
-
     companion object {
         private const val TAG_FRAGMENT_HOME = "TAG_FRAGMENT_HOME"
         private const val TAG_FRAGMENT_MY_ASSET = "TAG_FRAGMENT_MY_ASSET"
@@ -32,8 +30,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         binding.vm = _mainViewModel
 
         setupObserver()
-
-        _shareSettingViewModel.loadSettings()
     }
 
     private fun setupObserver() {
