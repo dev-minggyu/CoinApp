@@ -26,8 +26,7 @@ class FloatingWindowSettingActivity :
 
     private val _serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName?, binder: IBinder?) {
-            _floatingWindowService =
-                (binder as FloatingWindowServiceBinder).getService()
+            _floatingWindowService = (binder as FloatingWindowServiceBinder).getService()
         }
 
         override fun onServiceDisconnected(p0: ComponentName?) {}
