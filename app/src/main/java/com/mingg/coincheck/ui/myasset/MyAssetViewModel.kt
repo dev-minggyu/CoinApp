@@ -1,14 +1,12 @@
 package com.mingg.coincheck.ui.myasset
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mingg.coincheck.ui.base.BaseViewModel
 import com.mingg.domain.model.myasset.MyTicker
 import com.mingg.domain.usecase.myasset.GetMyAssetListUseCase
 import com.mingg.domain.usecase.ticker.UnfilteredTickerDataUseCase
 import com.mingg.domain.utils.TickerResource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,16 +14,28 @@ import javax.inject.Inject
 class MyAssetViewModel @Inject constructor(
     private val unfilteredTickerDataUseCase: UnfilteredTickerDataUseCase,
     private val getMyAssetListUseCase: GetMyAssetListUseCase
-) : ViewModel() {
-    private val _myAssetList: MutableStateFlow<List<MyTicker>?> =
-        MutableStateFlow(null)
-    val myAssetList = _myAssetList.asStateFlow()
+) : BaseViewModel<MyAssetState, MyAssetIntent, MyAssetEffect>() {
 
-    private var _assetList: MutableList<MyTicker> =
-        mutableListOf()
+    private val assetList: MutableList<MyTicker> = mutableListOf()
 
     init {
-        observeTickerList()
+        setEvent(MyAssetIntent.RefreshAssetList)
+        setEvent(MyAssetIntent.ObserveTickerList)
+    }
+
+    override fun createInitialState(): MyAssetState {
+        return MyAssetState(
+            myAssetList = null,
+            isLoading = false,
+            error = null
+        )
+    }
+
+    override fun handleEvent(event: MyAssetIntent) {
+        when (event) {
+            is MyAssetIntent.ObserveTickerList -> observeTickerList()
+            is MyAssetIntent.RefreshAssetList -> refreshAssetList()
+        }
     }
 
     private fun observeTickerList() {
@@ -34,43 +44,35 @@ class MyAssetViewModel @Inject constructor(
                 .collect { tickerResource ->
                     when (tickerResource) {
                         is TickerResource.Update -> {
-                            if (_assetList.isNotEmpty()) {
-                                _assetList.forEach { myTicker ->
-                                    myTicker.currentPrice =
-                                        tickerResource.data.tickerList.find { ticker ->
-                                            ticker.symbol == myTicker.symbol && ticker.currencyType == myTicker.currencyType
-                                        }?.currentPrice ?: "0"
+                            if (assetList.isNotEmpty()) {
+                                assetList.forEach { myTicker ->
+                                    val updatedTicker = tickerResource.data.tickerList.find { ticker ->
+                                        ticker.symbol == myTicker.symbol && ticker.currencyType == myTicker.currencyType
+                                    }
+                                    myTicker.currentPrice = updatedTicker?.currentPrice ?: "0"
                                 }
-                                _myAssetList.value = _assetList.map {
-                                    it.copy()
-                                }
+                                setState { copy(myAssetList = assetList.map { it.copy() }) }
                             }
                         }
-
                         else -> {}
                     }
                 }
         }
     }
 
-    fun refreshAssetList() {
+    private fun refreshAssetList() {
         viewModelScope.launch {
-            val list = getMyAssetListUseCase.execute()
-            if (list.isEmpty()) {
-                _assetList.clear()
-                _myAssetList.value = listOf()
-            } else {
-                _assetList.clear()
-                list.forEach { myTicker ->
-                    _assetList.find {
-                        it.symbol == myTicker.symbol && it.currencyType == myTicker.currencyType
-                    }?.apply {
-                        amount = myTicker.amount
-                        averagePrice = myTicker.averagePrice
-                    } ?: run {
-                        _assetList.add(myTicker)
-                    }
+            try {
+                val list = getMyAssetListUseCase.execute()
+                if (list.isEmpty()) {
+                    assetList.clear()
+                    setState { copy(myAssetList = listOf()) }
+                } else {
+                    assetList.clear()
+                    assetList.addAll(list)
                 }
+            } catch (e: Exception) {
+                setState { copy(error = e.message) }
             }
         }
     }

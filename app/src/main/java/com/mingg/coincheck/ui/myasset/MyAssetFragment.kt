@@ -3,8 +3,11 @@ package com.mingg.coincheck.ui.myasset
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
 import com.mingg.coincheck.R
 import com.mingg.coincheck.databinding.FragmentMyAssetBinding
 import com.mingg.coincheck.extension.collectWithLifecycle
@@ -12,11 +15,9 @@ import com.mingg.coincheck.model.myasset.MyAssetHeader
 import com.mingg.coincheck.model.myasset.MyAssetItem
 import com.mingg.coincheck.model.myasset.MyTickerInfo
 import com.mingg.coincheck.ui.base.BaseFragment
-import com.mingg.coincheck.ui.tickerdetail.TickerDetailActivity
 import com.mingg.coincheck.ui.myasset.adpater.MyAssetListAdapter
+import com.mingg.coincheck.ui.tickerdetail.TickerDetailActivity
 import com.mingg.domain.model.myasset.MyTicker
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.data.PieEntry
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
@@ -36,10 +37,13 @@ class MyAssetFragment : BaseFragment<FragmentMyAssetBinding>(R.layout.fragment_m
 
     private fun setupObserver() {
         lifecycleScope.launch {
-            _myAssetViewModel.myAssetList.collectWithLifecycle(lifecycle) { assetList ->
-                assetList?.let {
+            _myAssetViewModel.uiState.collectWithLifecycle(lifecycle) { state ->
+                state.myAssetList?.let {
                     val checkedList = it.filter { ticker -> ticker.averagePrice.isNotEmpty() && ticker.amount.isNotEmpty() }
-                    binding.isNoData = checkedList.isEmpty()
+                    with(binding) {
+                        rvAsset.isVisible = checkedList.isNotEmpty()
+                        tvGuideAddAsset.isVisible = checkedList.isEmpty()
+                    }
                     bindAssetList(checkedList)
                 }
             }
@@ -66,13 +70,13 @@ class MyAssetFragment : BaseFragment<FragmentMyAssetBinding>(R.layout.fragment_m
 
     override fun onResume() {
         super.onResume()
-        _myAssetViewModel.refreshAssetList()
+        _myAssetViewModel.setEvent(MyAssetIntent.RefreshAssetList)
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
-            _myAssetViewModel.refreshAssetList()
+            _myAssetViewModel.setEvent(MyAssetIntent.RefreshAssetList)
         }
     }
 
