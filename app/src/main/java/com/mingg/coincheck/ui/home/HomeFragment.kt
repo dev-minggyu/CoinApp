@@ -127,8 +127,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
                             btnSortVolume.setSortState(it)
                         }
                     }
-                    progress.isVisible = state.loading
-                    rvTicker.isVisible = !state.loading
+                    progress.isVisible = state.isLoading
+                    rvTicker.isVisible = !state.isLoading
                     layoutError.root.isVisible = !state.error.isNullOrEmpty()
                     state.error?.let { errorMessage -> layoutError.tvError.text = errorMessage }
                 }

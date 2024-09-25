@@ -47,13 +47,13 @@ class HomeViewModel @Inject constructor(
 
     private fun loadTickers() {
         viewModelScope.launch {
-            setState { copy(loading = true) }
+            setState { copy(isLoading = true) }
             tickerDataUseCase.execute().collect { resource ->
                 when (resource) {
                     is TickerResource.Update -> {
                         setState {
                             copy(
-                                loading = false,
+                                isLoading = false,
                                 tickerList = resource.data.tickerList,
                                 sortModel = resource.data.sortModel
                             )
@@ -63,7 +63,7 @@ class HomeViewModel @Inject constructor(
                     is TickerResource.Refresh -> {
                         setState {
                             copy(
-                                loading = false,
+                                isLoading = false,
                                 tickerList = resource.data.tickerList,
                                 sortModel = resource.data.sortModel
                             )
@@ -73,7 +73,7 @@ class HomeViewModel @Inject constructor(
                     is TickerResource.Error -> {
                         setState {
                             copy(
-                                loading = false,
+                                isLoading = false,
                                 error = App.getString(R.string.error_network)
                             )
                         }
@@ -111,13 +111,13 @@ class HomeViewModel @Inject constructor(
 
     private fun subscribeTicker() {
         viewModelScope.launch {
-            setState { copy(loading = true) }
+            setState { copy(isLoading = true) }
             when (subscribeTickerUseCase.execute(300L)) {
                 is Resource.Success -> setState { copy(error = null) }
                 is Resource.Error -> {
                     setState {
                         copy(
-                            loading = false,
+                            isLoading = false,
                             error = App.getString(R.string.error_network)
                         )
                     }

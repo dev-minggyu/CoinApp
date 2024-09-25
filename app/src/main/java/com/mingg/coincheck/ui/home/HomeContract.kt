@@ -17,7 +17,7 @@ sealed class HomeIntent : UiIntent {
 }
 
 data class HomeState(
-    val loading: Boolean = false,
+    val isLoading: Boolean = false,
     val tickerList: List<Ticker>? = null,
     val error: String? = null,
     val searchText: String? = null,
