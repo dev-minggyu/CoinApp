@@ -8,22 +8,22 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ShareSettingViewModel @Inject constructor(
+class SharedSettingViewModel @Inject constructor(
     private val settingTickerChangeColorUseCase: SettingTickerChangeColorUseCase
-) : BaseViewModel<ShareSettingState, ShareSettingIntent, ShareSettingEffect>() {
+) : BaseViewModel<SharedSettingState, SharedSettingIntent, SharedSettingEffect>() {
 
     init {
         loadSettings()
     }
 
-    override fun createInitialState(): ShareSettingState {
-        return ShareSettingState()
+    override fun createInitialState(): SharedSettingState {
+        return SharedSettingState()
     }
 
-    override fun handleEvent(event: ShareSettingIntent) {
+    override fun handleEvent(event: SharedSettingIntent) {
         when (event) {
-            is ShareSettingIntent.LoadSettings -> loadSettings()
-            is ShareSettingIntent.SetChangeTickerColor -> setChangeTickerColor(event.value)
+            is SharedSettingIntent.LoadSettings -> loadSettings()
+            is SharedSettingIntent.SetChangeTickerColor -> setChangeTickerColor(event.value)
         }
     }
 

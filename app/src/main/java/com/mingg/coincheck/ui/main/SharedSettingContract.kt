@@ -4,13 +4,13 @@ import com.mingg.coincheck.ui.base.UiEffect
 import com.mingg.coincheck.ui.base.UiIntent
 import com.mingg.coincheck.ui.base.UiState
 
-sealed class ShareSettingIntent : UiIntent {
-    data object LoadSettings : ShareSettingIntent()
-    data class SetChangeTickerColor(val value: Boolean) : ShareSettingIntent()
+sealed class SharedSettingIntent : UiIntent {
+    data object LoadSettings : SharedSettingIntent()
+    data class SetChangeTickerColor(val value: Boolean) : SharedSettingIntent()
 }
 
-data class ShareSettingState(
+data class SharedSettingState(
     val tickerChangeColor: Boolean = true
 ) : UiState
 
-sealed class ShareSettingEffect : UiEffect
+sealed class SharedSettingEffect : UiEffect

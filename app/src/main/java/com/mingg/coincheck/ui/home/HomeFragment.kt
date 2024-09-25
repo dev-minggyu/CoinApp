@@ -20,8 +20,8 @@ import com.mingg.coincheck.ui.base.BaseFragment
 import com.mingg.coincheck.ui.custom.SortButton
 import com.mingg.coincheck.ui.floating.FloatingWindowService
 import com.mingg.coincheck.ui.home.adapter.TickerListAdapter
-import com.mingg.coincheck.ui.main.ShareSettingIntent
-import com.mingg.coincheck.ui.main.ShareSettingViewModel
+import com.mingg.coincheck.ui.main.SharedSettingIntent
+import com.mingg.coincheck.ui.main.SharedSettingViewModel
 import com.mingg.coincheck.ui.tickerdetail.TickerDetailActivity
 import com.mingg.domain.model.ticker.Currency
 import com.mingg.domain.model.ticker.SortModel
@@ -34,7 +34,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
     LifecycleEventObserver {
 
     private val homeViewModel: HomeViewModel by viewModels()
-    private val settingViewModel: ShareSettingViewModel by viewModels()
+    private val sharedSettingViewModel: SharedSettingViewModel by viewModels()
 
     private var tickerListAdapter: TickerListAdapter? = null
     private var tickerList: List<Ticker>? = null
@@ -136,7 +136,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
         }
 
         lifecycleScope.launch {
-            settingViewModel.uiState.collectWithLifecycle(lifecycle) { state ->
+            sharedSettingViewModel.uiState.collectWithLifecycle(lifecycle) { state ->
                 tickerListAdapter?.setTickerChangeColor(state.tickerChangeColor)
             }
         }
@@ -161,7 +161,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
-            settingViewModel.setEvent(ShareSettingIntent.LoadSettings)
+            sharedSettingViewModel.setEvent(SharedSettingIntent.LoadSettings)
         }
     }
 
