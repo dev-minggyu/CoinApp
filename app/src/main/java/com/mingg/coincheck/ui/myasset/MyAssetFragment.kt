@@ -3,9 +3,11 @@ package com.mingg.coincheck.ui.myasset
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.mingg.coincheck.databinding.FragmentMyAssetBinding
@@ -13,9 +15,10 @@ import com.mingg.coincheck.extension.collectWithLifecycle
 import com.mingg.coincheck.model.myasset.MyAssetHeader
 import com.mingg.coincheck.model.myasset.MyAssetItem
 import com.mingg.coincheck.model.myasset.MyTickerInfo
+import com.mingg.coincheck.navigation.NavigationManager
 import com.mingg.coincheck.ui.base.BaseFragment
 import com.mingg.coincheck.ui.myasset.adpater.MyAssetListAdapter
-import com.mingg.coincheck.ui.tickerdetail.TickerDetailActivity
+import com.mingg.coincheck.ui.tickerdetail.TickerDetailFragment
 import com.mingg.domain.model.myasset.MyTicker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -26,11 +29,14 @@ class MyAssetFragment : BaseFragment<FragmentMyAssetBinding>(FragmentMyAssetBind
 
     private val myAssetViewModel: MyAssetViewModel by viewModels()
 
+    private lateinit var navigationManager: NavigationManager
+
     private lateinit var myAssetListAdapter: MyAssetListAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        navigationManager = NavigationManager(findNavController())
         setupRecyclerView()
         setupObserver()
     }
@@ -52,13 +58,14 @@ class MyAssetFragment : BaseFragment<FragmentMyAssetBinding>(FragmentMyAssetBind
 
     private fun setupRecyclerView() {
         myAssetListAdapter = MyAssetListAdapter {
-            TickerDetailActivity.startActivity(
-                requireContext(),
-                MyTickerInfo(
-                    symbol = it.symbol,
-                    currency = it.currencyType,
-                    it.koreanSymbol,
-                    it.englishSymbol
+            navigationManager.navigateToTickerDetail(
+                bundleOf(
+                    TickerDetailFragment.KEY_MY_TICKER to MyTickerInfo(
+                        symbol = it.symbol,
+                        currency = it.currencyType,
+                        it.koreanSymbol,
+                        it.englishSymbol
+                    )
                 )
             )
         }

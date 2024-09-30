@@ -54,6 +54,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.extension)
     implementation(libs.androidx.splashscreen)
     implementation(libs.androidx.preference)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
 
     implementation(libs.google.android.material)
 

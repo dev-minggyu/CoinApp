@@ -2,6 +2,7 @@ package com.mingg.coincheck.ui.home
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
@@ -10,19 +11,21 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.mingg.coincheck.R
 import com.mingg.coincheck.databinding.FragmentHomeBinding
 import com.mingg.coincheck.extension.collectWithLifecycle
 import com.mingg.coincheck.extension.isServiceRunning
 import com.mingg.coincheck.model.myasset.MyTickerInfo
+import com.mingg.coincheck.navigation.NavigationManager
 import com.mingg.coincheck.ui.base.BaseFragment
 import com.mingg.coincheck.ui.custom.SortButton
 import com.mingg.coincheck.ui.floating.FloatingWindowService
 import com.mingg.coincheck.ui.home.adapter.TickerListAdapter
 import com.mingg.coincheck.ui.main.SharedSettingIntent
 import com.mingg.coincheck.ui.main.SharedSettingViewModel
-import com.mingg.coincheck.ui.tickerdetail.TickerDetailActivity
+import com.mingg.coincheck.ui.tickerdetail.TickerDetailFragment
 import com.mingg.domain.model.ticker.Currency
 import com.mingg.domain.model.ticker.SortModel
 import com.mingg.domain.model.ticker.Ticker
@@ -34,14 +37,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     LifecycleEventObserver {
 
     private val homeViewModel: HomeViewModel by viewModels()
+
     private val sharedSettingViewModel: SharedSettingViewModel by viewModels()
 
+    private lateinit var navigationManager: NavigationManager
+
     private var tickerListAdapter: TickerListAdapter? = null
+
     private var tickerList: List<Ticker>? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
+
+        navigationManager = NavigationManager(findNavController())
 
         setupListener()
         setupRecyclerView()
@@ -86,13 +95,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
 
         tickerListAdapter = TickerListAdapter(favoriteClickListener) { ticker ->
-            TickerDetailActivity.startActivity(
-                requireContext(),
-                MyTickerInfo(
-                    ticker.symbol,
-                    ticker.currencyType,
-                    ticker.koreanSymbol,
-                    ticker.englishSymbol
+            navigationManager.navigateToTickerDetail(
+                bundleOf(
+                    TickerDetailFragment.KEY_MY_TICKER to MyTickerInfo(
+                        symbol = ticker.symbol,
+                        currency = ticker.currencyType,
+                        ticker.koreanSymbol,
+                        ticker.englishSymbol
+                    )
                 )
             )
         }

@@ -1,32 +1,33 @@
 package com.mingg.coincheck.ui.splash
 
-import android.content.Intent
 import android.os.Bundle
-import androidx.activity.viewModels
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import android.view.View
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.mingg.coincheck.databinding.ActivityInitBinding
+import androidx.navigation.fragment.findNavController
+import com.mingg.coincheck.databinding.FragmentInitBinding
 import com.mingg.coincheck.extension.collectWithLifecycle
-import com.mingg.coincheck.ui.base.BaseActivity
+import com.mingg.coincheck.navigation.NavigationManager
+import com.mingg.coincheck.ui.base.BaseFragment
 import com.mingg.coincheck.ui.floating.FloatingWindowService
-import com.mingg.coincheck.ui.main.MainActivity
 import com.mingg.coincheck.utils.ActivityOverlayPermissionManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class InitActivity : BaseActivity<ActivityInitBinding>(ActivityInitBinding::inflate) {
+class InitFragment : BaseFragment<FragmentInitBinding>(FragmentInitBinding::inflate) {
 
     private val initViewModel: InitViewModel by viewModels()
 
-    private lateinit var overlayPermissionManager: ActivityOverlayPermissionManager
+    private lateinit var navigationManager: NavigationManager
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
-        super.onCreate(savedInstanceState)
+    private val overlayPermissionManager: ActivityOverlayPermissionManager =
+        ActivityOverlayPermissionManager.from(this)
 
-        overlayPermissionManager = ActivityOverlayPermissionManager.from(this)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        navigationManager = NavigationManager(findNavController())
         setupObserver()
     }
 
@@ -36,25 +37,20 @@ class InitActivity : BaseActivity<ActivityInitBinding>(ActivityInitBinding::infl
                 if (it) {
                     initOverlayService()
                 } else {
-                    gotoMain()
+                    navigationManager.navigateToHome()
                 }
             }
         }
     }
 
-    private fun gotoMain() {
-        startActivity(Intent(this, MainActivity::class.java))
-        finish()
-    }
-
     private fun initOverlayService() {
         overlayPermissionManager.checkPermission {
             if (it) {
-                FloatingWindowService.startService(applicationContext)
+                FloatingWindowService.startService(requireContext())
             } else {
                 initViewModel.disableFloatingWindow()
             }
-            gotoMain()
+            navigationManager.navigateToHome()
         }
     }
 }

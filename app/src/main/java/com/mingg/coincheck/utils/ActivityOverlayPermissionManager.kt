@@ -3,36 +3,32 @@ package com.mingg.coincheck.utils
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.provider.Settings
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
+import androidx.fragment.app.Fragment
 import com.mingg.coincheck.R
 import java.lang.ref.WeakReference
 
-@RequiresApi(Build.VERSION_CODES.M)
-class ActivityOverlayPermissionManager private constructor(private val activity: WeakReference<AppCompatActivity>) {
+class ActivityOverlayPermissionManager private constructor(private val fragment: WeakReference<Fragment>) {
     private var callback: (Boolean) -> Unit = {}
 
     private val permissionCheck =
-        activity.get()
-            ?.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                activity.get()?.let {
-                    when (Settings.canDrawOverlays(it)) {
-                        true -> sendResultAndCleanUp(true)
-                        false -> sendResultAndCleanUp(false)
-                    }
+        fragment.get()?.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            fragment.get()?.let {
+                when (Settings.canDrawOverlays(it.requireContext())) {
+                    true -> sendResultAndCleanUp(true)
+                    false -> sendResultAndCleanUp(false)
                 }
             }
+        }
 
     fun checkPermission(callback: (Boolean) -> Unit) {
         this.callback = callback
-        activity.get()?.let {
-            when (Settings.canDrawOverlays(it)) {
+        fragment.get()?.let {
+            when (Settings.canDrawOverlays(it.requireContext())) {
                 true -> sendResultAndCleanUp(true)
-                false -> displayRationale(it)
+                false -> displayRationale(it.requireContext())
             }
         }
     }
@@ -62,7 +58,7 @@ class ActivityOverlayPermissionManager private constructor(private val activity:
     }
 
     companion object {
-        fun from(activity: AppCompatActivity) =
-            ActivityOverlayPermissionManager(WeakReference(activity))
+        fun from(fragment: Fragment) =
+            ActivityOverlayPermissionManager(WeakReference(fragment))
     }
 }
