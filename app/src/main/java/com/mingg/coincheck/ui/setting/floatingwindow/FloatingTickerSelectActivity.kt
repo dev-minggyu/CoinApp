@@ -6,9 +6,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.mingg.coincheck.R
 import com.mingg.coincheck.databinding.ActivitySettingFloatingTickerBinding
-import com.mingg.coincheck.extension.collectWithLifecycle
 import com.mingg.coincheck.ui.base.BaseActivity
 import com.mingg.coincheck.ui.setting.adapter.CheckSymbolListAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -16,10 +14,11 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class FloatingTickerSelectActivity :
-    BaseActivity<ActivitySettingFloatingTickerBinding>(R.layout.activity_setting_floating_ticker) {
-    private val _floatingSymbolSelectViewModel: FloatingSymbolSelectViewModel by viewModels()
+    BaseActivity<ActivitySettingFloatingTickerBinding>(ActivitySettingFloatingTickerBinding::inflate) {
 
-    private var _checkSymbolListAdapter: CheckSymbolListAdapter? = null
+    private val floatingSymbolSelectViewModel: FloatingSymbolSelectViewModel by viewModels()
+
+    private lateinit var checkSymbolListAdapter: CheckSymbolListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,17 +27,17 @@ class FloatingTickerSelectActivity :
         setupObserver()
         setupListener()
 
-        _floatingSymbolSelectViewModel.getFloatingSymbolList()
+        floatingSymbolSelectViewModel.setEvent(FloatingSymbolSelectIntent.LoadFloatingSymbolList)
     }
 
     private fun setupListener() {
         binding.btnSave.setOnClickListener {
-            val result = _checkSymbolListAdapter?.currentList?.filter { ticker ->
+            val result = checkSymbolListAdapter.currentList.filter { ticker ->
                 ticker.isChecked
-            }?.map { ticker ->
+            }.map { ticker ->
                 ticker.symbol
-            } ?: listOf()
-            _floatingSymbolSelectViewModel.setFloatingTickerList(result)
+            }
+            floatingSymbolSelectViewModel.setEvent(FloatingSymbolSelectIntent.SetFloatingTickerList(result))
             setResult(
                 FloatingWindowSettingActivity.REQUEST_CHECKED_FLOATING_SYMBOL,
                 Intent().putStringArrayListExtra(
@@ -52,21 +51,21 @@ class FloatingTickerSelectActivity :
 
     private fun setupObserver() {
         lifecycleScope.launch {
-            _floatingSymbolSelectViewModel.symbolList.collectWithLifecycle(lifecycle) {
-                it?.let { list ->
-                    _checkSymbolListAdapter?.submitList(list)
+            floatingSymbolSelectViewModel.uiState.collect { state ->
+                state.symbolList?.let { list ->
+                    checkSymbolListAdapter.submitList(list)
                 }
             }
         }
     }
 
     private fun setupAdapter() {
-        _checkSymbolListAdapter = CheckSymbolListAdapter()
+        checkSymbolListAdapter = CheckSymbolListAdapter()
         binding.rvSymbol.apply {
             setHasFixedSize(true)
             itemAnimator = null
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-            adapter = _checkSymbolListAdapter
+            adapter = checkSymbolListAdapter
         }
     }
 

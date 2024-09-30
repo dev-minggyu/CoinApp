@@ -4,35 +4,38 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
+import android.widget.SeekBar
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import com.mingg.coincheck.R
+import androidx.lifecycle.lifecycleScope
 import com.mingg.coincheck.databinding.ActivityFloatingWindowSettingBinding
+import com.mingg.coincheck.extension.collectWithLifecycle
 import com.mingg.coincheck.ui.base.BaseActivity
 import com.mingg.coincheck.ui.floating.FloatingWindowService
 import com.mingg.coincheck.ui.floating.FloatingWindowServiceBinder
 import com.mingg.coincheck.utils.ActivityOverlayPermissionManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class FloatingWindowSettingActivity :
-    BaseActivity<ActivityFloatingWindowSettingBinding>(R.layout.activity_floating_window_setting) {
-    private val _floatingWindowSettingViewModel: FloatingWindowSettingViewModel by viewModels()
+    BaseActivity<ActivityFloatingWindowSettingBinding>(ActivityFloatingWindowSettingBinding::inflate) {
 
-    private var _floatingWindowService: FloatingWindowService? = null
+    private val floatingWindowSettingViewModel: FloatingWindowSettingViewModel by viewModels()
 
-    private val _serviceConnection = object : ServiceConnection {
+    private var floatingWindowService: FloatingWindowService? = null
+
+    private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName?, binder: IBinder?) {
-            _floatingWindowService = (binder as FloatingWindowServiceBinder).getService()
+            floatingWindowService = (binder as FloatingWindowServiceBinder).getService()
         }
 
         override fun onServiceDisconnected(p0: ComponentName?) {}
     }
 
-    private lateinit var _overlayPermissionManager: ActivityOverlayPermissionManager
+    private lateinit var overlayPermissionManager: ActivityOverlayPermissionManager
 
     private val activityResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -40,7 +43,7 @@ class FloatingWindowSettingActivity :
                 REQUEST_CHECKED_FLOATING_SYMBOL -> {
                     result.data?.getStringArrayListExtra(FloatingTickerSelectActivity.KEY_CHECKED_FLOATING_SYMBOL_LIST)
                         ?.let {
-                            _floatingWindowService?.setFloatingList(it.toList())
+                            floatingWindowService?.setFloatingList(it.toList())
                         }
                 }
             }
@@ -48,76 +51,74 @@ class FloatingWindowSettingActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding.activity = this
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            _overlayPermissionManager = ActivityOverlayPermissionManager.from(this)
-        }
-
-        loadSettings()
+        overlayPermissionManager = ActivityOverlayPermissionManager.from(this)
+        setupListener()
+        setupObservers()
+        floatingWindowSettingViewModel.setEvent(FloatingWindowSettingIntent.LoadSettings)
     }
 
-    private fun loadSettings() {
-        _floatingWindowSettingViewModel.isEnableFloatingWindow().also {
-            binding.switchEnableFloatingWindow.isChecked = it
-            if (it) startFloatingWindowService()
+    private fun setupListener() {
+        binding.switchEnableFloatingWindow.setOnCheckedChangeListener { _, isChecked ->
+            floatingWindowSettingViewModel.setEvent(
+                FloatingWindowSettingIntent.SetEnableFloatingWindow(
+                    isChecked
+                )
+            )
+            if (isChecked) {
+                startFloatingWindowService()
+            } else {
+                FloatingWindowService.stopService(this, serviceConnection)
+                floatingWindowService = null
+            }
         }
 
-        binding.seekbarFloatingWindowTransparent.progress =
-            _floatingWindowSettingViewModel.getFloatingWindowTransparent()
-    }
+        binding.seekbarFloatingWindowTransparent.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) = Unit
 
-    fun settingMenuClick(id: Int) {
-        when (id) {
-            R.id.tv_select_floating_ticker -> {
-                FloatingTickerSelectActivity.createIntent(this).also {
-                    activityResult.launch(it)
+            override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                seekBar?.let {
+                    floatingWindowSettingViewModel.setEvent(FloatingWindowSettingIntent.SetFloatingWindowTransparency(it.progress))
+                    floatingWindowService?.setTransparent(it.progress)
                 }
+            }
+        })
+
+        binding.tvSelectFloatingTicker.setOnClickListener {
+            FloatingTickerSelectActivity.createIntent(this).also {
+                activityResult.launch(it)
             }
         }
     }
 
-    fun settingSwitchClick(id: Int, isChecked: Boolean) {
-        when (id) {
-            R.id.switch_enable_floating_window -> {
-                _floatingWindowSettingViewModel.setEnableFloatingWindow(isChecked)
-                if (isChecked) {
+    private fun setupObservers() {
+        lifecycleScope.launch {
+            floatingWindowSettingViewModel.uiState.collectWithLifecycle(lifecycle) { state ->
+                binding.switchEnableFloatingWindow.isChecked = state.isFloatingWindowEnabled
+                binding.seekbarFloatingWindowTransparent.progress = state.floatingWindowTransparency
+
+                if (state.isFloatingWindowEnabled) {
                     startFloatingWindowService()
-                } else {
-                    FloatingWindowService.stopService(this, _serviceConnection)
-                    _floatingWindowService = null
                 }
-            }
-        }
-    }
-
-    fun settingProgressChanged(id: Int, value: Int) {
-        when (id) {
-            R.id.seekbar_floating_window_transparent -> {
-                _floatingWindowSettingViewModel.setFloatingWindowTransparent(value)
-                _floatingWindowService?.setTransparent(value)
             }
         }
     }
 
     private fun startFloatingWindowService() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            _overlayPermissionManager.checkPermission {
-                if (it) {
-                    FloatingWindowService.startService(this, _serviceConnection)
-                }
+        overlayPermissionManager.checkPermission {
+            if (it) {
+                FloatingWindowService.startService(this, serviceConnection)
             }
-        } else {
-            FloatingWindowService.startService(this, _serviceConnection)
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        _floatingWindowService?.let {
-            FloatingWindowService.unbindService(this, _serviceConnection)
-            _floatingWindowService = null
+        floatingWindowService?.let {
+            FloatingWindowService.unbindService(this, serviceConnection)
+            floatingWindowService = null
         }
     }
 

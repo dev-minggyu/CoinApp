@@ -1,13 +1,10 @@
 package com.mingg.coincheck.ui.setting.floatingwindow
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mingg.domain.model.setting.FloatingTicker
+import com.mingg.coincheck.ui.base.BaseViewModel
 import com.mingg.domain.usecase.setting.AllFloatingTickerListUseCase
 import com.mingg.domain.usecase.setting.SettingFloatingTickerListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,18 +12,29 @@ import javax.inject.Inject
 class FloatingSymbolSelectViewModel @Inject constructor(
     private val settingFloatingTickerListUseCase: SettingFloatingTickerListUseCase,
     private val allFloatingTickerListUseCase: AllFloatingTickerListUseCase
-) : ViewModel() {
-    private val _symbolList: MutableStateFlow<List<FloatingTicker>?> =
-        MutableStateFlow(null)
-    val symbolList = _symbolList.asStateFlow()
+) : BaseViewModel<FloatingSymbolSelectState, FloatingSymbolSelectIntent, FloatingSymbolSelectEffect>() {
 
-    fun getFloatingSymbolList() {
-        viewModelScope.launch {
-            _symbolList.value = allFloatingTickerListUseCase.execute()
+    override fun createInitialState(): FloatingSymbolSelectState {
+        return FloatingSymbolSelectState()
+    }
+
+    override fun handleEvent(event: FloatingSymbolSelectIntent) {
+        when (event) {
+            is FloatingSymbolSelectIntent.LoadFloatingSymbolList -> loadFloatingSymbolList()
+            is FloatingSymbolSelectIntent.SetFloatingTickerList -> setFloatingTickerList(event.list)
         }
     }
 
-    fun setFloatingTickerList(list: List<String>) {
-        settingFloatingTickerListUseCase.set(list)
+    private fun loadFloatingSymbolList() {
+        viewModelScope.launch {
+            val list = allFloatingTickerListUseCase.execute()
+            setState { copy(symbolList = list) }
+        }
+    }
+
+    private fun setFloatingTickerList(list: List<String>) {
+        viewModelScope.launch {
+            settingFloatingTickerListUseCase.set(list)
+        }
     }
 }
