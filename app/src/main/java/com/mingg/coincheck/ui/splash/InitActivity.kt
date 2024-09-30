@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
-import com.mingg.coincheck.R
 import com.mingg.coincheck.databinding.ActivityInitBinding
 import com.mingg.coincheck.extension.collectWithLifecycle
 import com.mingg.coincheck.ui.base.BaseActivity
@@ -16,7 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class InitActivity : BaseActivity<ActivityInitBinding>(R.layout.activity_init) {
+class InitActivity : BaseActivity<ActivityInitBinding>(ActivityInitBinding::inflate) {
     private val _initViewModel: InitViewModel by viewModels()
 
     private lateinit var _overlayPermissionManager: ActivityOverlayPermissionManager

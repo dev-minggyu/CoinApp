@@ -1,16 +1,12 @@
 package com.mingg.coincheck.databinding
 
-import android.annotation.SuppressLint
 import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
-import androidx.databinding.InverseBindingAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mingg.coincheck.R
-import com.mingg.coincheck.ui.custom.SortButton
 import com.mingg.coincheck.ui.home.adapter.TickerListAdapter
-import com.mingg.domain.model.ticker.SortModel
 import com.mingg.domain.model.ticker.Ticker
 import java.util.Locale
 
@@ -75,22 +71,6 @@ object BindingAdapter {
                 view.text = ticker.koreanSymbol
             } else {
                 view.text = ticker.englishSymbol
-            }
-        }
-    }
-
-    @SuppressLint("SetTextI18n")
-    @JvmStatic
-    @BindingAdapter("textDetailTickerSymbol")
-    fun bindTextDetailTickerSymbol(
-        view: TextView,
-        ticker: Ticker?
-    ) {
-        ticker?.let {
-            if (Locale.getDefault().language == "ko") {
-                view.text = "${ticker.koreanSymbol} (${ticker.symbol})"
-            } else {
-                view.text = "${ticker.englishSymbol} (${ticker.symbol})"
             }
         }
     }

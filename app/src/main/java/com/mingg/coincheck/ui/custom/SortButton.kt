@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
-import androidx.databinding.DataBindingUtil
 import com.mingg.coincheck.R
 import com.mingg.coincheck.databinding.ButtonSortBinding
 import com.mingg.coincheck.extension.getEnum
@@ -29,16 +28,8 @@ class SortButton(context: Context?, attrs: AttributeSet?) : LinearLayout(context
     }
 
     private fun init(context: Context?) {
-        _binding = DataBindingUtil.inflate(
-            LayoutInflater.from(context),
-            R.layout.button_sort,
-            this,
-            false
-        )
-
+        _binding = ButtonSortBinding.inflate(LayoutInflater.from(context), this, true)
         _binding.ivSortArrow.setImageResource(R.drawable.ic_arrow_normal)
-
-        addView(_binding.root)
     }
 
     private fun getAttrs(attrs: AttributeSet?) {

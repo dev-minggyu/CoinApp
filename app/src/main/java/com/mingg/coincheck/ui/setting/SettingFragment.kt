@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.mingg.coincheck.R
 import com.mingg.coincheck.databinding.FragmentSettingBinding
 import com.mingg.coincheck.extension.collectWithLifecycle
 import com.mingg.coincheck.extension.showThemeDialog
@@ -17,7 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SettingFragment : BaseFragment<FragmentSettingBinding>(R.layout.fragment_setting) {
+class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBinding::inflate) {
     private val settingViewModel: SettingViewModel by viewModels()
     private val sharedSettingViewModel: SharedSettingViewModel by viewModels()
 

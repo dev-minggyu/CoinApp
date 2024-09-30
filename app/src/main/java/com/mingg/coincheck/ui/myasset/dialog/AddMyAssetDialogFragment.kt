@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AddMyAssetDialogFragment :
-    BaseBottomSheetDialogFragment<FragmentDialogAddMyAssetBinding>(R.layout.fragment_dialog_add_my_asset) {
+    BaseBottomSheetDialogFragment<FragmentDialogAddMyAssetBinding>(FragmentDialogAddMyAssetBinding::inflate) {
     private val _addMyAssetDialogViewModel: AddMyAssetDialogViewModel by viewModels()
 
     private var _myTickerInfo: MyTickerInfo? = null

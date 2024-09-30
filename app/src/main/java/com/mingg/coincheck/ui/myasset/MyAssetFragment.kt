@@ -8,7 +8,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import com.mingg.coincheck.R
 import com.mingg.coincheck.databinding.FragmentMyAssetBinding
 import com.mingg.coincheck.extension.collectWithLifecycle
 import com.mingg.coincheck.model.myasset.MyAssetHeader
@@ -23,7 +22,7 @@ import kotlinx.coroutines.launch
 import java.text.NumberFormat
 
 @AndroidEntryPoint
-class MyAssetFragment : BaseFragment<FragmentMyAssetBinding>(R.layout.fragment_my_asset) {
+class MyAssetFragment : BaseFragment<FragmentMyAssetBinding>(FragmentMyAssetBinding::inflate) {
     private val _myAssetViewModel: MyAssetViewModel by viewModels()
 
     private lateinit var _myAssetListAdapter: MyAssetListAdapter
