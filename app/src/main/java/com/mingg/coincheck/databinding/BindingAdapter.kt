@@ -1,18 +1,13 @@
 package com.mingg.coincheck.databinding
 
-import android.annotation.SuppressLint
 import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
-import androidx.databinding.InverseBindingAdapter
-import androidx.databinding.InverseBindingListener
-import com.mingg.coincheck.R
-import com.mingg.coincheck.ui.custom.SortButton
-import com.mingg.coincheck.ui.home.adapter.TickerListAdapter
-import com.mingg.domain.model.ticker.SortModel
-import com.mingg.domain.model.ticker.Ticker
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.mingg.coincheck.R
+import com.mingg.coincheck.ui.home.adapter.TickerListAdapter
+import com.mingg.domain.model.ticker.Ticker
 import java.util.Locale
 
 object BindingAdapter {
@@ -25,33 +20,6 @@ object BindingAdapter {
             function(item.itemId)
             true
         }
-    }
-
-    @JvmStatic
-    @BindingAdapter("sortState")
-    fun bindSortState(
-        view: SortButton, sortModel: SortModel?
-    ) {
-        sortModel?.let {
-            view.setSortState(it)
-        }
-    }
-
-    @JvmStatic
-    @InverseBindingAdapter(attribute = "sortState", event = "sortStateAttrChanged")
-    fun inverseBindSortState(view: SortButton): SortModel =
-        view.getSortState()
-
-    @JvmStatic
-    @BindingAdapter("sortStateAttrChanged")
-    fun bindOnSortChanged(
-        view: SortButton, listener: InverseBindingListener?
-    ) {
-        view.setOnSortChangedListener(object : SortButton.OnSortChangedListener {
-            override fun onChanged() {
-                listener?.onChange()
-            }
-        })
     }
 
     @JvmStatic
@@ -103,22 +71,6 @@ object BindingAdapter {
                 view.text = ticker.koreanSymbol
             } else {
                 view.text = ticker.englishSymbol
-            }
-        }
-    }
-
-    @SuppressLint("SetTextI18n")
-    @JvmStatic
-    @BindingAdapter("textDetailTickerSymbol")
-    fun bindTextDetailTickerSymbol(
-        view: TextView,
-        ticker: Ticker?
-    ) {
-        ticker?.let {
-            if (Locale.getDefault().language == "ko") {
-                view.text = "${ticker.koreanSymbol} (${ticker.symbol})"
-            } else {
-                view.text = "${ticker.englishSymbol} (${ticker.symbol})"
             }
         }
     }

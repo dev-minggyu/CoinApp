@@ -1,11 +1,10 @@
 package com.mingg.coincheck.ui.home
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mingg.coincheck.App
 import com.mingg.coincheck.R
+import com.mingg.coincheck.ui.base.BaseViewModel
 import com.mingg.domain.model.ticker.SortModel
-import com.mingg.domain.model.ticker.Ticker
 import com.mingg.domain.usecase.favoriteticker.FavoriteTickerUseCase
 import com.mingg.domain.usecase.setting.SettingFloatingWindowUseCase
 import com.mingg.domain.usecase.ticker.SubscribeTickerUseCase
@@ -16,8 +15,6 @@ import com.mingg.domain.usecase.ticker.UnsubscribeTickerUseCase
 import com.mingg.domain.utils.Resource
 import com.mingg.domain.utils.TickerResource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,97 +27,100 @@ class HomeViewModel @Inject constructor(
     private val subscribeTickerUseCase: SubscribeTickerUseCase,
     private val unsubscribeTickerUseCase: UnsubscribeTickerUseCase,
     private val settingFloatingWindowUseCase: SettingFloatingWindowUseCase
-) : ViewModel() {
-    private val _tickerList: MutableStateFlow<List<Ticker>?> =
-        MutableStateFlow(null)
-    val tickerList = _tickerList.asStateFlow()
+) : BaseViewModel<HomeState, HomeIntent, HomeEffect>() {
 
-    val searchText: MutableStateFlow<String?> = MutableStateFlow(null)
-
-    val sortModel: MutableStateFlow<SortModel?> =
-        MutableStateFlow(null)
-
-    private val _errorTicker: MutableStateFlow<String?> = MutableStateFlow(null)
-    val errorTicker = _errorTicker.asStateFlow()
-
-    private val _loadingTicker: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val loadingTicker = _loadingTicker.asStateFlow()
-
-    init {
-        observeTickerList()
-        observeSearchText()
-        observeSortModel()
+    override fun createInitialState(): HomeState {
+        return HomeState()
     }
 
-    private fun observeTickerList() {
-        viewModelScope.launch {
-            tickerDataUseCase.execute()
-                .collect {
-                    when (it) {
-                        is TickerResource.Update -> {
-                            _loadingTicker.value = false
-                            _tickerList.value = it.data.tickerList
-                            sortModel.value = it.data.sortModel
-                        }
-
-                        is TickerResource.Refresh -> {
-                            _loadingTicker.value = false
-                            _tickerList.value = null
-                            _tickerList.value = it.data.tickerList
-                            sortModel.value = it.data.sortModel
-                        }
-
-                        is TickerResource.Error -> {
-                            _loadingTicker.value = false
-                            _errorTicker.value = App.getString(R.string.error_network)
-                        }
-
-                        else -> {}
-                    }
-                }
+    override fun handleEvent(event: HomeIntent) {
+        when (event) {
+            is HomeIntent.LoadTickers -> loadTickers()
+            is HomeIntent.InsertFavorite -> insertFavoriteTicker(event.symbol)
+            is HomeIntent.DeleteFavorite -> deleteFavoriteTicker(event.symbol)
+            is HomeIntent.Search -> searchTickers(event.query)
+            is HomeIntent.Sort -> sortTickers(event.sortModel)
+            is HomeIntent.Subscribe -> subscribeTicker()
+            is HomeIntent.Unsubscribe -> unsubscribeTicker()
         }
     }
 
-    fun insertFavoriteTicker(symbol: String) {
+    private fun loadTickers() {
+        viewModelScope.launch {
+            setState { copy(isLoading = true) }
+            tickerDataUseCase.execute().collect { resource ->
+                when (resource) {
+                    is TickerResource.Update -> {
+                        setState {
+                            copy(
+                                isLoading = false,
+                                tickerList = resource.data.tickerList,
+                                sortModel = resource.data.sortModel
+                            )
+                        }
+                    }
+
+                    is TickerResource.Refresh -> {
+                        setState {
+                            copy(
+                                isLoading = false,
+                                tickerList = resource.data.tickerList,
+                                sortModel = resource.data.sortModel
+                            )
+                        }
+                    }
+
+                    is TickerResource.Error -> {
+                        setState {
+                            copy(
+                                isLoading = false,
+                                error = App.getString(R.string.error_network)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun insertFavoriteTicker(symbol: String) {
         viewModelScope.launch {
             favoriteTickerUseCase.executeInsert(symbol)
         }
     }
 
-    fun deleteFavoriteTicker(symbol: String) {
+    private fun deleteFavoriteTicker(symbol: String) {
         viewModelScope.launch {
             favoriteTickerUseCase.executeDelete(symbol)
         }
     }
 
-    private fun observeSearchText() {
+    private fun searchTickers(query: String) {
         viewModelScope.launch {
-            searchText.collect {
-                it?.let {
-                    tickerSearchUseCase.execute(it)
-                }
-            }
+            setState { copy(searchText = query) }
+            tickerSearchUseCase.execute(query)
         }
     }
 
-    private fun observeSortModel() {
+    private fun sortTickers(sortModel: SortModel) {
         viewModelScope.launch {
-            sortModel.collect {
-                it?.let {
-                    tickerSortUseCase.execute(it)
-                }
-            }
+            setState { copy(sortModel = sortModel) }
+            tickerSortUseCase.execute(sortModel)
         }
     }
 
-    fun subscribeTicker() {
+    private fun subscribeTicker() {
         viewModelScope.launch {
-            _loadingTicker.value = true
+            setState { copy(isLoading = true) }
             when (subscribeTickerUseCase.execute(300L)) {
-                is Resource.Success -> _errorTicker.value = null
+                is Resource.Success -> setState { copy(error = null) }
                 is Resource.Error -> {
-                    _loadingTicker.value = false
-                    _errorTicker.value = App.getString(R.string.error_network)
+                    setState {
+                        copy(
+                            isLoading = false,
+                            error = App.getString(R.string.error_network)
+                        )
+                    }
                 }
 
                 else -> {}
@@ -128,7 +128,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun unsubscribeTicker() {
+    private fun unsubscribeTicker() {
         viewModelScope.launch {
             unsubscribeTickerUseCase.execute()
         }

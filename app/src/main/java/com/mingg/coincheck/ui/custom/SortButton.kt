@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
-import androidx.databinding.DataBindingUtil
 import com.mingg.coincheck.R
 import com.mingg.coincheck.databinding.ButtonSortBinding
 import com.mingg.coincheck.extension.getEnum
@@ -14,13 +13,13 @@ import com.mingg.domain.model.ticker.SortType
 
 class SortButton(context: Context?, attrs: AttributeSet?) : LinearLayout(context, attrs) {
 
-    private lateinit var _binding: ButtonSortBinding
+    private lateinit var binding: ButtonSortBinding
 
-    private lateinit var _sortCategory: SortCategory
+    private lateinit var sortCategory: SortCategory
 
-    private lateinit var _sortModel: SortModel
+    private lateinit var sortModel: SortModel
 
-    private var _onSortChangedListener: OnSortChangedListener? = null
+    private var onSortChangedListener: OnSortChangedListener? = null
 
     init {
         init(context)
@@ -29,25 +28,17 @@ class SortButton(context: Context?, attrs: AttributeSet?) : LinearLayout(context
     }
 
     private fun init(context: Context?) {
-        _binding = DataBindingUtil.inflate(
-            LayoutInflater.from(context),
-            R.layout.button_sort,
-            this,
-            false
-        )
-
-        _binding.ivSortArrow.setImageResource(R.drawable.ic_arrow_normal)
-
-        addView(_binding.root)
+        binding = ButtonSortBinding.inflate(LayoutInflater.from(context), this, true)
+        binding.ivSortArrow.setImageResource(R.drawable.ic_arrow_normal)
     }
 
     private fun getAttrs(attrs: AttributeSet?) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.SortButton)
 
-        _sortCategory = typedArray.getEnum(R.styleable.SortButton_sortCategory)
+        sortCategory = typedArray.getEnum(R.styleable.SortButton_sortCategory)
 
-        _binding.tvSortName.apply {
-            text = when (_sortCategory) {
+        binding.tvSortName.apply {
+            text = when (sortCategory) {
                 SortCategory.NAME -> context.getString(R.string.sort_coin_name)
                 SortCategory.PRICE -> context.getString(R.string.sort_coin_price)
                 SortCategory.RATE -> context.getString(R.string.sort_coin_rate)
@@ -60,25 +51,25 @@ class SortButton(context: Context?, attrs: AttributeSet?) : LinearLayout(context
 
     private fun setListener() {
         setOnClickListener {
-            _binding.apply {
-                if (_sortModel.category == _sortCategory) {
-                    when (_sortModel.type) {
-                        SortType.ASC -> _sortModel.type = SortType.DESC
-                        SortType.DESC -> _sortModel.type = SortType.ASC
+            binding.apply {
+                if (sortModel.category == sortCategory) {
+                    when (sortModel.type) {
+                        SortType.ASC -> sortModel.type = SortType.DESC
+                        SortType.DESC -> sortModel.type = SortType.ASC
                     }
                 } else {
-                    _sortModel.type = SortType.DESC
+                    sortModel.type = SortType.DESC
                 }
-                _sortModel.category = _sortCategory
+                sortModel.category = sortCategory
             }
-            _onSortChangedListener?.onChanged()
+            onSortChangedListener?.onChanged(sortModel)
         }
     }
 
     fun setSortState(sortModel: SortModel) {
-        _sortModel = sortModel.copy()
-        _binding.apply {
-            if (_sortModel.category == _sortCategory) {
+        this.sortModel = sortModel.copy()
+        binding.apply {
+            if (this@SortButton.sortModel.category == sortCategory) {
                 when (sortModel.type) {
                     SortType.DESC -> ivSortArrow.setImageResource(R.drawable.ic_arrow_down)
                     SortType.ASC -> ivSortArrow.setImageResource(R.drawable.ic_arrow_up)
@@ -89,13 +80,13 @@ class SortButton(context: Context?, attrs: AttributeSet?) : LinearLayout(context
         }
     }
 
-    fun getSortState(): SortModel = _sortModel.copy()
+    fun getSortState(): SortModel = sortModel.copy()
 
     fun setOnSortChangedListener(listener: OnSortChangedListener) {
-        _onSortChangedListener = listener
+        onSortChangedListener = listener
     }
 
     interface OnSortChangedListener {
-        fun onChanged()
+        fun onChanged(sortModel: SortModel)
     }
 }

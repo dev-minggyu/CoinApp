@@ -1,78 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <data>
-
-        <import type="android.view.View" />
-
-        <variable
-            name="vm"
-            type="com.mingg.coincheck.ui.home.HomeViewModel" />
-    </data>
-
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:background="@color/color_background_regular1">
 
-        <com.google.android.material.appbar.AppBarLayout
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/color_background_regular1">
+            app:layout_scrollFlags="scroll">
 
-            <com.google.android.material.appbar.CollapsingToolbarLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_scrollFlags="scroll">
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-            </com.google.android.material.appbar.CollapsingToolbarLayout>
+        <include
+            android:id="@+id/layout_search"
+            layout="@layout/layout_list_search" />
 
-            <include
-                android:id="@+id/layout_search"
-                layout="@layout/layout_list_search"
-                app:vm="@{vm}" />
+        <include
+            android:id="@+id/layout_list_category"
+            layout="@layout/layout_list_category" />
 
-            <include
-                android:id="@+id/layout_list_category"
-                layout="@layout/layout_list_category"
-                app:vm="@{vm}" />
+        <include
+            android:id="@+id/layout_sort"
+            layout="@layout/layout_list_sort" />
 
-            <include
-                android:id="@+id/layout_sort"
-                layout="@layout/layout_list_sort"
-                app:vm="@{vm}" />
+    </com.google.android.material.appbar.AppBarLayout>
 
-        </com.google.android.material.appbar.AppBarLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_ticker"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_ticker"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="@{vm.loadingTicker ? View.GONE :View.VISIBLE}"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        <include
+            android:id="@+id/layout_error"
+            layout="@layout/layout_error" />
 
-            <include
-                android:id="@+id/layout_error"
-                layout="@layout/layout_error"
-                android:visibility="@{vm.errorTicker == null ? View.GONE : View.VISIBLE}"
-                app:vm="@{vm}" />
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/color_primary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:indeterminateTint="@color/color_primary"
-                android:visibility="@{vm.loadingTicker ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-</layout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

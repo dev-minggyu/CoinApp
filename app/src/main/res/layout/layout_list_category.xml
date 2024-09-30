@@ -1,71 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/_5sdp"
+    android:paddingTop="@dimen/_5sdp"
+    android:paddingBottom="@dimen/_5sdp">
 
-    <data>
-
-        <variable
-            name="vm"
-            type="com.mingg.coincheck.ui.home.HomeViewModel" />
-    </data>
-
-    <HorizontalScrollView
-        android:layout_width="match_parent"
+    <RadioGroup
+        android:id="@+id/radio_group_catecory"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/_5sdp"
-        android:paddingTop="@dimen/_5sdp"
-        android:paddingBottom="@dimen/_5sdp">
+        android:checkedButton="@id/btn_krw"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <RadioGroup
-            android:id="@+id/radio_group_catecory"
+        <RadioButton
+            android:id="@+id/btn_krw"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checkedButton="@id/btn_krw"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="@dimen/_30sdp"
+            android:background="@drawable/radio_button_category"
+            android:button="@null"
+            android:text="@string/list_category_krw"
+            android:textAlignment="center" />
 
-            <RadioButton
-                android:id="@+id/btn_krw"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_30sdp"
-                android:background="@drawable/radio_button_category"
-                android:button="@null"
-                android:text="@string/list_category_krw"
-                android:textAlignment="center" />
+        <RadioButton
+            android:id="@+id/btn_btc"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:background="@drawable/radio_button_category"
+            android:button="@null"
+            android:text="@string/list_category_btc"
+            android:textAlignment="center" />
 
-            <RadioButton
-                android:id="@+id/btn_btc"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_30sdp"
-                android:layout_marginStart="@dimen/_5sdp"
-                android:background="@drawable/radio_button_category"
-                android:button="@null"
-                android:text="@string/list_category_btc"
-                android:textAlignment="center" />
+        <RadioButton
+            android:id="@+id/btn_usdt"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:background="@drawable/radio_button_category"
+            android:button="@null"
+            android:text="@string/list_category_usdt"
+            android:textAlignment="center" />
 
-            <RadioButton
-                android:id="@+id/btn_usdt"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_30sdp"
-                android:layout_marginStart="@dimen/_5sdp"
-                android:background="@drawable/radio_button_category"
-                android:button="@null"
-                android:text="@string/list_category_usdt"
-                android:textAlignment="center" />
+        <RadioButton
+            android:id="@+id/btn_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:background="@drawable/radio_button_category"
+            android:button="@null"
+            android:text="@string/list_category_favorite"
+            android:textAlignment="center" />
 
-            <RadioButton
-                android:id="@+id/btn_favorite"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_30sdp"
-                android:layout_marginStart="@dimen/_5sdp"
-                android:background="@drawable/radio_button_category"
-                android:button="@null"
-                android:text="@string/list_category_favorite"
-                android:textAlignment="center" />
+    </RadioGroup>
 
-        </RadioGroup>
-
-    </HorizontalScrollView>
-
-</layout>
+</HorizontalScrollView>

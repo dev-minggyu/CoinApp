@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
-import com.mingg.coincheck.R
 import com.mingg.coincheck.databinding.ActivityInitBinding
 import com.mingg.coincheck.extension.collectWithLifecycle
 import com.mingg.coincheck.ui.base.BaseActivity
@@ -16,23 +15,24 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class InitActivity : BaseActivity<ActivityInitBinding>(R.layout.activity_init) {
-    private val _initViewModel: InitViewModel by viewModels()
+class InitActivity : BaseActivity<ActivityInitBinding>(ActivityInitBinding::inflate) {
 
-    private lateinit var _overlayPermissionManager: ActivityOverlayPermissionManager
+    private val initViewModel: InitViewModel by viewModels()
+
+    private lateinit var overlayPermissionManager: ActivityOverlayPermissionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
 
-        _overlayPermissionManager = ActivityOverlayPermissionManager.from(this)
+        overlayPermissionManager = ActivityOverlayPermissionManager.from(this)
 
         setupObserver()
     }
 
     private fun setupObserver() {
         lifecycleScope.launch {
-            _initViewModel.isEnableFloatingWindow.collectWithLifecycle(lifecycle) {
+            initViewModel.isEnableFloatingWindow.collectWithLifecycle(lifecycle) {
                 if (it) {
                     initOverlayService()
                 } else {
@@ -48,11 +48,11 @@ class InitActivity : BaseActivity<ActivityInitBinding>(R.layout.activity_init) {
     }
 
     private fun initOverlayService() {
-        _overlayPermissionManager.checkPermission {
+        overlayPermissionManager.checkPermission {
             if (it) {
                 FloatingWindowService.startService(applicationContext)
             } else {
-                _initViewModel.disableFloatingWindow()
+                initViewModel.disableFloatingWindow()
             }
             gotoMain()
         }

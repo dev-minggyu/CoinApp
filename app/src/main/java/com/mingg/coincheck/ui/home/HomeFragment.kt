@@ -2,7 +2,8 @@ package com.mingg.coincheck.ui.home
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.activityViewModels
+import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -16,48 +17,59 @@ import com.mingg.coincheck.extension.collectWithLifecycle
 import com.mingg.coincheck.extension.isServiceRunning
 import com.mingg.coincheck.model.myasset.MyTickerInfo
 import com.mingg.coincheck.ui.base.BaseFragment
+import com.mingg.coincheck.ui.custom.SortButton
 import com.mingg.coincheck.ui.floating.FloatingWindowService
 import com.mingg.coincheck.ui.home.adapter.TickerListAdapter
+import com.mingg.coincheck.ui.main.SharedSettingIntent
+import com.mingg.coincheck.ui.main.SharedSettingViewModel
 import com.mingg.coincheck.ui.tickerdetail.TickerDetailActivity
-import com.mingg.coincheck.ui.main.ShareSettingViewModel
 import com.mingg.domain.model.ticker.Currency
+import com.mingg.domain.model.ticker.SortModel
 import com.mingg.domain.model.ticker.Ticker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
+class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate),
     LifecycleEventObserver {
-    private val _homeViewModel: HomeViewModel by viewModels()
 
-    private val _settingViewModel: ShareSettingViewModel by activityViewModels()
+    private val homeViewModel: HomeViewModel by viewModels()
+    private val sharedSettingViewModel: SharedSettingViewModel by viewModels()
 
-    private var _tickerListAdapter: TickerListAdapter? = null
-
-    private var _tickerList: List<Ticker>? = null
+    private var tickerListAdapter: TickerListAdapter? = null
+    private var tickerList: List<Ticker>? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
 
-        binding.vm = _homeViewModel
-
+        setupListener()
         setupRecyclerView()
         setupListCategoryButton()
         setupObserver()
+
+        homeViewModel.setEvent(HomeIntent.LoadTickers)
     }
 
-    private fun setupObserver() {
-        lifecycleScope.launch {
-            _homeViewModel.tickerList.collectWithLifecycle(lifecycle) { tickerList ->
-                _tickerList = tickerList
-                setListOfCategory(binding.layoutListCategory.radioGroupCatecory.checkedRadioButtonId)
+    private fun setupListener() {
+        with(binding) {
+            layoutError.btnRetry.setOnClickListener {
+                homeViewModel.setEvent(HomeIntent.Unsubscribe)
             }
-        }
-
-        lifecycleScope.launch {
-            _settingViewModel.tickerChangeColor.collectWithLifecycle(lifecycle) {
-                _tickerListAdapter?.setTickerChangeColor(it)
+            layoutSearch.etSearchTicker.doOnTextChanged { text, _, _, _ ->
+                homeViewModel.setEvent(HomeIntent.Search(text.toString()))
+            }
+            object : SortButton.OnSortChangedListener {
+                override fun onChanged(sortModel: SortModel) {
+                    homeViewModel.setEvent(HomeIntent.Sort(sortModel))
+                }
+            }.let {
+                with(layoutSort) {
+                    btnSortName.setOnSortChangedListener(it)
+                    btnSortPrice.setOnSortChangedListener(it)
+                    btnSortRate.setOnSortChangedListener(it)
+                    btnSortVolume.setOnSortChangedListener(it)
+                }
             }
         }
     }
@@ -65,16 +77,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
     private fun setupRecyclerView() {
         val favoriteClickListener = object : TickerListAdapter.FavoriteClickListener {
             override fun onAddFavorite(symbol: String) {
-                _homeViewModel.insertFavoriteTicker(symbol)
+                homeViewModel.setEvent(HomeIntent.InsertFavorite(symbol))
             }
 
             override fun onDeleteFavorite(symbol: String) {
-                _homeViewModel.deleteFavoriteTicker(symbol)
+                homeViewModel.setEvent(HomeIntent.DeleteFavorite(symbol))
             }
         }
-        _tickerListAdapter = TickerListAdapter(favoriteClickListener) { ticker ->
+
+        tickerListAdapter = TickerListAdapter(favoriteClickListener) { ticker ->
             TickerDetailActivity.startActivity(
-                requireContext(), MyTickerInfo(
+                requireContext(),
+                MyTickerInfo(
                     ticker.symbol,
                     ticker.currencyType,
                     ticker.koreanSymbol,
@@ -87,39 +101,76 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home),
             setHasFixedSize(true)
             itemAnimator = null
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-            adapter = _tickerListAdapter
+            adapter = tickerListAdapter
         }
     }
 
     private fun setupListCategoryButton() {
         binding.layoutListCategory.radioGroupCatecory.setOnCheckedChangeListener { _, id ->
-            _tickerListAdapter?.submitList(null)
+            tickerListAdapter?.submitList(null)
             setListOfCategory(id)
+        }
+    }
+
+    private fun setupObserver() {
+        lifecycleScope.launch {
+            homeViewModel.uiState.collectWithLifecycle(lifecycle) { state ->
+                tickerList = state.tickerList
+                setListOfCategory(binding.layoutListCategory.radioGroupCatecory.checkedRadioButtonId)
+
+                with(binding) {
+                    state.sortModel?.let {
+                        with(layoutSort) {
+                            btnSortName.setSortState(it)
+                            btnSortPrice.setSortState(it)
+                            btnSortRate.setSortState(it)
+                            btnSortVolume.setSortState(it)
+                        }
+                    }
+                    progress.isVisible = state.isLoading
+                    rvTicker.isVisible = !state.isLoading
+                    layoutError.root.isVisible = !state.error.isNullOrEmpty()
+                    state.error?.let { errorMessage -> layoutError.tvError.text = errorMessage }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            sharedSettingViewModel.uiState.collectWithLifecycle(lifecycle) { state ->
+                tickerListAdapter?.setTickerChangeColor(state.tickerChangeColor)
+            }
         }
     }
 
     private fun setListOfCategory(categoryId: Int) {
         when (categoryId) {
             R.id.btn_krw ->
-                _tickerListAdapter?.submitList(_tickerList?.filter { it.currencyType == Currency.KRW })
+                tickerListAdapter?.submitList(tickerList?.filter { it.currencyType == Currency.KRW })
 
             R.id.btn_btc ->
-                _tickerListAdapter?.submitList(_tickerList?.filter { it.currencyType == Currency.BTC })
+                tickerListAdapter?.submitList(tickerList?.filter { it.currencyType == Currency.BTC })
 
             R.id.btn_usdt ->
-                _tickerListAdapter?.submitList(_tickerList?.filter { it.currencyType == Currency.USDT })
+                tickerListAdapter?.submitList(tickerList?.filter { it.currencyType == Currency.USDT })
 
             R.id.btn_favorite ->
-                _tickerListAdapter?.submitList(_tickerList?.filter { it.isFavorite })
+                tickerListAdapter?.submitList(tickerList?.filter { it.isFavorite })
+        }
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            sharedSettingViewModel.setEvent(SharedSettingIntent.LoadSettings)
         }
     }
 
     override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
         when (event) {
-            Lifecycle.Event.ON_START -> _homeViewModel.subscribeTicker()
+            Lifecycle.Event.ON_START -> homeViewModel.setEvent(HomeIntent.Subscribe)
             Lifecycle.Event.ON_STOP -> {
                 if (requireContext().isServiceRunning(FloatingWindowService::class.java)) {
-                    _homeViewModel.unsubscribeTicker()
+                    homeViewModel.setEvent(HomeIntent.Unsubscribe)
                 }
             }
 

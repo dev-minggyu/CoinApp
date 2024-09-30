@@ -4,13 +4,13 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.mingg.coincheck.R
-import com.mingg.coincheck.databinding.ItemAssetHeaderBinding
-import com.mingg.coincheck.model.myasset.MyAssetHeader
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
+import com.mingg.coincheck.R
+import com.mingg.coincheck.databinding.ItemAssetHeaderBinding
+import com.mingg.coincheck.model.myasset.MyAssetHeader
 
 class AssetHeaderViewHolder(private val binding: ItemAssetHeaderBinding) :
     RecyclerView.ViewHolder(binding.root) {

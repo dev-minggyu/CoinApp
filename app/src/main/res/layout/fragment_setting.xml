@@ -1,125 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <data>
-
-        <variable
-            name="fragment"
-            type="com.mingg.coincheck.ui.setting.SettingFragment" />
-    </data>
-
-    <ScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_13sdp">
+
+        <TextView
+            android:id="@+id/tv_section_title_ui"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:text="@string/settings_title_ui"
+            android:textColor="@color/color_text"
+            android:textSize="@dimen/_12sdp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_section_ui"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/_13sdp">
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="@drawable/background_setting_section"
+            app:layout_constraintTop_toBottomOf="@id/tv_section_title_ui">
 
             <TextView
-                android:id="@+id/tv_section_title_ui"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_5sdp"
-                android:text="@string/settings_title_ui"
+                android:id="@+id/tv_theme"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_40sdp"
+                android:background="?selectableItemBackground"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/_10sdp"
+                android:paddingEnd="@dimen/_10sdp"
+                android:text="@string/settings_app_theme"
                 android:textColor="@color/color_text"
-                android:textSize="@dimen/_12sdp"
-                android:textStyle="bold"
+                android:textSize="@dimen/_13sdp"
+                app:drawableRightCompat="@drawable/ic_arrow_forward"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layout_section_ui"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:background="@drawable/background_setting_section"
-                app:layout_constraintTop_toBottomOf="@id/tv_section_title_ui">
-
-                <TextView
-                    android:id="@+id/tv_theme"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_40sdp"
-                    android:background="?selectableItemBackground"
-                    android:gravity="center_vertical"
-                    android:onClick="@{(view) -> fragment.settingMenuClick(view.id)}"
-                    android:paddingStart="@dimen/_10sdp"
-                    android:paddingEnd="@dimen/_10sdp"
-                    android:text="@string/settings_app_theme"
-                    android:textColor="@color/color_text"
-                    android:textSize="@dimen/_13sdp"
-                    app:drawableRightCompat="@drawable/ic_arrow_forward"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/tv_change_ticker_color"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_40sdp"
-                    android:gravity="center_vertical"
-                    android:paddingStart="@dimen/_10sdp"
-                    android:paddingEnd="@dimen/_10sdp"
-                    android:text="@string/settings_ticker_change_color"
-                    android:textColor="@color/color_text"
-                    android:textSize="@dimen/_13sdp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_theme" />
-
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/switch_change_ticker_color"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/_10sdp"
-                    android:onCheckedChanged="@{(view, isChecked) -> fragment.settingSwitchClick(view.id, isChecked)}"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_change_ticker_color"
-                    app:layout_constraintEnd_toEndOf="@id/layout_section_ui"
-                    app:layout_constraintTop_toTopOf="@id/tv_change_ticker_color" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
             <TextView
-                android:id="@+id/tv_section_title_floating_window"
+                android:id="@+id/tv_change_ticker_color"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_40sdp"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/_10sdp"
+                android:paddingEnd="@dimen/_10sdp"
+                android:text="@string/settings_ticker_change_color"
+                android:textColor="@color/color_text"
+                android:textSize="@dimen/_13sdp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_theme" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_change_ticker_color"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_5sdp"
-                android:layout_marginTop="@dimen/_17sdp"
-                android:text="@string/settings_title_floating_window"
-                android:textColor="@color/color_text"
-                android:textSize="@dimen/_12sdp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layout_section_ui" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layout_section_floating_window"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:background="@drawable/background_setting_section"
-                app:layout_constraintTop_toBottomOf="@id/tv_section_title_floating_window">
-
-                <TextView
-                    android:id="@+id/tv_floating_window_setting"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_40sdp"
-                    android:background="?selectableItemBackground"
-                    android:gravity="center_vertical"
-                    android:onClick="@{(view) -> fragment.settingMenuClick(view.id)}"
-                    android:paddingStart="@dimen/_10sdp"
-                    android:paddingEnd="@dimen/_10sdp"
-                    android:text="@string/settings_floating_window"
-                    android:textColor="@color/color_text"
-                    android:textSize="@dimen/_13sdp"
-                    app:drawableRightCompat="@drawable/ic_arrow_forward"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_marginEnd="@dimen/_10sdp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_change_ticker_color"
+                app:layout_constraintEnd_toEndOf="@id/layout_section_ui"
+                app:layout_constraintTop_toTopOf="@id/tv_change_ticker_color" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </ScrollView>
+        <TextView
+            android:id="@+id/tv_section_title_floating_window"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:layout_marginTop="@dimen/_17sdp"
+            android:text="@string/settings_title_floating_window"
+            android:textColor="@color/color_text"
+            android:textSize="@dimen/_12sdp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_section_ui" />
 
-</layout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_section_floating_window"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="@drawable/background_setting_section"
+            app:layout_constraintTop_toBottomOf="@id/tv_section_title_floating_window">
+
+            <TextView
+                android:id="@+id/tv_floating_window_setting"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_40sdp"
+                android:background="?selectableItemBackground"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/_10sdp"
+                android:paddingEnd="@dimen/_10sdp"
+                android:text="@string/settings_floating_window"
+                android:textColor="@color/color_text"
+                android:textSize="@dimen/_13sdp"
+                app:drawableRightCompat="@drawable/ic_arrow_forward"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
