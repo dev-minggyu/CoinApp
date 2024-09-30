@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.graphics.PixelFormat
-import android.os.Build
 import android.os.IBinder
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -29,28 +28,28 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class FloatingWindowService : Service() {
     @Inject
-    lateinit var _unfilteredTickerDataUseCase: UnfilteredTickerDataUseCase
+    lateinit var unfilteredTickerDataUseCase: UnfilteredTickerDataUseCase
 
     @Inject
-    lateinit var _settingFloatingTickerListUseCase: SettingFloatingTickerListUseCase
+    lateinit var settingFloatingTickerListUseCase: SettingFloatingTickerListUseCase
 
     @Inject
-    lateinit var _settingFloatingTransparentUseCase: SettingFloatingTransparentUseCase
+    lateinit var settingFloatingTransparentUseCase: SettingFloatingTransparentUseCase
 
     private val _serviceJob: Job = Job()
     private val _serviceScope = CoroutineScope(_serviceJob + Dispatchers.Default)
 
-    private var _windowView: FloatingViewBinding? = null
-    private var _viewPosX = 0f
-    private var _viewPosY = 0f
+    private var windowView: FloatingViewBinding? = null
+    private var viewPosX = 0f
+    private var viewPosY = 0f
 
-    private var _binder = FloatingWindowServiceBinder(this)
+    private var binder = FloatingWindowServiceBinder(this)
 
-    private var _floatingList = listOf<String>()
+    private var floatingList = listOf<String>()
 
-    private var _floatingListAdapter: FloatingListAdapter? = null
+    private var floatingListAdapter: FloatingListAdapter? = null
 
-    override fun onBind(intent: Intent): IBinder = _binder
+    override fun onBind(intent: Intent): IBinder = binder
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         startForeground(this.hashCode(), NotificationUtil.notification(applicationContext))
@@ -60,29 +59,26 @@ class FloatingWindowService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        _windowView?.let {
+        windowView?.let {
             _serviceJob.cancel()
-            _floatingListAdapter = null
-            val windowManager =
-                applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            floatingListAdapter = null
+            val windowManager = applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
             windowManager.removeView(it.root)
-            _windowView = null
+            windowView = null
         }
     }
 
     @SuppressLint("ClickableViewAccessibility", "InlinedApi")
     private fun createView() {
-        if (_windowView != null) return
+        if (windowView != null) return
 
-        val layoutInflater =
-            applicationContext.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val layoutInflater = applicationContext.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val windowManager = applicationContext.getSystemService(WINDOW_SERVICE) as WindowManager
 
-        _windowView = FloatingViewBinding.inflate(layoutInflater, null, false).also { binding ->
+        windowView = FloatingViewBinding.inflate(layoutInflater, null, false).also { binding ->
             val layoutParams = WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY.takeIf { Build.VERSION.SDK_INT >= Build.VERSION_CODES.O }
-                    ?: WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
                 PixelFormat.TRANSLUCENT
             )
@@ -92,14 +88,14 @@ class FloatingWindowService : Service() {
             binding.layoutOverlay.setOnTouchListener { _, motionEvent ->
                 when (motionEvent.action) {
                     MotionEvent.ACTION_DOWN -> {
-                        _viewPosX = layoutParams.x - motionEvent.rawX
-                        _viewPosY = layoutParams.y - motionEvent.rawY
+                        viewPosX = layoutParams.x - motionEvent.rawX
+                        viewPosY = layoutParams.y - motionEvent.rawY
                         return@setOnTouchListener true
                     }
 
                     MotionEvent.ACTION_MOVE -> {
-                        layoutParams.x = (_viewPosX + motionEvent.rawX).toInt()
-                        layoutParams.y = (_viewPosY + motionEvent.rawY).toInt()
+                        layoutParams.x = (viewPosX + motionEvent.rawX).toInt()
+                        layoutParams.y = (viewPosY + motionEvent.rawY).toInt()
                         windowManager.updateViewLayout(binding.root, layoutParams)
                         return@setOnTouchListener true
                     }
@@ -107,36 +103,36 @@ class FloatingWindowService : Service() {
                 return@setOnTouchListener false
             }
 
-            _floatingListAdapter = FloatingListAdapter()
+            floatingListAdapter = FloatingListAdapter()
             binding.rvTicker.apply {
                 itemAnimator = null
-                adapter = _floatingListAdapter
+                adapter = floatingListAdapter
             }
         }
 
-        setTransparent(_settingFloatingTransparentUseCase.get())
+        setTransparent(settingFloatingTransparentUseCase.get())
         observeTickerData()
     }
 
     fun setTransparent(value: Int) {
-        _windowView?.let {
+        windowView?.let {
             it.root.background.alpha = value
         }
     }
 
     fun setFloatingList(list: List<String>) {
-        _floatingList = list
+        floatingList = list
     }
 
     private fun observeTickerData() {
-        _floatingList = _settingFloatingTickerListUseCase.get()
+        floatingList = settingFloatingTickerListUseCase.get()
         _serviceScope.launch(Dispatchers.Main) {
-            _unfilteredTickerDataUseCase.execute().collect {
+            unfilteredTickerDataUseCase.execute().collect {
                 when (it) {
                     is TickerResource.Update -> {
-                        _floatingListAdapter?.submitList(
+                        floatingListAdapter?.submitList(
                             it.data.tickerList.filter { ticker ->
-                                _floatingList.contains(ticker.symbol + ticker.currencyType.name)
+                                floatingList.contains(ticker.symbol + ticker.currencyType.name)
                             }
                         )
                     }
