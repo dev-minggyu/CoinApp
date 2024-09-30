@@ -1,7 +1,7 @@
 package com.mingg.coincheck.di
 
-import com.mingg.network.mapper.ticker.TickerMapperProvider
 import com.mingg.coincheck.provider.TickerMapperProviderImpl
+import com.mingg.network.mapper.ticker.TickerMapperProvider
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

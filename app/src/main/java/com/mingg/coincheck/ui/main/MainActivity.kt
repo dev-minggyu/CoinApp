@@ -16,7 +16,8 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
-    private val _mainViewModel: MainViewModel by viewModels()
+
+    private val mainViewModel: MainViewModel by viewModels()
 
     companion object {
         private const val TAG_FRAGMENT_HOME = "TAG_FRAGMENT_HOME"
@@ -27,14 +28,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding.vm = _mainViewModel
-
         setupObserver()
     }
 
     private fun setupObserver() {
         lifecycleScope.launch {
-            _mainViewModel.currentMenuId.collectWithLifecycle(lifecycle) {
+            mainViewModel.currentMenuId.collectWithLifecycle(lifecycle) {
                 showFragment(it)
             }
         }

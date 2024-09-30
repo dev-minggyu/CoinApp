@@ -6,8 +6,8 @@ import com.mingg.coincheck.ui.base.UiState
 import com.mingg.domain.model.myasset.MyTicker
 
 sealed class MyAssetIntent : UiIntent {
-    object ObserveTickerList : MyAssetIntent()
-    object RefreshAssetList : MyAssetIntent()
+    data object ObserveTickerList : MyAssetIntent()
+    data object RefreshAssetList : MyAssetIntent()
 }
 
 data class MyAssetState(

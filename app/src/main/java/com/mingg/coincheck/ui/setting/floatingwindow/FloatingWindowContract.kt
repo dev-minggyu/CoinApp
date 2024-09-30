@@ -3,7 +3,6 @@ package com.mingg.coincheck.ui.setting.floatingwindow
 import com.mingg.coincheck.ui.base.UiEffect
 import com.mingg.coincheck.ui.base.UiIntent
 import com.mingg.coincheck.ui.base.UiState
-import com.mingg.domain.model.myasset.MyTicker
 
 sealed class FloatingWindowSettingIntent : UiIntent {
     data object LoadSettings : FloatingWindowSettingIntent()

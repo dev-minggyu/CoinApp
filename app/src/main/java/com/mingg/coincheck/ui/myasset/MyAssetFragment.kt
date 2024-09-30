@@ -23,9 +23,10 @@ import java.text.NumberFormat
 
 @AndroidEntryPoint
 class MyAssetFragment : BaseFragment<FragmentMyAssetBinding>(FragmentMyAssetBinding::inflate) {
-    private val _myAssetViewModel: MyAssetViewModel by viewModels()
 
-    private lateinit var _myAssetListAdapter: MyAssetListAdapter
+    private val myAssetViewModel: MyAssetViewModel by viewModels()
+
+    private lateinit var myAssetListAdapter: MyAssetListAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -36,7 +37,7 @@ class MyAssetFragment : BaseFragment<FragmentMyAssetBinding>(FragmentMyAssetBind
 
     private fun setupObserver() {
         lifecycleScope.launch {
-            _myAssetViewModel.uiState.collectWithLifecycle(lifecycle) { state ->
+            myAssetViewModel.uiState.collectWithLifecycle(lifecycle) { state ->
                 state.myAssetList?.let {
                     val checkedList = it.filter { ticker -> ticker.averagePrice.isNotEmpty() && ticker.amount.isNotEmpty() }
                     with(binding) {
@@ -50,7 +51,7 @@ class MyAssetFragment : BaseFragment<FragmentMyAssetBinding>(FragmentMyAssetBind
     }
 
     private fun setupRecyclerView() {
-        _myAssetListAdapter = MyAssetListAdapter {
+        myAssetListAdapter = MyAssetListAdapter {
             TickerDetailActivity.startActivity(
                 requireContext(),
                 MyTickerInfo(
@@ -63,19 +64,19 @@ class MyAssetFragment : BaseFragment<FragmentMyAssetBinding>(FragmentMyAssetBind
         }
         binding.rvAsset.apply {
             itemAnimator = null
-            adapter = _myAssetListAdapter
+            adapter = myAssetListAdapter
         }
     }
 
     override fun onResume() {
         super.onResume()
-        _myAssetViewModel.setEvent(MyAssetIntent.RefreshAssetList)
+        myAssetViewModel.setEvent(MyAssetIntent.RefreshAssetList)
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
-            _myAssetViewModel.setEvent(MyAssetIntent.RefreshAssetList)
+            myAssetViewModel.setEvent(MyAssetIntent.RefreshAssetList)
         }
     }
 
@@ -112,7 +113,7 @@ class MyAssetFragment : BaseFragment<FragmentMyAssetBinding>(FragmentMyAssetBind
                 MyAssetItem.Ticker(it)
             })
 
-            _myAssetListAdapter.submitAssetList(assetList)
+            myAssetListAdapter.submitAssetList(assetList)
         }
     }
 
