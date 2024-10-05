@@ -1,20 +1,19 @@
 package com.mingg.coincheck.ui.tickerdetail
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
+import android.view.View
 import android.webkit.WebViewClient
 import android.widget.TextView
-import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.mingg.coincheck.R
-import com.mingg.coincheck.databinding.ActivityTickerDetailBinding
+import com.mingg.coincheck.databinding.FragmentTickerDetailBinding
 import com.mingg.coincheck.model.myasset.MyTickerInfo
-import com.mingg.coincheck.ui.base.BaseActivity
+import com.mingg.coincheck.navigation.NavigationManager
+import com.mingg.coincheck.ui.base.BaseFragment
 import com.mingg.coincheck.ui.myasset.dialog.AddMyAssetDialogFragment
 import com.mingg.coincheck.utils.AppThemeManager
 import com.mingg.coincheck.utils.TradingViewUtil
@@ -24,24 +23,40 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 
 @AndroidEntryPoint
-class TickerDetailActivity :
-    BaseActivity<ActivityTickerDetailBinding>(ActivityTickerDetailBinding::inflate) {
+class TickerDetailFragment : BaseFragment<FragmentTickerDetailBinding>(FragmentTickerDetailBinding::inflate) {
 
     private val tickerDetailViewModel: TickerDetailViewModel by viewModels()
 
+    private lateinit var navigationManager: NavigationManager
+
     private var myTickerInfo: MyTickerInfo? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        myTickerInfo = intent.getParcelableExtra(KEY_MY_TICKER)
+        navigationManager = NavigationManager(findNavController())
 
-        setupActionBar()
+        myTickerInfo = arguments?.getParcelable(KEY_MY_TICKER)
+
+        setupListener()
         setupWebView()
         setupObservers()
 
         myTickerInfo?.let {
             tickerDetailViewModel.setEvent(TickerDetailIntent.LoadTicker(it.symbol, it.currency))
+        }
+    }
+
+    private fun setupListener() {
+        with(binding) {
+            btnBack.setOnClickListener {
+                navigationManager.goBack()
+            }
+            btnAddAsset.setOnClickListener {
+                myTickerInfo?.let {
+                    AddMyAssetDialogFragment.newInstance(it).show(childFragmentManager, null)
+                }
+            }
         }
     }
 
@@ -57,14 +72,6 @@ class TickerDetailActivity :
                     isDarkMode = AppThemeManager.isDarkMode(resources)
                 ), "text/html", "base64"
             )
-        }
-    }
-
-    private fun setupActionBar() {
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            setDisplayShowHomeEnabled(true)
         }
     }
 
@@ -93,42 +100,15 @@ class TickerDetailActivity :
     private fun setTickerPriceColor(view: TextView, rate: String?) {
         rate?.let {
             val color: Int = when {
-                it.toFloat() > 0 -> ContextCompat.getColor(this, R.color.color_price_up)
-                it.toFloat() < 0 -> ContextCompat.getColor(this, R.color.color_price_down)
-                else -> ContextCompat.getColor(this, R.color.color_price_same)
+                it.toFloat() > 0 -> ContextCompat.getColor(requireContext(), R.color.color_price_up)
+                it.toFloat() < 0 -> ContextCompat.getColor(requireContext(), R.color.color_price_down)
+                else -> ContextCompat.getColor(requireContext(), R.color.color_price_same)
             }
             view.setTextColor(color)
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.ticker_detail_toolbar_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                finish()
-                return true
-            }
-
-            R.id.menu_add_my_asset -> {
-                myTickerInfo?.let {
-                    AddMyAssetDialogFragment.newInstance(it).show(supportFragmentManager, null)
-                }
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     companion object {
-        fun startActivity(context: Context, ticker: MyTickerInfo) {
-            val intent = Intent(context, TickerDetailActivity::class.java)
-            intent.putExtra(KEY_MY_TICKER, ticker)
-            context.startActivity(intent)
-        }
-
-        private const val KEY_MY_TICKER = "KEY_MY_TICKER"
+        const val KEY_MY_TICKER = "KEY_MY_TICKER"
     }
 }

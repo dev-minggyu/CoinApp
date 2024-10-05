@@ -22,10 +22,10 @@
 <br/>
 
 ## WIP
-- Feature 레이어 모듈화
-- MVVM to MVI
-- SAA(Single Activity Architecture) Navigation
-
+- ✔️ MVVM to MVI
+- ✔️ SAA(Single Activity Architecture, Navigation)
+- ❔ Orbit MVI
+- ❔ Feature layer modulazation
 <br/>
 
 # Architecture

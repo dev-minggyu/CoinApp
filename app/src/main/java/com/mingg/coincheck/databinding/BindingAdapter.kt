@@ -4,24 +4,12 @@ import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mingg.coincheck.R
 import com.mingg.coincheck.ui.home.adapter.TickerListAdapter
 import com.mingg.domain.model.ticker.Ticker
 import java.util.Locale
 
 object BindingAdapter {
-    @JvmStatic
-    @BindingAdapter("onNavItemSelected")
-    fun bindOnNavItemSelected(
-        view: BottomNavigationView, function: (Int) -> Unit
-    ) {
-        view.setOnItemSelectedListener { item ->
-            function(item.itemId)
-            true
-        }
-    }
-
     @JvmStatic
     @BindingAdapter(value = ["tickerSymbol", "favoriteClickListener"], requireAll = true)
     fun bindOnFavoriteClickListener(

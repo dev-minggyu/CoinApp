@@ -1,27 +1,33 @@
 package com.mingg.coincheck.ui.setting.floatingwindow
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import androidx.activity.viewModels
+import android.view.View
+import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.mingg.coincheck.databinding.ActivitySettingFloatingTickerBinding
-import com.mingg.coincheck.ui.base.BaseActivity
+import com.mingg.coincheck.databinding.FragmentSettingFloatingTickerBinding
+import com.mingg.coincheck.navigation.NavigationManager
+import com.mingg.coincheck.ui.base.BaseFragment
 import com.mingg.coincheck.ui.setting.adapter.CheckSymbolListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class FloatingTickerSelectActivity :
-    BaseActivity<ActivitySettingFloatingTickerBinding>(ActivitySettingFloatingTickerBinding::inflate) {
+class FloatingTickerSelectFragment :
+    BaseFragment<FragmentSettingFloatingTickerBinding>(FragmentSettingFloatingTickerBinding::inflate) {
 
     private val floatingSymbolSelectViewModel: FloatingSymbolSelectViewModel by viewModels()
 
+    private lateinit var navigationManager: NavigationManager
+
     private lateinit var checkSymbolListAdapter: CheckSymbolListAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        navigationManager = NavigationManager(findNavController())
 
         setupAdapter()
         setupObserver()
@@ -38,14 +44,14 @@ class FloatingTickerSelectActivity :
                 ticker.symbol
             }
             floatingSymbolSelectViewModel.setEvent(FloatingSymbolSelectIntent.SetFloatingTickerList(result))
-            setResult(
-                FloatingWindowSettingActivity.REQUEST_CHECKED_FLOATING_SYMBOL,
-                Intent().putStringArrayListExtra(
-                    KEY_CHECKED_FLOATING_SYMBOL_LIST,
-                    ArrayList(result)
-                )
+
+            setFragmentResult(
+                FloatingWindowSettingFragment.REQUEST_CHECKED_FLOATING_SYMBOL,
+                Bundle().apply {
+                    putStringArrayList(KEY_CHECKED_FLOATING_SYMBOL_LIST, ArrayList(result))
+                }
             )
-            finish()
+            navigationManager.goBack()
         }
     }
 
@@ -71,8 +77,5 @@ class FloatingTickerSelectActivity :
 
     companion object {
         const val KEY_CHECKED_FLOATING_SYMBOL_LIST = "KEY_CHECKED_FLOATING_SYMBOL_LIST"
-
-        fun createIntent(context: Context): Intent =
-            Intent(context, FloatingTickerSelectActivity::class.java)
     }
 }

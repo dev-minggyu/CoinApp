@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/initFragment">
+
+    <fragment
+        android:id="@+id/initFragment"
+        android:name="com.mingg.coincheck.ui.splash.InitFragment"
+        android:label="init" />
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.mingg.coincheck.ui.home.HomeFragment"
+        android:label="home" />
+
+    <fragment
+        android:id="@+id/tickerDetailFragment"
+        android:name="com.mingg.coincheck.ui.tickerdetail.TickerDetailFragment"
+        android:label="ticker_detail" />
+
+    <fragment
+        android:id="@+id/myAssetFragment"
+        android:name="com.mingg.coincheck.ui.myasset.MyAssetFragment"
+        android:label="my_asset" />
+
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.mingg.coincheck.ui.setting.SettingFragment"
+        android:label="setting" />
+
+    <fragment
+        android:id="@+id/floatingWindowSettingFragment"
+        android:name="com.mingg.coincheck.ui.setting.floatingwindow.FloatingWindowSettingFragment"
+        android:label="floating_window_setting" />
+
+    <fragment
+        android:id="@+id/floatingTickerSelectFragment"
+        android:name="com.mingg.coincheck.ui.setting.floatingwindow.FloatingTickerSelectFragment"
+        android:label="floating_ticker_select" />
+
+</navigation>

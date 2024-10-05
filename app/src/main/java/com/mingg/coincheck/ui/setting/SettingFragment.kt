@@ -4,25 +4,31 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.mingg.coincheck.databinding.FragmentSettingBinding
 import com.mingg.coincheck.extension.collectWithLifecycle
 import com.mingg.coincheck.extension.showThemeDialog
+import com.mingg.coincheck.navigation.NavigationManager
 import com.mingg.coincheck.ui.base.BaseFragment
 import com.mingg.coincheck.ui.main.SharedSettingIntent
 import com.mingg.coincheck.ui.main.SharedSettingViewModel
-import com.mingg.coincheck.ui.setting.floatingwindow.FloatingWindowSettingActivity
 import com.mingg.coincheck.utils.AppThemeManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBinding::inflate) {
+
     private val settingViewModel: SettingViewModel by viewModels()
+
     private val sharedSettingViewModel: SharedSettingViewModel by viewModels()
+
+    private lateinit var navigationManager: NavigationManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        navigationManager = NavigationManager(findNavController())
         setupListener()
         setupObservers()
     }
@@ -36,7 +42,7 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
                 sharedSettingViewModel.setEvent(SharedSettingIntent.SetChangeTickerColor(isChecked))
             }
             tvFloatingWindowSetting.setOnClickListener {
-                FloatingWindowSettingActivity.startActivity(requireContext())
+                navigationManager.navigateToFloatingWindow()
             }
         }
     }
