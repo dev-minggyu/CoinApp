@@ -50,27 +50,26 @@ class AtomicTickerListImpl @Inject constructor() : AtomicTickerList {
         }
     }
 
-    override suspend fun getList(sortModel: SortModel?, searchSymbol: String?): TickerListModel =
-        mutex.withLock {
-            sortModel?.let {
-                this.sortModel = sortModel
-            }
-            searchSymbol?.let {
-                this.searchSymbol = searchSymbol
-            }
-
-            sortList()
-
-            var result = copyTickerList()
-            if (this.searchSymbol.isNotEmpty()) {
-                result = result.filter {
-                    it.symbol.startsWith(this.searchSymbol, true)
-                            || it.koreanSymbol.startsWith(this.searchSymbol)
-                }
-            }
-
-            TickerListModel(result, this.sortModel.copy())
+    override suspend fun getList(sortModel: SortModel?, searchSymbol: String?) = mutex.withLock {
+        sortModel?.let {
+            this.sortModel = sortModel
         }
+        searchSymbol?.let {
+            this.searchSymbol = searchSymbol
+        }
+
+        sortList()
+
+        var result = copyTickerList()
+        if (this.searchSymbol.isNotEmpty()) {
+            result = result.filter {
+                it.symbol.startsWith(this.searchSymbol, true)
+                        || it.koreanSymbol.startsWith(this.searchSymbol)
+            }
+        }
+
+        TickerListModel(result, this.sortModel.copy())
+    }
 
     override suspend fun getUnfilteredList(): TickerListModel = mutex.withLock {
         TickerListModel(copyTickerList(), this.sortModel.copy())
@@ -98,28 +97,17 @@ class AtomicTickerListImpl @Inject constructor() : AtomicTickerList {
         }
     }
 
-    override fun getValidTickerSize(): Int =
-        _list.count {
-            it.currentPrice.isNotEmpty()
-        }
+    override fun getValidTickerSize(): Int = _list.count { it.currentPrice.isNotEmpty() }
 
     override suspend fun getSymbolList(): List<TickerSymbol> = mutex.withLock {
-        val result = copyTickerList().sortedBy { it.symbol }
-        result.map {
-            it.toTickerSymbol()
-        }
+        copyTickerList().sortedBy { it.symbol }.map { it.toTickerSymbol() }
     }
 
     override suspend fun clear() {
-        mutex.withLock {
-            _list.clear()
-        }
+        mutex.withLock { _list.clear() }
     }
 
-    private fun copyTickerList(): List<Ticker> =
-        _list.map {
-            it.copy()
-        }
+    private fun copyTickerList(): List<Ticker> = _list.map { it.copy() }
 
     private fun Ticker.toTickerSymbol(): TickerSymbol =
         TickerSymbol(
