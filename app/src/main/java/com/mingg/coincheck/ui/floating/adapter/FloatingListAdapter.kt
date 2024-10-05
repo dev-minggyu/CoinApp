@@ -19,9 +19,7 @@ class FloatingListAdapter : BaseListAdapter<Ticker, FloatingListAdapter.Floating
         return FloatingViewHolder(binding)
     }
 
-    inner class FloatingViewHolder(private val binding: ItemFloatingTickerBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
+    class FloatingViewHolder(private val binding: ItemFloatingTickerBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Ticker) {
             binding.ticker = item
             binding.executePendingBindings()
