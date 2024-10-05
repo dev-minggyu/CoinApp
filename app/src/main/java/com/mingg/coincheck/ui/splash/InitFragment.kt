@@ -17,8 +17,7 @@ class InitFragment : BaseFragment<FragmentInitBinding>(FragmentInitBinding::infl
 
     private val initViewModel: InitViewModel by viewModels()
 
-    private val overlayPermissionManager: ActivityOverlayPermissionManager =
-        ActivityOverlayPermissionManager.from(this)
+    private val overlayPermissionManager: ActivityOverlayPermissionManager = ActivityOverlayPermissionManager.from(this)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -28,8 +27,8 @@ class InitFragment : BaseFragment<FragmentInitBinding>(FragmentInitBinding::infl
 
     private fun setupObserver() {
         lifecycleScope.launch {
-            initViewModel.isEnableFloatingWindow.collectWithLifecycle(lifecycle) {
-                if (it) {
+            initViewModel.uiState.collectWithLifecycle(lifecycle) { state ->
+                if (state.isFloatingWindowEnabled) {
                     initOverlayService()
                 } else {
                     navigationManager.navigateToHome()
@@ -39,11 +38,11 @@ class InitFragment : BaseFragment<FragmentInitBinding>(FragmentInitBinding::infl
     }
 
     private fun initOverlayService() {
-        overlayPermissionManager.checkPermission {
-            if (it) {
+        overlayPermissionManager.checkPermission { isGranted ->
+            if (isGranted) {
                 FloatingWindowService.startService(requireContext())
             } else {
-                initViewModel.disableFloatingWindow()
+                initViewModel.setEvent(InitIntent.DisableFloatingWindow)
             }
             navigationManager.navigateToHome()
         }

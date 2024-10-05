@@ -1,28 +1,42 @@
 package com.mingg.coincheck.ui.splash
 
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.mingg.coincheck.ui.base.BaseViewModel
 import com.mingg.domain.usecase.setting.SettingFloatingWindowUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class InitViewModel @Inject constructor(
     private val settingFloatingWindowUseCase: SettingFloatingWindowUseCase
-) : ViewModel() {
-    private val _isEnableFloatingWindow = MutableStateFlow(false)
-    val isEnableFloatingWindow = _isEnableFloatingWindow.asStateFlow()
+) : BaseViewModel<InitState, InitIntent, InitEffect>() {
 
-    init {
-        isEnabledFloatingWindow()
+    override fun createInitialState(): InitState {
+        return InitState()
     }
 
-    private fun isEnabledFloatingWindow() {
-        _isEnableFloatingWindow.value = settingFloatingWindowUseCase.get()
+    init {
+        setEvent(InitIntent.CheckFloatingWindowEnabled)
+    }
+
+    override fun handleEvent(event: InitIntent) {
+        when (event) {
+            InitIntent.CheckFloatingWindowEnabled -> checkFloatingWindowEnabled()
+            InitIntent.DisableFloatingWindow -> disableFloatingWindow()
+        }
+    }
+
+    private fun checkFloatingWindowEnabled() {
+        viewModelScope.launch {
+            val isEnabled = settingFloatingWindowUseCase.get()
+            setState { copy(isFloatingWindowEnabled = isEnabled) }
+        }
     }
 
     fun disableFloatingWindow() {
-        settingFloatingWindowUseCase.set(false)
+        viewModelScope.launch {
+            settingFloatingWindowUseCase.set(false)
+        }
     }
 }
