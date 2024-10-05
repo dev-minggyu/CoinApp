@@ -35,11 +35,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     LifecycleEventObserver {
 
     private val homeViewModel: HomeViewModel by viewModels()
-
     private val sharedSettingViewModel: SharedSettingViewModel by viewModels()
 
     private var tickerListAdapter: TickerListAdapter? = null
-
     private var tickerList: List<Ticker>? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -55,6 +53,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     private fun setupListener() {
+        val sortChangedListener = object : SortButton.OnSortChangedListener {
+            override fun onChanged(sortModel: SortModel) {
+                homeViewModel.setEvent(HomeIntent.Sort(sortModel))
+            }
+        }
+
         with(binding) {
             layoutError.btnRetry.setOnClickListener {
                 homeViewModel.setEvent(HomeIntent.Unsubscribe)
@@ -62,17 +66,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             layoutSearch.etSearchTicker.doOnTextChanged { text, _, _, _ ->
                 homeViewModel.setEvent(HomeIntent.Search(text.toString()))
             }
-            object : SortButton.OnSortChangedListener {
-                override fun onChanged(sortModel: SortModel) {
-                    homeViewModel.setEvent(HomeIntent.Sort(sortModel))
-                }
-            }.let {
-                with(layoutSort) {
-                    btnSortName.setOnSortChangedListener(it)
-                    btnSortPrice.setOnSortChangedListener(it)
-                    btnSortRate.setOnSortChangedListener(it)
-                    btnSortVolume.setOnSortChangedListener(it)
-                }
+            with(layoutSort) {
+                btnSortName.setOnSortChangedListener(sortChangedListener)
+                btnSortPrice.setOnSortChangedListener(sortChangedListener)
+                btnSortRate.setOnSortChangedListener(sortChangedListener)
+                btnSortVolume.setOnSortChangedListener(sortChangedListener)
             }
         }
     }
@@ -123,6 +121,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 setListOfCategory(binding.layoutListCategory.radioGroupCatecory.checkedRadioButtonId)
 
                 with(binding) {
+                    progress.isVisible = state.isLoading
+                    rvTicker.isVisible = !state.isLoading
+                    layoutError.root.isVisible = state.error != null
+
                     state.sortModel?.let {
                         with(layoutSort) {
                             btnSortName.setSortState(it)
@@ -131,10 +133,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                             btnSortVolume.setSortState(it)
                         }
                     }
-                    progress.isVisible = state.isLoading
-                    rvTicker.isVisible = !state.isLoading
-                    layoutError.root.isVisible = !state.error.isNullOrEmpty()
-                    state.error?.let { errorMessage -> layoutError.tvError.text = errorMessage }
+
+                    state.error?.let { errorType ->
+                        layoutError.tvError.text = when (errorType) {
+                            is HomeErrorType.NetworkError -> getString(R.string.home_error_network)
+                            is HomeErrorType.UnexpectedError -> getString(R.string.home_error_unexpected)
+                        }
+                        layoutError.root.isVisible = true
+                    }
                 }
             }
         }
@@ -147,19 +153,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     private fun setListOfCategory(categoryId: Int) {
-        when (categoryId) {
-            R.id.btn_krw ->
-                tickerListAdapter?.submitList(tickerList?.filter { it.currencyType == Currency.KRW })
-
-            R.id.btn_btc ->
-                tickerListAdapter?.submitList(tickerList?.filter { it.currencyType == Currency.BTC })
-
-            R.id.btn_usdt ->
-                tickerListAdapter?.submitList(tickerList?.filter { it.currencyType == Currency.USDT })
-
-            R.id.btn_favorite ->
-                tickerListAdapter?.submitList(tickerList?.filter { it.isFavorite })
+        val filteredList = when (categoryId) {
+            R.id.btn_krw -> tickerList?.filter { it.currencyType == Currency.KRW }
+            R.id.btn_btc -> tickerList?.filter { it.currencyType == Currency.BTC }
+            R.id.btn_usdt -> tickerList?.filter { it.currencyType == Currency.USDT }
+            R.id.btn_favorite -> tickerList?.filter { it.isFavorite }
+            else -> null
         }
+        tickerListAdapter?.submitList(filteredList)
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
@@ -182,12 +183,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        tickerListAdapter = null
+        tickerList = null
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         ProcessLifecycleOwner.get().lifecycle.removeObserver(this)
-    }
-
-    companion object {
-        fun newInstance() = HomeFragment()
     }
 }

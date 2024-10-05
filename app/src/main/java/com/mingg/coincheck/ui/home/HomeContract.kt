@@ -19,9 +19,14 @@ sealed class HomeIntent : UiIntent {
 data class HomeState(
     val isLoading: Boolean = false,
     val tickerList: List<Ticker>? = null,
-    val error: String? = null,
+    val error: HomeErrorType? = null,
     val searchText: String? = null,
     val sortModel: SortModel? = null
 ) : UiState
 
 sealed class HomeEffect : UiEffect
+
+sealed class HomeErrorType {
+    data object NetworkError : HomeErrorType()
+    data object UnexpectedError : HomeErrorType()
+}
