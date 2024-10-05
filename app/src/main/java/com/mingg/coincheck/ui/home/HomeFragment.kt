@@ -62,7 +62,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
         with(binding) {
             layoutError.btnRetry.setOnClickListener {
-                homeViewModel.setEvent(HomeIntent.Unsubscribe)
+                homeViewModel.setEvent(HomeIntent.Subscribe)
             }
             layoutSearch.etSearchTicker.doOnTextChanged { text, _, _, _ ->
                 homeViewModel.setEvent(HomeIntent.Search(text.toString()))
