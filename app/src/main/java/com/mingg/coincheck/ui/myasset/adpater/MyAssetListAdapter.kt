@@ -2,8 +2,6 @@ package com.mingg.coincheck.ui.myasset.adpater
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mingg.coincheck.databinding.ItemAssetHeaderBinding
 import com.mingg.coincheck.databinding.ItemAssetTickerBinding
@@ -15,11 +13,13 @@ class MyAssetListAdapter(
     private val assetClickListener: (MyTicker) -> Unit
 ) : BaseListAdapter<MyAssetItem, RecyclerView.ViewHolder>() {
 
-    fun submitAssetList(list: MutableList<MyAssetItem>) {
-        val items = listOf(MyAssetItem.Header((list[0] as MyAssetItem.Header).header)) +
-                list.slice(1 until list.size).map {
-                    MyAssetItem.Ticker((it as MyAssetItem.Ticker).ticker)
-                }
+    fun submitAssetList(list: List<MyAssetItem>) {
+        val items = list.map { item ->
+            when (item) {
+                is MyAssetItem.Header -> MyAssetItem.Header(item.header)
+                is MyAssetItem.Ticker -> MyAssetItem.Ticker(item.ticker)
+            }
+        }
         submitList(items)
     }
 
@@ -27,23 +27,6 @@ class MyAssetListAdapter(
         return when (getItem(position)) {
             is MyAssetItem.Header -> HEADER
             is MyAssetItem.Ticker -> TICKER
-        }
-    }
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder) {
-            is AssetHeaderViewHolder -> {
-                val item = getItem(position) as MyAssetItem.Header
-                holder.bind(item.header)
-            }
-
-            is AssetTickerViewHolder -> {
-                val item = getItem(position) as MyAssetItem.Ticker
-                holder.itemView.setOnClickListener {
-                    assetClickListener.invoke(item.ticker)
-                }
-                holder.bind(item.ticker)
-            }
         }
     }
 
@@ -62,7 +45,22 @@ class MyAssetListAdapter(
         }
     }
 
-    companion object {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (val item = getItem(position)) {
+            is MyAssetItem.Header -> {
+                (holder as AssetHeaderViewHolder).bind(item.header)
+            }
+
+            is MyAssetItem.Ticker -> {
+                (holder as AssetTickerViewHolder).apply {
+                    itemView.setOnClickListener { assetClickListener.invoke(item.ticker) }
+                    bind(item.ticker)
+                }
+            }
+        }
+    }
+
+    private companion object {
         private const val HEADER = 0
         private const val TICKER = 1
     }

@@ -15,11 +15,18 @@ import com.mingg.coincheck.model.myasset.MyAssetHeader
 class AssetHeaderViewHolder(private val binding: ItemAssetHeaderBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
+    private val colorPriceUp = ContextCompat.getColor(itemView.context, R.color.color_price_up)
+    private val colorPriceDown = ContextCompat.getColor(itemView.context, R.color.color_price_down)
+    private val colorPriceSame = ContextCompat.getColor(itemView.context, R.color.color_price_same)
+    private val textColor = ContextCompat.getColor(itemView.context, R.color.color_text)
+
     @SuppressLint("SetTextI18n")
     fun bind(item: MyAssetHeader) {
         binding.apply {
             setupChart()
-            setupTextViewColor(item)
+            val pnlColor = getPnlColor(item.totalAsset, item.totalBuy)
+            tvPnl.setTextColor(pnlColor)
+            tvPnlPercent.setTextColor(pnlColor)
             tvTotalAsset.text = item.decimalTotalAsset
             tvTotalBuy.text = item.decimalTotalBuy
             tvPnl.text = item.pnl
@@ -29,7 +36,6 @@ class AssetHeaderViewHolder(private val binding: ItemAssetHeaderBinding) :
                     valueFormatter = PercentFormatter(chartAsset)
                     valueTextSize = 12f
                     valueTextColor = Color.WHITE
-                }.apply {
                     colors = ColorTemplate.COLORFUL_COLORS.toList()
                 }
             )
@@ -37,45 +43,12 @@ class AssetHeaderViewHolder(private val binding: ItemAssetHeaderBinding) :
         }
     }
 
-    private fun ItemAssetHeaderBinding.setupTextViewColor(item: MyAssetHeader) {
-        tvPnl.setTextColor(
-            when {
-                item.totalAsset - item.totalBuy > 0 -> ContextCompat.getColor(
-                    itemView.context,
-                    R.color.color_price_up
-                )
-
-                item.totalAsset - item.totalBuy < 0 -> ContextCompat.getColor(
-                    itemView.context,
-                    R.color.color_price_down
-                )
-
-                else -> ContextCompat.getColor(itemView.context, R.color.color_price_same)
-            }
-        )
-        tvPnlPercent.setTextColor(
-            when {
-                item.totalAsset - item.totalBuy > 0 -> ContextCompat.getColor(
-                    itemView.context,
-                    R.color.color_price_up
-                )
-
-                item.totalAsset - item.totalBuy < 0 -> ContextCompat.getColor(
-                    itemView.context,
-                    R.color.color_price_down
-                )
-
-                else -> ContextCompat.getColor(itemView.context, R.color.color_price_same)
-            }
-        )
-    }
-
     private fun ItemAssetHeaderBinding.setupChart() {
         chartAsset.apply {
             setUsePercentValues(true)
             description.isEnabled = false
             centerText = context.getString(R.string.my_asset_chart_center_text)
-            setCenterTextColor(ContextCompat.getColor(itemView.context, R.color.color_text))
+            setCenterTextColor(textColor)
             isRotationEnabled = false
             setEntryLabelTextSize(12f)
             setEntryLabelColor(Color.WHITE)
@@ -85,9 +58,17 @@ class AssetHeaderViewHolder(private val binding: ItemAssetHeaderBinding) :
                 verticalAlignment = Legend.LegendVerticalAlignment.CENTER
                 horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
                 orientation = Legend.LegendOrientation.VERTICAL
-                textColor = ContextCompat.getColor(itemView.context, R.color.color_text)
+                textColor = textColor
                 xOffset = 15f
             }
+        }
+    }
+
+    private fun getPnlColor(totalAsset: Double, totalBuy: Double): Int {
+        return when {
+            totalAsset - totalBuy > 0 -> colorPriceUp
+            totalAsset - totalBuy < 0 -> colorPriceDown
+            else -> colorPriceSame
         }
     }
 }
