@@ -29,14 +29,11 @@ class MyAssetFragment : BaseFragment<FragmentMyAssetBinding>(FragmentMyAssetBind
 
     private val myAssetViewModel: MyAssetViewModel by viewModels()
 
-    private lateinit var navigationManager: NavigationManager
-
     private lateinit var myAssetListAdapter: MyAssetListAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        navigationManager = NavigationManager(findNavController())
         setupRecyclerView()
         setupObserver()
     }

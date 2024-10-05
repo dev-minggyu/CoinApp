@@ -8,11 +8,9 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.mingg.coincheck.R
 import com.mingg.coincheck.databinding.FragmentTickerDetailBinding
 import com.mingg.coincheck.model.myasset.MyTickerInfo
-import com.mingg.coincheck.navigation.NavigationManager
 import com.mingg.coincheck.ui.base.BaseFragment
 import com.mingg.coincheck.ui.myasset.dialog.AddMyAssetDialogFragment
 import com.mingg.coincheck.utils.AppThemeManager
@@ -27,14 +25,10 @@ class TickerDetailFragment : BaseFragment<FragmentTickerDetailBinding>(FragmentT
 
     private val tickerDetailViewModel: TickerDetailViewModel by viewModels()
 
-    private lateinit var navigationManager: NavigationManager
-
     private var myTickerInfo: MyTickerInfo? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        navigationManager = NavigationManager(findNavController())
 
         myTickerInfo = arguments?.getParcelable(KEY_MY_TICKER)
 
