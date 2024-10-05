@@ -12,17 +12,19 @@ import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 
 class AtomicTickerListImpl @Inject constructor() : AtomicTickerList {
-    override val mutex = Mutex()
+    private val _list = mutableListOf<Ticker>()
+    override val list: List<Ticker>
+        get() = _list.toList()
 
-    override var list = mutableListOf<Ticker>()
+    private val mutex = Mutex()
 
-    override var sortModel = SortModel(SortCategory.VOLUME, SortType.DESC)
+    private var sortModel = SortModel(SortCategory.VOLUME, SortType.DESC)
 
-    override var searchSymbol: String = ""
+    private var searchSymbol: String = ""
 
     override suspend fun updateTicker(element: Ticker) {
         mutex.withLock {
-            list.find {
+            _list.find {
                 (it.symbol == element.symbol) && (it.currencyType == element.currencyType)
             }?.apply {
                 currentPrice = element.currentPrice
@@ -32,7 +34,7 @@ class AtomicTickerListImpl @Inject constructor() : AtomicTickerList {
                 volume = element.volume
                 formattedVolume = element.formattedVolume
             } ?: run {
-                list.add(element)
+                _list.add(element)
             }
         }
     }
@@ -40,7 +42,7 @@ class AtomicTickerListImpl @Inject constructor() : AtomicTickerList {
     override suspend fun updateFavorite(symbol: String, isFavorite: Boolean) {
         mutex.withLock {
             val splitSymbol = symbol.split("-")
-            list.find {
+            _list.find {
                 (it.symbol == splitSymbol[1]) && (it.currencyType.name == splitSymbol[0])
             }?.apply {
                 this.isFavorite = isFavorite
@@ -74,13 +76,8 @@ class AtomicTickerListImpl @Inject constructor() : AtomicTickerList {
         TickerListModel(copyTickerList(), this.sortModel.copy())
     }
 
-    private fun copyTickerList(): List<Ticker> =
-        list.map {
-            it.copy()
-        }
-
     override fun sortList() {
-        list.apply {
+        _list.apply {
             when (sortModel.type) {
                 SortType.DESC ->
                     when (sortModel.category) {
@@ -102,7 +99,7 @@ class AtomicTickerListImpl @Inject constructor() : AtomicTickerList {
     }
 
     override fun getValidTickerSize(): Int =
-        list.count {
+        _list.count {
             it.currentPrice.isNotEmpty()
         }
 
@@ -115,9 +112,14 @@ class AtomicTickerListImpl @Inject constructor() : AtomicTickerList {
 
     override suspend fun clear() {
         mutex.withLock {
-            list.clear()
+            _list.clear()
         }
     }
+
+    private fun copyTickerList(): List<Ticker> =
+        _list.map {
+            it.copy()
+        }
 
     private fun Ticker.toTickerSymbol(): TickerSymbol =
         TickerSymbol(

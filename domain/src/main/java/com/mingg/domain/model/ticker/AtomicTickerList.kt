@@ -1,15 +1,7 @@
 package com.mingg.domain.model.ticker
 
-import kotlinx.coroutines.sync.Mutex
-
 interface AtomicTickerList {
-    val mutex: Mutex
-
-    var list: MutableList<Ticker>
-
-    var sortModel: SortModel
-
-    var searchSymbol: String
+    val list: List<Ticker>
 
     suspend fun updateTicker(element: Ticker)
 
