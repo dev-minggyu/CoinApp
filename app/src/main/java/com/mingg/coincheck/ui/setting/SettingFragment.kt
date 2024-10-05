@@ -67,8 +67,4 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
             }
         }
     }
-
-    companion object {
-        fun newInstance() = SettingFragment()
-    }
 }
