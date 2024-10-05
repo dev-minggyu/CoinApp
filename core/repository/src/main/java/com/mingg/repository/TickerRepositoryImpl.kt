@@ -38,14 +38,14 @@ class TickerRepositoryImpl @Inject constructor(
     private val _coroutineScope = CoroutineScope(Job() + Dispatchers.Default)
 
     private val _tickerSocketData = MutableSharedFlow<TickerResource<TickerListModel>>(
-        replay = 0,
+        replay = 1,
         extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
     override val tickerSocketData = _tickerSocketData.asSharedFlow()
 
     private val _tickerSocketUnfilteredData = MutableSharedFlow<TickerResource<TickerListModel>>(
-        replay = 0,
+        replay = 1,
         extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
@@ -92,10 +92,7 @@ class TickerRepositoryImpl @Inject constructor(
                                     }
                                 } else {
                                     _tickerSocketData.emit(TickerResource.Update(atomicTickerList.getList()))
-                                    _tickerSocketUnfilteredData.emit(
-                                        TickerResource.Update(
-                                            atomicTickerList.getUnfilteredList()
-                                        )
+                                    _tickerSocketUnfilteredData.emit(TickerResource.Update(atomicTickerList.getUnfilteredList())
                                     )
                                     delay(receiveDelayMillis)
                                 }
