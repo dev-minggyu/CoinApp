@@ -8,6 +8,7 @@ import com.mingg.coincheck.R
 import com.mingg.coincheck.databinding.FragmentDialogAddMyAssetBinding
 import com.mingg.coincheck.extension.addNumberFormatter
 import com.mingg.coincheck.extension.collectWithLifecycle
+import com.mingg.coincheck.extension.getParcelableCompat
 import com.mingg.coincheck.extension.getTextWithoutComma
 import com.mingg.coincheck.model.myasset.MyTickerInfo
 import com.mingg.coincheck.ui.base.BaseBottomSheetDialogFragment
@@ -18,71 +19,79 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class AddMyAssetDialogFragment :
     BaseBottomSheetDialogFragment<FragmentDialogAddMyAssetBinding>(FragmentDialogAddMyAssetBinding::inflate) {
-    private val _addMyAssetDialogViewModel: AddMyAssetDialogViewModel by viewModels()
 
-    private var _myTickerInfo: MyTickerInfo? = null
+    private val addMyAssetDialogViewModel: AddMyAssetDialogViewModel by viewModels()
+    private var myTickerInfo: MyTickerInfo? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        _myTickerInfo = arguments?.getParcelable(KEY_MY_TICKER)
+        myTickerInfo = arguments?.getParcelableCompat(KEY_MY_TICKER)
 
         setupObserver()
-        checkMyAssetTicker()
         setupListener()
+        checkMyAssetTicker()
+    }
+
+    private fun setupObserver() {
+        lifecycleScope.launch {
+            addMyAssetDialogViewModel.uiState.collectWithLifecycle(lifecycle) { state ->
+                state.myAssetTicker?.let { ticker ->
+                    if (ticker.averagePrice.isNotEmpty() && ticker.amount.isNotEmpty()) {
+                        setExistAsset(ticker)
+                    }
+                }
+            }
+        }
     }
 
     private fun setupListener() {
         binding.apply {
             etAmount.addNumberFormatter()
             etAveragePrice.addNumberFormatter()
-
-            btnAddAsset.setOnClickListener {
-                _myTickerInfo?.let {
-                    val amount = binding.etAmount.getTextWithoutComma()
-                    val price = binding.etAveragePrice.getTextWithoutComma()
-                    if (amount.isEmpty() || price.isEmpty()) return@setOnClickListener
-
-                    _addMyAssetDialogViewModel.addAsset(
-                        MyTicker(
-                            symbol = it.symbol,
-                            koreanSymbol = it.koreanSymbol,
-                            englishSymbol = it.englishSymbol,
-                            currencyType = it.currency,
-                            amount = amount,
-                            averagePrice = price
-                        )
-                    )
-                    dismiss()
-                }
-            }
-
-            btnDeleteAsset.setOnClickListener {
-                _myTickerInfo?.let {
-                    _addMyAssetDialogViewModel.deleteAsset(it.symbol, it.currency.name)
-                    dismiss()
-                }
-            }
+            btnAddAsset.setOnClickListener { handleAddAsset() }
+            btnDeleteAsset.setOnClickListener { handleDeleteAsset() }
         }
     }
 
     private fun checkMyAssetTicker() {
-        _myTickerInfo?.let {
-            _addMyAssetDialogViewModel.checkMyAssetTicker(it.symbol, it.currency.name)
+        myTickerInfo?.let {
+            addMyAssetDialogViewModel.setEvent(AddMyAssetDialogIntent.CheckMyAssetTicker(it.symbol, it.currency.name))
         }
     }
 
-    private fun setupObserver() {
-        lifecycleScope.launch {
-            _addMyAssetDialogViewModel.myAssetTicker.collectWithLifecycle(lifecycle) {
-                it?.let {
-                    if (it.averagePrice.isEmpty() || it.amount.isEmpty()) return@let
-                    binding.btnAddAsset.setText(R.string.ticker_detail_modify_my_asset)
-                    binding.btnDeleteAsset.visibility = View.VISIBLE
-                    binding.etAmount.setText(it.amount)
-                    binding.etAveragePrice.setText(it.averagePrice)
-                }
-            }
+    private fun setExistAsset(ticker: MyTicker) {
+        binding.apply {
+            btnAddAsset.setText(R.string.ticker_detail_modify_my_asset)
+            btnDeleteAsset.visibility = View.VISIBLE
+            etAmount.setText(ticker.amount)
+            etAveragePrice.setText(ticker.averagePrice)
+        }
+    }
+
+    private fun handleAddAsset() {
+        myTickerInfo?.let {
+            val amount = binding.etAmount.getTextWithoutComma()
+            val price = binding.etAveragePrice.getTextWithoutComma()
+            if (amount.isEmpty() || price.isEmpty()) return
+
+            val myTicker = MyTicker(
+                symbol = it.symbol,
+                koreanSymbol = it.koreanSymbol,
+                englishSymbol = it.englishSymbol,
+                currencyType = it.currency,
+                amount = amount,
+                averagePrice = price
+            )
+            addMyAssetDialogViewModel.setEvent(AddMyAssetDialogIntent.AddAsset(myTicker))
+            dismiss()
+        }
+    }
+
+    private fun handleDeleteAsset() {
+        myTickerInfo?.let {
+            addMyAssetDialogViewModel.setEvent(AddMyAssetDialogIntent.DeleteAsset(it.symbol, it.currency.name))
+            dismiss()
         }
     }
 
