@@ -26,7 +26,7 @@ class MyAssetFragment : BaseFragment<FragmentMyAssetBinding>(FragmentMyAssetBind
 
     private val myAssetViewModel: MyAssetViewModel by viewModels()
 
-    private lateinit var myAssetListAdapter: MyAssetListAdapter
+    private var myAssetListAdapter: MyAssetListAdapter? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -86,7 +86,7 @@ class MyAssetFragment : BaseFragment<FragmentMyAssetBinding>(FragmentMyAssetBind
                 add(MyAssetItem.Header(createAssetHeader(list)))
                 addAll(list.map { MyAssetItem.Ticker(it) })
             }
-            myAssetListAdapter.submitAssetList(assetList)
+            myAssetListAdapter?.submitAssetList(assetList)
         }
     }
 
@@ -105,5 +105,10 @@ class MyAssetFragment : BaseFragment<FragmentMyAssetBinding>(FragmentMyAssetBind
                 list.map { PieEntry(it.amount.toFloat() * it.currentPrice.toFloat(), it.symbol) }, ""
             )
         )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        myAssetListAdapter = null
     }
 }
