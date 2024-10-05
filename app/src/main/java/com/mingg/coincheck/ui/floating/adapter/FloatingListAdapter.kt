@@ -8,10 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mingg.coincheck.databinding.ItemFloatingTickerBinding
 import com.mingg.domain.model.ticker.Ticker
 
-class FloatingListAdapter :
-    ListAdapter<Ticker, FloatingListAdapter.FloatingViewHolder>(
-        TickerDiffCallback()
-    ) {
+class FloatingListAdapter : ListAdapter<Ticker, FloatingListAdapter.FloatingViewHolder>(TickerDiffCallback()) {
     override fun onBindViewHolder(holder: FloatingViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)

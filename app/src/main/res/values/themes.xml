@@ -8,7 +8,7 @@
 
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/color_background_regular1</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:windowLightStatusBar">true</item>
 
         <!-- BottomSheetDialog -->
         <item name="bottomSheetDialogTheme">@style/CustomBottomSheetDialogTheme</item>
