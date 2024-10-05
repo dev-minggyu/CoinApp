@@ -2,11 +2,12 @@ package com.mingg.coincheck.ui.setting
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.mingg.coincheck.R
 import com.mingg.coincheck.databinding.FragmentSettingBinding
 import com.mingg.coincheck.extension.collectWithLifecycle
-import com.mingg.coincheck.extension.showThemeDialog
 import com.mingg.coincheck.ui.base.BaseFragment
 import com.mingg.coincheck.ui.main.SharedSettingIntent
 import com.mingg.coincheck.ui.main.SharedSettingViewModel
@@ -66,5 +67,27 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
                 }
             }
         }
+    }
+
+    private fun showThemeDialog(
+        selectedTheme: String,
+        callback: (selectedTheme: String) -> Unit
+    ) {
+        val items = resources.getStringArray(R.array.app_theme)
+        val values = resources.getStringArray(R.array.app_theme_value)
+        AlertDialog.Builder(requireContext()).setSingleChoiceItems(
+            items,
+            values.indexOf(selectedTheme)
+        ) { dialog, which ->
+            callback(
+                when (items[which]) {
+                    getString(R.string.app_theme_system) -> AppThemeManager.THEME_SYSTEM
+                    getString(R.string.app_theme_light) -> AppThemeManager.THEME_LIGHT
+                    getString(R.string.app_theme_dark) -> AppThemeManager.THEME_DARK
+                    else -> throw IllegalArgumentException("Unknown item : ${items[which]}")
+                }
+            )
+            dialog.dismiss()
+        }.show()
     }
 }
