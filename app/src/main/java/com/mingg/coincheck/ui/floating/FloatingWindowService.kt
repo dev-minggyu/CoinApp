@@ -22,6 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,10 +37,14 @@ class FloatingWindowService : Service() {
     @Inject
     lateinit var settingFloatingTransparentUseCase: SettingFloatingTransparentUseCase
 
-    private val _serviceJob: Job = Job()
-    private val _serviceScope = CoroutineScope(_serviceJob + Dispatchers.Default)
+    private val serviceScope = CoroutineScope(Dispatchers.Default + Job())
+
+    private val windowManager by lazy {
+        applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    }
 
     private var windowView: FloatingViewBinding? = null
+
     private var viewPosX = 0f
     private var viewPosY = 0f
 
@@ -59,10 +64,9 @@ class FloatingWindowService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        serviceScope.cancel()
         windowView?.let {
-            _serviceJob.cancel()
             floatingListAdapter = null
-            val windowManager = applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
             windowManager.removeView(it.root)
             windowView = null
         }
@@ -73,16 +77,15 @@ class FloatingWindowService : Service() {
         if (windowView != null) return
 
         val layoutInflater = applicationContext.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val windowManager = applicationContext.getSystemService(WINDOW_SERVICE) as WindowManager
-
         windowView = FloatingViewBinding.inflate(layoutInflater, null, false).also { binding ->
             val layoutParams = WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
                 PixelFormat.TRANSLUCENT
-            )
-            layoutParams.gravity = Gravity.CENTER
+            ).apply {
+                gravity = Gravity.CENTER
+            }
             windowManager.addView(binding.root, layoutParams)
 
             binding.layoutOverlay.setOnTouchListener { _, motionEvent ->
@@ -90,17 +93,16 @@ class FloatingWindowService : Service() {
                     MotionEvent.ACTION_DOWN -> {
                         viewPosX = layoutParams.x - motionEvent.rawX
                         viewPosY = layoutParams.y - motionEvent.rawY
-                        return@setOnTouchListener true
+                        true
                     }
-
                     MotionEvent.ACTION_MOVE -> {
                         layoutParams.x = (viewPosX + motionEvent.rawX).toInt()
                         layoutParams.y = (viewPosY + motionEvent.rawY).toInt()
                         windowManager.updateViewLayout(binding.root, layoutParams)
-                        return@setOnTouchListener true
+                        true
                     }
+                    else -> false
                 }
-                return@setOnTouchListener false
             }
 
             floatingListAdapter = FloatingListAdapter()
@@ -114,33 +116,27 @@ class FloatingWindowService : Service() {
         observeTickerData()
     }
 
-    fun setTransparent(value: Int) {
-        windowView?.let {
-            it.root.background.alpha = value
+    private fun observeTickerData() {
+        floatingList = settingFloatingTickerListUseCase.get()
+        serviceScope.launch(Dispatchers.Main) {
+            unfilteredTickerDataUseCase.execute().collect {
+                if (it is TickerResource.Update) {
+                    floatingListAdapter?.submitList(
+                        it.data.tickerList.filter { ticker ->
+                            floatingList.contains(ticker.symbol + ticker.currencyType.name)
+                        }
+                    )
+                }
+            }
         }
+    }
+
+    fun setTransparent(value: Int) {
+        windowView?.root?.background?.alpha = value
     }
 
     fun setFloatingList(list: List<String>) {
         floatingList = list
-    }
-
-    private fun observeTickerData() {
-        floatingList = settingFloatingTickerListUseCase.get()
-        _serviceScope.launch(Dispatchers.Main) {
-            unfilteredTickerDataUseCase.execute().collect {
-                when (it) {
-                    is TickerResource.Update -> {
-                        floatingListAdapter?.submitList(
-                            it.data.tickerList.filter { ticker ->
-                                floatingList.contains(ticker.symbol + ticker.currencyType.name)
-                            }
-                        )
-                    }
-
-                    else -> {}
-                }
-            }
-        }
     }
 
     companion object {
@@ -156,9 +152,7 @@ class FloatingWindowService : Service() {
             serviceConnection?.let {
                 context.unbindService(it)
             }
-            context.stopService(
-                Intent(context, FloatingWindowService::class.java)
-            )
+            context.stopService(Intent(context, FloatingWindowService::class.java))
         }
 
         fun unbindService(context: Context, serviceConnection: ServiceConnection) {
