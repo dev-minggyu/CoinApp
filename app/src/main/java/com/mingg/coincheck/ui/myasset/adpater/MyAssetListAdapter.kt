@@ -8,11 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mingg.coincheck.databinding.ItemAssetHeaderBinding
 import com.mingg.coincheck.databinding.ItemAssetTickerBinding
 import com.mingg.coincheck.model.myasset.MyAssetItem
+import com.mingg.coincheck.ui.base.BaseListAdapter
 import com.mingg.domain.model.myasset.MyTicker
 
 class MyAssetListAdapter(
     private val assetClickListener: (MyTicker) -> Unit
-) : ListAdapter<MyAssetItem, RecyclerView.ViewHolder>(TickerDiffCallback()) {
+) : BaseListAdapter<MyAssetItem, RecyclerView.ViewHolder>() {
 
     fun submitAssetList(list: MutableList<MyAssetItem>) {
         val items = listOf(MyAssetItem.Header((list[0] as MyAssetItem.Header).header)) +
@@ -58,16 +59,6 @@ class MyAssetListAdapter(
             )
 
             else -> throw IllegalArgumentException("Unknown viewType $viewType")
-        }
-    }
-
-    class TickerDiffCallback : DiffUtil.ItemCallback<MyAssetItem>() {
-        override fun areItemsTheSame(oldItem: MyAssetItem, newItem: MyAssetItem): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: MyAssetItem, newItem: MyAssetItem): Boolean {
-            return oldItem == newItem
         }
     }
 

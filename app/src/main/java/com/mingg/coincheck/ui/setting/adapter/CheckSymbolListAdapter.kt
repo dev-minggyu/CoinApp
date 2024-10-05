@@ -2,16 +2,13 @@ package com.mingg.coincheck.ui.setting.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mingg.coincheck.databinding.ItemCheckSymbolBinding
+import com.mingg.coincheck.ui.base.BaseListAdapter
 import com.mingg.domain.model.setting.FloatingTicker
 
-class CheckSymbolListAdapter :
-    ListAdapter<FloatingTicker, CheckSymbolListAdapter.SymbolViewHolder>(
-        SymbolDiffCallback()
-    ) {
+class CheckSymbolListAdapter : BaseListAdapter<FloatingTicker, CheckSymbolListAdapter.SymbolViewHolder>() {
+
     override fun onBindViewHolder(holder: SymbolViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
@@ -29,23 +26,6 @@ class CheckSymbolListAdapter :
         fun bind(item: FloatingTicker) {
             binding.symbol = item
             binding.executePendingBindings()
-        }
-    }
-
-    class SymbolDiffCallback :
-        DiffUtil.ItemCallback<FloatingTicker>() {
-        override fun areItemsTheSame(
-            oldItem: FloatingTicker,
-            newItem: FloatingTicker
-        ): Boolean {
-            return oldItem.symbol == newItem.symbol
-        }
-
-        override fun areContentsTheSame(
-            oldItem: FloatingTicker,
-            newItem: FloatingTicker
-        ): Boolean {
-            return oldItem == newItem
         }
     }
 }
