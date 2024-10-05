@@ -3,6 +3,7 @@ package com.mingg.coincheck.ui.myasset
 import androidx.lifecycle.viewModelScope
 import com.mingg.coincheck.ui.base.BaseViewModel
 import com.mingg.domain.model.myasset.MyTicker
+import com.mingg.domain.model.ticker.Ticker
 import com.mingg.domain.usecase.myasset.GetMyAssetListUseCase
 import com.mingg.domain.usecase.ticker.UnfilteredTickerDataUseCase
 import com.mingg.domain.utils.TickerResource
@@ -17,11 +18,6 @@ class MyAssetViewModel @Inject constructor(
 ) : BaseViewModel<MyAssetState, MyAssetIntent, MyAssetEffect>() {
 
     private val assetList: MutableList<MyTicker> = mutableListOf()
-
-    init {
-        setEvent(MyAssetIntent.RefreshAssetList)
-        setEvent(MyAssetIntent.ObserveTickerList)
-    }
 
     override fun createInitialState(): MyAssetState {
         return MyAssetState(
@@ -43,20 +39,22 @@ class MyAssetViewModel @Inject constructor(
             unfilteredTickerDataUseCase.execute()
                 .collect { tickerResource ->
                     when (tickerResource) {
-                        is TickerResource.Update -> {
-                            if (assetList.isNotEmpty()) {
-                                assetList.forEach { myTicker ->
-                                    val updatedTicker = tickerResource.data.tickerList.find { ticker ->
-                                        ticker.symbol == myTicker.symbol && ticker.currencyType == myTicker.currencyType
-                                    }
-                                    myTicker.currentPrice = updatedTicker?.currentPrice ?: "0"
-                                }
-                                setState { copy(myAssetList = assetList.map { it.copy() }) }
-                            }
-                        }
+                        is TickerResource.Update -> updateAssetList(tickerResource.data.tickerList)
                         else -> {}
                     }
                 }
+        }
+    }
+
+    private fun updateAssetList(tickerList: List<Ticker>) {
+        if (assetList.isNotEmpty()) {
+            assetList.forEach { myTicker ->
+                val updatedTicker = tickerList.find { ticker ->
+                    ticker.symbol == myTicker.symbol && ticker.currencyType == myTicker.currencyType
+                }
+                myTicker.currentPrice = updatedTicker?.currentPrice ?: "0"
+            }
+            setState { copy(myAssetList = assetList.map { it.copy() }) }
         }
     }
 

@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_13sdp"
-        tools:context=".ui.setting.floatingwindow.FloatingWindowSettingFragment">
+        tools:context=".ui.setting.floatingwindow.setting.FloatingWindowSettingFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_section_floating_window"

@@ -1,7 +1,6 @@
 package com.mingg.coincheck.ui.main
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -14,8 +13,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
 
-    private val mainViewModel: MainViewModel by viewModels()
-
     private lateinit var navigationManager: NavigationManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +22,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navigationManager = NavigationManager(navHostFragment.navController)
-        binding.bottomNavigationView.setupWithNavController(navHostFragment.navController)
-        binding.bottomNavigationView.setOnItemReselectedListener { }
+
+        binding.apply {
+            bottomNavigationView.setupWithNavController(navHostFragment.navController)
+            bottomNavigationView.setOnItemReselectedListener { }
+        }
     }
 }

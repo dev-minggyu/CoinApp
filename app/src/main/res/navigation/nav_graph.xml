@@ -30,12 +30,12 @@
 
     <fragment
         android:id="@+id/floatingWindowSettingFragment"
-        android:name="com.mingg.coincheck.ui.setting.floatingwindow.FloatingWindowSettingFragment"
+        android:name="com.mingg.coincheck.ui.setting.floatingwindow.setting.FloatingWindowSettingFragment"
         android:label="floating_window_setting" />
 
     <fragment
         android:id="@+id/floatingTickerSelectFragment"
-        android:name="com.mingg.coincheck.ui.setting.floatingwindow.FloatingTickerSelectFragment"
+        android:name="com.mingg.coincheck.ui.setting.floatingwindow.selector.FloatingTickerSelectFragment"
         android:label="floating_ticker_select" />
 
 </navigation>

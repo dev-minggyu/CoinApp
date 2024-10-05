@@ -1,13 +1,11 @@
 package com.mingg.coincheck.ui.myasset
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.mingg.coincheck.databinding.FragmentMyAssetBinding
@@ -15,7 +13,6 @@ import com.mingg.coincheck.extension.collectWithLifecycle
 import com.mingg.coincheck.model.myasset.MyAssetHeader
 import com.mingg.coincheck.model.myasset.MyAssetItem
 import com.mingg.coincheck.model.myasset.MyTickerInfo
-import com.mingg.coincheck.navigation.NavigationManager
 import com.mingg.coincheck.ui.base.BaseFragment
 import com.mingg.coincheck.ui.myasset.adpater.MyAssetListAdapter
 import com.mingg.coincheck.ui.tickerdetail.TickerDetailFragment
@@ -29,27 +26,28 @@ class MyAssetFragment : BaseFragment<FragmentMyAssetBinding>(FragmentMyAssetBind
 
     private val myAssetViewModel: MyAssetViewModel by viewModels()
 
-    private lateinit var navigationManager: NavigationManager
-
-    private lateinit var myAssetListAdapter: MyAssetListAdapter
+    private var myAssetListAdapter: MyAssetListAdapter? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        navigationManager = NavigationManager(findNavController())
         setupRecyclerView()
         setupObserver()
+
+        myAssetViewModel.setEvent(MyAssetIntent.ObserveTickerList)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        myAssetViewModel.setEvent(MyAssetIntent.RefreshAssetList)
     }
 
     private fun setupObserver() {
         lifecycleScope.launch {
             myAssetViewModel.uiState.collectWithLifecycle(lifecycle) { state ->
-                state.myAssetList?.let {
-                    val checkedList = it.filter { ticker -> ticker.averagePrice.isNotEmpty() && ticker.amount.isNotEmpty() }
-                    with(binding) {
-                        rvAsset.isVisible = checkedList.isNotEmpty()
-                        tvGuideAddAsset.isVisible = checkedList.isEmpty()
-                    }
+                state.myAssetList?.let { list ->
+                    val checkedList = list.filter { it.averagePrice.isNotEmpty() && it.amount.isNotEmpty() }
+                    updateUI(checkedList)
                     bindAssetList(checkedList)
                 }
             }
@@ -75,56 +73,42 @@ class MyAssetFragment : BaseFragment<FragmentMyAssetBinding>(FragmentMyAssetBind
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        myAssetViewModel.setEvent(MyAssetIntent.RefreshAssetList)
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (!hidden) {
-            myAssetViewModel.setEvent(MyAssetIntent.RefreshAssetList)
+    private fun updateUI(checkedList: List<MyTicker>) {
+        with(binding) {
+            rvAsset.isVisible = checkedList.isNotEmpty()
+            tvGuideAddAsset.isVisible = checkedList.isEmpty()
         }
     }
 
-    @SuppressLint("SetTextI18n")
     private fun bindAssetList(list: List<MyTicker>) {
         binding.apply {
-            val priceFormat = NumberFormat.getInstance()
-            val totalAsset = list.sumOf { it.amount.toDouble() * it.currentPrice.toDouble() }
-            val totalBuy = list.sumOf { it.amount.toDouble() * it.averagePrice.toDouble() }
-
-            val header = MyAssetHeader(
-                totalAsset = totalAsset,
-                decimalTotalAsset = priceFormat.format(totalAsset),
-                totalBuy = totalBuy,
-                decimalTotalBuy = priceFormat.format(totalBuy),
-                pnl = priceFormat.format(totalAsset - totalBuy),
-                pnlPercent = String.format(
-                    "%.2f",
-                    ((totalAsset - totalBuy) / totalBuy) * 100
-                ) + "%",
-                chartData = PieDataSet(
-                    list.map {
-                        PieEntry(
-                            it.amount.toFloat() * it.currentPrice.toFloat(),
-                            it.symbol
-                        )
-                    }, ""
-                )
-            )
-
-            val assetList = mutableListOf<MyAssetItem>()
-            assetList.add(MyAssetItem.Header(header))
-            assetList.addAll(list.map {
-                MyAssetItem.Ticker(it)
-            })
-
-            myAssetListAdapter.submitAssetList(assetList)
+            val assetList = mutableListOf<MyAssetItem>().apply {
+                add(MyAssetItem.Header(createAssetHeader(list)))
+                addAll(list.map { MyAssetItem.Ticker(it) })
+            }
+            myAssetListAdapter?.submitAssetList(assetList)
         }
     }
 
-    companion object {
-        fun newInstance() = MyAssetFragment()
+    private fun createAssetHeader(list: List<MyTicker>): MyAssetHeader {
+        val priceFormat = NumberFormat.getInstance()
+        val totalAsset = list.sumOf { it.amount.toDouble() * it.currentPrice.toDouble() }
+        val totalBuy = list.sumOf { it.amount.toDouble() * it.averagePrice.toDouble() }
+        return MyAssetHeader(
+            totalAsset = totalAsset,
+            decimalTotalAsset = priceFormat.format(totalAsset),
+            totalBuy = totalBuy,
+            decimalTotalBuy = priceFormat.format(totalBuy),
+            pnl = priceFormat.format(totalAsset - totalBuy),
+            pnlPercent = String.format("%.2f", ((totalAsset - totalBuy) / totalBuy) * 100) + "%",
+            chartData = PieDataSet(
+                list.map { PieEntry(it.amount.toFloat() * it.currentPrice.toFloat(), it.symbol) }, ""
+            )
+        )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        myAssetListAdapter = null
     }
 }

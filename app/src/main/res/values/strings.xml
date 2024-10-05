@@ -32,7 +32,8 @@
     <string name="list_category_usdt">USDT</string>
     <string name="list_category_favorite">관심</string>
 
-    <string name="error_network">네트워크 오류가 발생했습니다.</string>
+    <string name="home_error_network">네트워크 오류가 발생했습니다.</string>
+    <string name="home_error_unexpected">알 수 없는 오류가 발생했습니다.</string>
     <string name="retry">재시도</string>
 
     <string name="unit_million">백만</string>

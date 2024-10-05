@@ -4,10 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.mingg.coincheck.databinding.FragmentInitBinding
 import com.mingg.coincheck.extension.collectWithLifecycle
-import com.mingg.coincheck.navigation.NavigationManager
 import com.mingg.coincheck.ui.base.BaseFragment
 import com.mingg.coincheck.ui.floating.FloatingWindowService
 import com.mingg.coincheck.utils.ActivityOverlayPermissionManager
@@ -19,22 +17,18 @@ class InitFragment : BaseFragment<FragmentInitBinding>(FragmentInitBinding::infl
 
     private val initViewModel: InitViewModel by viewModels()
 
-    private lateinit var navigationManager: NavigationManager
-
-    private val overlayPermissionManager: ActivityOverlayPermissionManager =
-        ActivityOverlayPermissionManager.from(this)
+    private val overlayPermissionManager: ActivityOverlayPermissionManager = ActivityOverlayPermissionManager.from(this)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        navigationManager = NavigationManager(findNavController())
         setupObserver()
     }
 
     private fun setupObserver() {
         lifecycleScope.launch {
-            initViewModel.isEnableFloatingWindow.collectWithLifecycle(lifecycle) {
-                if (it) {
+            initViewModel.uiState.collectWithLifecycle(lifecycle) { state ->
+                if (state.isFloatingWindowEnabled) {
                     initOverlayService()
                 } else {
                     navigationManager.navigateToHome()
@@ -44,11 +38,11 @@ class InitFragment : BaseFragment<FragmentInitBinding>(FragmentInitBinding::infl
     }
 
     private fun initOverlayService() {
-        overlayPermissionManager.checkPermission {
-            if (it) {
+        overlayPermissionManager.checkPermission { isGranted ->
+            if (isGranted) {
                 FloatingWindowService.startService(requireContext())
             } else {
-                initViewModel.disableFloatingWindow()
+                initViewModel.setEvent(InitIntent.DisableFloatingWindow)
             }
             navigationManager.navigateToHome()
         }

@@ -1,4 +1,4 @@
-package com.mingg.coincheck.ui.setting.floatingwindow
+package com.mingg.coincheck.ui.setting.floatingwindow.selector
 
 import androidx.lifecycle.viewModelScope
 import com.mingg.coincheck.ui.base.BaseViewModel
@@ -9,26 +9,26 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class FloatingSymbolSelectViewModel @Inject constructor(
+class FloatingTickerSelectViewModel @Inject constructor(
     private val settingFloatingTickerListUseCase: SettingFloatingTickerListUseCase,
     private val allFloatingTickerListUseCase: AllFloatingTickerListUseCase
-) : BaseViewModel<FloatingSymbolSelectState, FloatingSymbolSelectIntent, FloatingSymbolSelectEffect>() {
+) : BaseViewModel<FloatingTickerSelectState, FloatingTickerSelectIntent, FloatingTickerSelectEffect>() {
 
-    override fun createInitialState(): FloatingSymbolSelectState {
-        return FloatingSymbolSelectState()
+    override fun createInitialState(): FloatingTickerSelectState {
+        return FloatingTickerSelectState()
     }
 
-    override fun handleEvent(event: FloatingSymbolSelectIntent) {
+    override fun handleEvent(event: FloatingTickerSelectIntent) {
         when (event) {
-            is FloatingSymbolSelectIntent.LoadFloatingSymbolList -> loadFloatingSymbolList()
-            is FloatingSymbolSelectIntent.SetFloatingTickerList -> setFloatingTickerList(event.list)
+            is FloatingTickerSelectIntent.LoadFloatingTickerList -> loadFloatingSymbolList()
+            is FloatingTickerSelectIntent.SetFloatingTickerList -> setFloatingTickerList(event.list)
         }
     }
 
     private fun loadFloatingSymbolList() {
         viewModelScope.launch {
             val list = allFloatingTickerListUseCase.execute()
-            setState { copy(symbolList = list) }
+            setState { copy(tickerList = list) }
         }
     }
 

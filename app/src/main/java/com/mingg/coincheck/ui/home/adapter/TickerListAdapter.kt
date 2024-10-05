@@ -1,22 +1,15 @@
 package com.mingg.coincheck.ui.home.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.mingg.coincheck.R
 import com.mingg.coincheck.databinding.ItemTickerBinding
+import com.mingg.coincheck.ui.base.BaseListAdapter
 import com.mingg.domain.model.ticker.Ticker
 
 class TickerListAdapter(
     private val favoriteClickListener: FavoriteClickListener?,
     private val tickerClickListener: (Ticker) -> Unit
-) : ListAdapter<Ticker, TickerListAdapter.TickerViewHolder>(
-    TickerDiffCallback()
-) {
+) : BaseListAdapter<Ticker, TickerViewHolder>() {
 
     private var tickerChangeColor = true
 
@@ -30,7 +23,7 @@ class TickerListAdapter(
             tickerClickListener.invoke(item)
         }
         if (tickerChangeColor) {
-            holder.bind(holder.itemView, item)
+            holder.bindWithColorChange(item)
         } else {
             holder.bind(item)
         }
@@ -39,60 +32,7 @@ class TickerListAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TickerViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = ItemTickerBinding.inflate(layoutInflater, parent, false)
-        return TickerViewHolder(binding)
-    }
-
-    inner class TickerViewHolder(private val binding: ItemTickerBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(item: Ticker) {
-            binding.ticker = item
-            binding.favoriteClickListener = favoriteClickListener
-            binding.executePendingBindings()
-        }
-
-        fun bind(itemView: View, item: Ticker) {
-            val prevSymbol = binding.tvCurrency.text.toString()
-            val currentSymbol = item.symbol + "/" + item.currencyType.name
-            if (prevSymbol != currentSymbol) {
-                bind(item)
-                return
-            }
-            val prevPrice = binding.tvPrice.tag.toString().toFloat()
-            val currentPrice = item.currentPrice.toFloat()
-            if (prevPrice != currentPrice) {
-                itemView.apply {
-                    val startColor =
-                        ContextCompat.getColor(context, R.color.color_background_regular2)
-                    val endColor = if (prevPrice < currentPrice) {
-                        ContextCompat.getColor(context, R.color.color_price_up_transparent)
-                    } else {
-                        ContextCompat.getColor(context, R.color.color_price_down_transparent)
-                    }
-                    setBackgroundColor(endColor)
-                    postDelayed({
-                        setBackgroundColor(startColor)
-                    }, 200)
-                }
-            }
-            bind(item)
-        }
-    }
-
-    class TickerDiffCallback : DiffUtil.ItemCallback<Ticker>() {
-        override fun areItemsTheSame(
-            oldItem: Ticker,
-            newItem: Ticker
-        ): Boolean {
-            return oldItem.symbol == newItem.symbol
-        }
-
-        override fun areContentsTheSame(
-            oldItem: Ticker,
-            newItem: Ticker
-        ): Boolean {
-            return oldItem == newItem
-        }
+        return TickerViewHolder(binding, favoriteClickListener)
     }
 
     interface FavoriteClickListener {
@@ -100,3 +40,4 @@ class TickerListAdapter(
         fun onDeleteFavorite(symbol: String)
     }
 }
+

@@ -11,14 +11,12 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.mingg.coincheck.R
 import com.mingg.coincheck.databinding.FragmentHomeBinding
 import com.mingg.coincheck.extension.collectWithLifecycle
 import com.mingg.coincheck.extension.isServiceRunning
 import com.mingg.coincheck.model.myasset.MyTickerInfo
-import com.mingg.coincheck.navigation.NavigationManager
 import com.mingg.coincheck.ui.base.BaseFragment
 import com.mingg.coincheck.ui.custom.SortButton
 import com.mingg.coincheck.ui.floating.FloatingWindowService
@@ -37,48 +35,43 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     LifecycleEventObserver {
 
     private val homeViewModel: HomeViewModel by viewModels()
-
     private val sharedSettingViewModel: SharedSettingViewModel by viewModels()
 
-    private lateinit var navigationManager: NavigationManager
-
     private var tickerListAdapter: TickerListAdapter? = null
-
     private var tickerList: List<Ticker>? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
 
-        navigationManager = NavigationManager(findNavController())
-
         setupListener()
         setupRecyclerView()
         setupListCategoryButton()
         setupObserver()
 
+        sharedSettingViewModel.setEvent(SharedSettingIntent.LoadSettings)
         homeViewModel.setEvent(HomeIntent.LoadTickers)
     }
 
     private fun setupListener() {
+        val sortChangedListener = object : SortButton.OnSortChangedListener {
+            override fun onChanged(sortModel: SortModel) {
+                homeViewModel.setEvent(HomeIntent.Sort(sortModel))
+            }
+        }
+
         with(binding) {
             layoutError.btnRetry.setOnClickListener {
-                homeViewModel.setEvent(HomeIntent.Unsubscribe)
+                homeViewModel.setEvent(HomeIntent.Subscribe)
             }
             layoutSearch.etSearchTicker.doOnTextChanged { text, _, _, _ ->
                 homeViewModel.setEvent(HomeIntent.Search(text.toString()))
             }
-            object : SortButton.OnSortChangedListener {
-                override fun onChanged(sortModel: SortModel) {
-                    homeViewModel.setEvent(HomeIntent.Sort(sortModel))
-                }
-            }.let {
-                with(layoutSort) {
-                    btnSortName.setOnSortChangedListener(it)
-                    btnSortPrice.setOnSortChangedListener(it)
-                    btnSortRate.setOnSortChangedListener(it)
-                    btnSortVolume.setOnSortChangedListener(it)
-                }
+            with(layoutSort) {
+                btnSortName.setOnSortChangedListener(sortChangedListener)
+                btnSortPrice.setOnSortChangedListener(sortChangedListener)
+                btnSortRate.setOnSortChangedListener(sortChangedListener)
+                btnSortVolume.setOnSortChangedListener(sortChangedListener)
             }
         }
     }
@@ -127,21 +120,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             homeViewModel.uiState.collectWithLifecycle(lifecycle) { state ->
                 tickerList = state.tickerList
                 setListOfCategory(binding.layoutListCategory.radioGroupCatecory.checkedRadioButtonId)
-
-                with(binding) {
-                    state.sortModel?.let {
-                        with(layoutSort) {
-                            btnSortName.setSortState(it)
-                            btnSortPrice.setSortState(it)
-                            btnSortRate.setSortState(it)
-                            btnSortVolume.setSortState(it)
-                        }
-                    }
-                    progress.isVisible = state.isLoading
-                    rvTicker.isVisible = !state.isLoading
-                    layoutError.root.isVisible = !state.error.isNullOrEmpty()
-                    state.error?.let { errorMessage -> layoutError.tvError.text = errorMessage }
-                }
+                updateUI(state)
             }
         }
 
@@ -152,27 +131,40 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
     }
 
-    private fun setListOfCategory(categoryId: Int) {
-        when (categoryId) {
-            R.id.btn_krw ->
-                tickerListAdapter?.submitList(tickerList?.filter { it.currencyType == Currency.KRW })
+    private fun updateUI(state: HomeState) {
+        with(binding) {
+            progress.isVisible = state.isLoading
+            rvTicker.isVisible = !state.isLoading
+            layoutError.root.isVisible = state.error != null
 
-            R.id.btn_btc ->
-                tickerListAdapter?.submitList(tickerList?.filter { it.currencyType == Currency.BTC })
+            state.sortModel?.let {
+                with(layoutSort) {
+                    btnSortName.setSortState(it)
+                    btnSortPrice.setSortState(it)
+                    btnSortRate.setSortState(it)
+                    btnSortVolume.setSortState(it)
+                }
+            }
 
-            R.id.btn_usdt ->
-                tickerListAdapter?.submitList(tickerList?.filter { it.currencyType == Currency.USDT })
-
-            R.id.btn_favorite ->
-                tickerListAdapter?.submitList(tickerList?.filter { it.isFavorite })
+            state.error?.let { errorType ->
+                layoutError.tvError.text = when (errorType) {
+                    is HomeErrorType.NetworkError -> getString(R.string.home_error_network)
+                    is HomeErrorType.UnexpectedError -> getString(R.string.home_error_unexpected)
+                }
+                layoutError.root.isVisible = true
+            }
         }
     }
 
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (!hidden) {
-            sharedSettingViewModel.setEvent(SharedSettingIntent.LoadSettings)
+    private fun setListOfCategory(categoryId: Int) {
+        val filteredList = when (categoryId) {
+            R.id.btn_krw -> tickerList?.filter { it.currencyType == Currency.KRW }
+            R.id.btn_btc -> tickerList?.filter { it.currencyType == Currency.BTC }
+            R.id.btn_usdt -> tickerList?.filter { it.currencyType == Currency.USDT }
+            R.id.btn_favorite -> tickerList?.filter { it.isFavorite }
+            else -> null
         }
+        tickerListAdapter?.submitList(filteredList)
     }
 
     override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
@@ -188,12 +180,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        tickerListAdapter = null
+        tickerList = null
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         ProcessLifecycleOwner.get().lifecycle.removeObserver(this)
-    }
-
-    companion object {
-        fun newInstance() = HomeFragment()
     }
 }

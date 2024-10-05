@@ -1,5 +1,7 @@
 package com.mingg.domain.model.ticker
 
+import com.mingg.domain.model.Diffable
+
 data class Ticker(
     var symbol: String,
     val koreanSymbol: String = "",
@@ -12,4 +14,12 @@ data class Ticker(
     var volume: String,
     var formattedVolume: String,
     var isFavorite: Boolean = false
-)
+) : Diffable<Ticker> {
+    override fun areItemsTheSame(other: Ticker): Boolean {
+        return this.symbol == other.symbol
+    }
+
+    override fun areContentsTheSame(other: Ticker): Boolean {
+        return this == other
+    }
+}

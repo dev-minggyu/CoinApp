@@ -1,4 +1,4 @@
-package com.mingg.coincheck.ui.setting.floatingwindow
+package com.mingg.coincheck.ui.setting.floatingwindow.setting
 
 import android.content.ComponentName
 import android.content.ServiceConnection
@@ -9,13 +9,12 @@ import android.widget.SeekBar
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.mingg.coincheck.databinding.FragmentFloatingWindowSettingBinding
 import com.mingg.coincheck.extension.collectWithLifecycle
-import com.mingg.coincheck.navigation.NavigationManager
 import com.mingg.coincheck.ui.base.BaseFragment
 import com.mingg.coincheck.ui.floating.FloatingWindowService
 import com.mingg.coincheck.ui.floating.FloatingWindowServiceBinder
+import com.mingg.coincheck.ui.setting.floatingwindow.selector.FloatingTickerSelectFragment
 import com.mingg.coincheck.utils.ActivityOverlayPermissionManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -25,8 +24,6 @@ class FloatingWindowSettingFragment :
     BaseFragment<FragmentFloatingWindowSettingBinding>(FragmentFloatingWindowSettingBinding::inflate) {
 
     private val floatingWindowSettingViewModel: FloatingWindowSettingViewModel by viewModels()
-
-    private lateinit var navigationManager: NavigationManager
 
     private var floatingWindowService: FloatingWindowService? = null
 
@@ -43,15 +40,15 @@ class FloatingWindowSettingFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        navigationManager = NavigationManager(findNavController())
+
         setupListener()
         setupObservers()
         floatingWindowSettingViewModel.setEvent(FloatingWindowSettingIntent.LoadSettings)
     }
 
     private fun setupListener() {
-        setFragmentResultListener(REQUEST_CHECKED_FLOATING_SYMBOL) { _, bundle ->
-            val resultList = bundle.getStringArrayList(FloatingTickerSelectFragment.KEY_CHECKED_FLOATING_SYMBOL_LIST)
+        setFragmentResultListener(REQUEST_CHECKED_FLOATING_TICKER) { _, bundle ->
+            val resultList = bundle.getStringArrayList(FloatingTickerSelectFragment.KEY_CHECKED_FLOATING_TICKER_LIST)
             resultList?.let {
                 floatingWindowService?.setFloatingList(it.toList())
             }
@@ -120,6 +117,6 @@ class FloatingWindowSettingFragment :
     }
 
     companion object {
-        const val REQUEST_CHECKED_FLOATING_SYMBOL = "REQUEST_CHECKED_FLOATING_SYMBOL"
+        const val REQUEST_CHECKED_FLOATING_TICKER = "REQUEST_CHECKED_FLOATING_TICKER"
     }
 }

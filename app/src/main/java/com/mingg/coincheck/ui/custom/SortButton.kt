@@ -13,22 +13,23 @@ import com.mingg.domain.model.ticker.SortType
 
 class SortButton(context: Context?, attrs: AttributeSet?) : LinearLayout(context, attrs) {
 
-    private lateinit var binding: ButtonSortBinding
+    private val binding: ButtonSortBinding by lazy {
+        ButtonSortBinding.inflate(LayoutInflater.from(context), this, true)
+    }
 
     private lateinit var sortCategory: SortCategory
 
-    private lateinit var sortModel: SortModel
+    private var sortModel: SortModel = SortModel(SortCategory.NAME, SortType.ASC)
 
     private var onSortChangedListener: OnSortChangedListener? = null
 
     init {
-        init(context)
+        init()
         getAttrs(attrs)
         setListener()
     }
 
-    private fun init(context: Context?) {
-        binding = ButtonSortBinding.inflate(LayoutInflater.from(context), this, true)
+    private fun init() {
         binding.ivSortArrow.setImageResource(R.drawable.ic_arrow_normal)
     }
 

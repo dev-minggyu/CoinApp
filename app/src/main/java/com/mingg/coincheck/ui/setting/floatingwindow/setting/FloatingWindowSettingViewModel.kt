@@ -1,4 +1,4 @@
-package com.mingg.coincheck.ui.setting.floatingwindow
+package com.mingg.coincheck.ui.setting.floatingwindow.setting
 
 import androidx.lifecycle.viewModelScope
 import com.mingg.coincheck.ui.base.BaseViewModel
