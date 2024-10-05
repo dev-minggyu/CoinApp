@@ -37,11 +37,6 @@ class MyAssetFragment : BaseFragment<FragmentMyAssetBinding>(FragmentMyAssetBind
         myAssetViewModel.setEvent(MyAssetIntent.ObserveTickerList)
     }
 
-    override fun onResume() {
-        super.onResume()
-        myAssetViewModel.setEvent(MyAssetIntent.RefreshAssetList)
-    }
-
     private fun setupObserver() {
         lifecycleScope.launch {
             myAssetViewModel.uiState.collectWithLifecycle(lifecycle) { state ->

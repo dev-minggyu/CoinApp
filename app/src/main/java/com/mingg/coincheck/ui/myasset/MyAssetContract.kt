@@ -7,7 +7,6 @@ import com.mingg.domain.model.myasset.MyTicker
 
 sealed class MyAssetIntent : UiIntent {
     data object ObserveTickerList : MyAssetIntent()
-    data object RefreshAssetList : MyAssetIntent()
 }
 
 data class MyAssetState(

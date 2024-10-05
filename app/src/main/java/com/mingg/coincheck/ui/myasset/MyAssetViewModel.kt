@@ -8,6 +8,7 @@ import com.mingg.domain.usecase.myasset.GetMyAssetListUseCase
 import com.mingg.domain.usecase.ticker.UnfilteredTickerDataUseCase
 import com.mingg.domain.utils.TickerResource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,19 +31,46 @@ class MyAssetViewModel @Inject constructor(
     override fun handleEvent(event: MyAssetIntent) {
         when (event) {
             is MyAssetIntent.ObserveTickerList -> observeTickerList()
-            is MyAssetIntent.RefreshAssetList -> refreshAssetList()
         }
     }
 
     private fun observeTickerList() {
         viewModelScope.launch {
+            loadAssetList()
             unfilteredTickerDataUseCase.execute()
                 .collect { tickerResource ->
                     when (tickerResource) {
-                        is TickerResource.Update -> updateAssetList(tickerResource.data.tickerList)
+                        is TickerResource.Update -> {
+                            updateAssetList(tickerResource.data.tickerList)
+                        }
+
                         else -> {}
                     }
                 }
+        }
+    }
+
+    private suspend fun loadAssetList() = coroutineScope {
+        try {
+            val list = getMyAssetListUseCase.execute()
+            if (list.isEmpty()) {
+                assetList.clear()
+                setState { copy(myAssetList = listOf()) }
+            } else {
+                for (newItem in list) {
+                    val existingItemIndex = assetList.indexOfFirst { it.symbol == newItem.symbol && it.currencyType == newItem.currencyType }
+                    if (existingItemIndex != -1) {
+                        assetList[existingItemIndex].apply {
+                            amount = newItem.amount
+                            averagePrice = newItem.averagePrice
+                        }
+                    } else {
+                        assetList.add(newItem)
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            setState { copy(error = e.message) }
         }
     }
 
@@ -55,23 +83,6 @@ class MyAssetViewModel @Inject constructor(
                 myTicker.currentPrice = updatedTicker?.currentPrice ?: "0"
             }
             setState { copy(myAssetList = assetList.map { it.copy() }) }
-        }
-    }
-
-    private fun refreshAssetList() {
-        viewModelScope.launch {
-            try {
-                val list = getMyAssetListUseCase.execute()
-                if (list.isEmpty()) {
-                    assetList.clear()
-                    setState { copy(myAssetList = listOf()) }
-                } else {
-                    assetList.clear()
-                    assetList.addAll(list)
-                }
-            } catch (e: Exception) {
-                setState { copy(error = e.message) }
-            }
         }
     }
 }
