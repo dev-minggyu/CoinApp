@@ -10,8 +10,7 @@ import com.mingg.network.mapper.ticker.TickerMapperProvider
 import java.text.NumberFormat
 import javax.inject.Inject
 
-class TickerMapperProviderImpl @Inject constructor() :
-    TickerMapperProvider {
+class TickerMapperProviderImpl @Inject constructor() : TickerMapperProvider {
     override fun mapperToTicker(tickerResponse: TickerResponse): Ticker {
         return tickerResponse.run {
             val splitCode = code.split("-")
