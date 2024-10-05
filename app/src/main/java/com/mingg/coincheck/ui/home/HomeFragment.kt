@@ -49,6 +49,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         setupListCategoryButton()
         setupObserver()
 
+        sharedSettingViewModel.setEvent(SharedSettingIntent.LoadSettings)
         homeViewModel.setEvent(HomeIntent.LoadTickers)
     }
 
@@ -119,35 +120,38 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             homeViewModel.uiState.collectWithLifecycle(lifecycle) { state ->
                 tickerList = state.tickerList
                 setListOfCategory(binding.layoutListCategory.radioGroupCatecory.checkedRadioButtonId)
-
-                with(binding) {
-                    progress.isVisible = state.isLoading
-                    rvTicker.isVisible = !state.isLoading
-                    layoutError.root.isVisible = state.error != null
-
-                    state.sortModel?.let {
-                        with(layoutSort) {
-                            btnSortName.setSortState(it)
-                            btnSortPrice.setSortState(it)
-                            btnSortRate.setSortState(it)
-                            btnSortVolume.setSortState(it)
-                        }
-                    }
-
-                    state.error?.let { errorType ->
-                        layoutError.tvError.text = when (errorType) {
-                            is HomeErrorType.NetworkError -> getString(R.string.home_error_network)
-                            is HomeErrorType.UnexpectedError -> getString(R.string.home_error_unexpected)
-                        }
-                        layoutError.root.isVisible = true
-                    }
-                }
+                updateUI(state)
             }
         }
 
         lifecycleScope.launch {
             sharedSettingViewModel.uiState.collectWithLifecycle(lifecycle) { state ->
                 tickerListAdapter?.setTickerChangeColor(state.tickerChangeColor)
+            }
+        }
+    }
+
+    private fun updateUI(state: HomeState) {
+        with(binding) {
+            progress.isVisible = state.isLoading
+            rvTicker.isVisible = !state.isLoading
+            layoutError.root.isVisible = state.error != null
+
+            state.sortModel?.let {
+                with(layoutSort) {
+                    btnSortName.setSortState(it)
+                    btnSortPrice.setSortState(it)
+                    btnSortRate.setSortState(it)
+                    btnSortVolume.setSortState(it)
+                }
+            }
+
+            state.error?.let { errorType ->
+                layoutError.tvError.text = when (errorType) {
+                    is HomeErrorType.NetworkError -> getString(R.string.home_error_network)
+                    is HomeErrorType.UnexpectedError -> getString(R.string.home_error_unexpected)
+                }
+                layoutError.root.isVisible = true
             }
         }
     }
@@ -161,13 +165,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             else -> null
         }
         tickerListAdapter?.submitList(filteredList)
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (!hidden) {
-            sharedSettingViewModel.setEvent(SharedSettingIntent.LoadSettings)
-        }
     }
 
     override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
