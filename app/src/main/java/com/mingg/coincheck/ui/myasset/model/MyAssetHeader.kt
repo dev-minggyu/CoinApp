@@ -1,4 +1,4 @@
-package com.mingg.coincheck.model.myasset
+package com.mingg.coincheck.ui.myasset.model
 
 import com.github.mikephil.charting.data.PieDataSet
 

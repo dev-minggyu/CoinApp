@@ -10,9 +10,9 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.mingg.coincheck.databinding.FragmentMyAssetBinding
 import com.mingg.coincheck.extension.collectWithLifecycle
-import com.mingg.coincheck.model.myasset.MyAssetHeader
-import com.mingg.coincheck.model.myasset.MyAssetItem
-import com.mingg.coincheck.model.myasset.MyTickerInfo
+import com.mingg.coincheck.ui.myasset.model.MyAssetHeader
+import com.mingg.coincheck.ui.myasset.model.MyAssetItem
+import com.mingg.coincheck.model.MyTickerInfo
 import com.mingg.coincheck.ui.base.BaseFragment
 import com.mingg.coincheck.ui.myasset.adpater.MyAssetListAdapter
 import com.mingg.coincheck.ui.tickerdetail.TickerDetailFragment

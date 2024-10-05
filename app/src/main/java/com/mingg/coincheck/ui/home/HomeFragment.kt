@@ -16,7 +16,7 @@ import com.mingg.coincheck.R
 import com.mingg.coincheck.databinding.FragmentHomeBinding
 import com.mingg.coincheck.extension.collectWithLifecycle
 import com.mingg.coincheck.extension.isServiceRunning
-import com.mingg.coincheck.model.myasset.MyTickerInfo
+import com.mingg.coincheck.model.MyTickerInfo
 import com.mingg.coincheck.ui.base.BaseFragment
 import com.mingg.coincheck.ui.custom.SortButton
 import com.mingg.coincheck.ui.floating.FloatingWindowService

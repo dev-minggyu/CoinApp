@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mingg.coincheck.databinding.ItemAssetHeaderBinding
 import com.mingg.coincheck.databinding.ItemAssetTickerBinding
-import com.mingg.coincheck.model.myasset.MyAssetItem
+import com.mingg.coincheck.ui.myasset.model.MyAssetItem
 import com.mingg.coincheck.ui.base.BaseListAdapter
 import com.mingg.domain.model.myasset.MyTicker
 

@@ -10,7 +10,7 @@ import com.mingg.coincheck.extension.addNumberFormatter
 import com.mingg.coincheck.extension.collectWithLifecycle
 import com.mingg.coincheck.extension.getParcelableCompat
 import com.mingg.coincheck.extension.getTextWithoutComma
-import com.mingg.coincheck.model.myasset.MyTickerInfo
+import com.mingg.coincheck.model.MyTickerInfo
 import com.mingg.coincheck.ui.base.BaseBottomSheetDialogFragment
 import com.mingg.domain.model.myasset.MyTicker
 import dagger.hilt.android.AndroidEntryPoint

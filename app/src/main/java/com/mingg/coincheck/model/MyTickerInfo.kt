@@ -1,4 +1,4 @@
-package com.mingg.coincheck.model.myasset
+package com.mingg.coincheck.model
 
 import android.os.Parcelable
 import com.mingg.domain.model.myasset.MyTicker

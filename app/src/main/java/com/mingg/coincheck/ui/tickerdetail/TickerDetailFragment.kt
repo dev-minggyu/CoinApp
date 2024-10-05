@@ -12,7 +12,7 @@ import com.mingg.coincheck.R
 import com.mingg.coincheck.databinding.FragmentTickerDetailBinding
 import com.mingg.coincheck.extension.collectWithLifecycle
 import com.mingg.coincheck.extension.getParcelableCompat
-import com.mingg.coincheck.model.myasset.MyTickerInfo
+import com.mingg.coincheck.model.MyTickerInfo
 import com.mingg.coincheck.ui.base.BaseFragment
 import com.mingg.coincheck.ui.myasset.dialog.AddMyAssetDialogFragment
 import com.mingg.coincheck.utils.AppThemeManager

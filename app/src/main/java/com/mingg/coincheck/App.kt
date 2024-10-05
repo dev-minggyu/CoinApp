@@ -18,8 +18,7 @@ class App : Application() {
 
     private fun initTheme() {
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
-        val theme =
-            pref.getString(getString(R.string.key_pref_app_theme), AppThemeManager.THEME_SYSTEM)!!
+        val theme = pref.getString(getString(R.string.key_pref_app_theme), AppThemeManager.THEME_SYSTEM)!!
         AppThemeManager.applyTheme(theme)
     }
 

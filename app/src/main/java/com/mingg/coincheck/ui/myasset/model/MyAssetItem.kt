@@ -1,4 +1,4 @@
-package com.mingg.coincheck.model.myasset
+package com.mingg.coincheck.ui.myasset.model
 
 import com.mingg.domain.model.Diffable
 import com.mingg.domain.model.myasset.MyTicker

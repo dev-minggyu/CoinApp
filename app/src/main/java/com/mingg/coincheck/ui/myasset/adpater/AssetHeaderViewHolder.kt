@@ -10,7 +10,7 @@ import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.mingg.coincheck.R
 import com.mingg.coincheck.databinding.ItemAssetHeaderBinding
-import com.mingg.coincheck.model.myasset.MyAssetHeader
+import com.mingg.coincheck.ui.myasset.model.MyAssetHeader
 
 class AssetHeaderViewHolder(private val binding: ItemAssetHeaderBinding) :
     RecyclerView.ViewHolder(binding.root) {
