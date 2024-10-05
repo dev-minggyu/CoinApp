@@ -1,4 +1,4 @@
-package com.mingg.coincheck.ui.setting.floatingwindow
+package com.mingg.coincheck.ui.setting.floatingwindow.setting
 
 import com.mingg.coincheck.ui.base.UiEffect
 import com.mingg.coincheck.ui.base.UiIntent

@@ -6,7 +6,7 @@ import com.mingg.coincheck.databinding.ItemCheckSymbolBinding
 import com.mingg.coincheck.ui.base.BaseListAdapter
 import com.mingg.domain.model.setting.FloatingTicker
 
-class CheckSymbolListAdapter : BaseListAdapter<FloatingTicker, CheckSymbolViewHolder>() {
+class CheckTickerListAdapter : BaseListAdapter<FloatingTicker, CheckSymbolViewHolder>() {
 
     override fun onBindViewHolder(holder: CheckSymbolViewHolder, position: Int) {
         val item = getItem(position)

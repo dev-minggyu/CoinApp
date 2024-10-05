@@ -33,10 +33,10 @@
             android:foregroundServiceType="dataSync" />
 
         <activity
-            android:name=".ui.setting.floatingwindow.FloatingWindowSettingFragment"
+            android:name=".ui.setting.floatingwindow.setting.FloatingWindowSettingFragment"
             android:exported="false" />
         <activity
-            android:name=".ui.setting.floatingwindow.FloatingTickerSelectFragment"
+            android:name=".ui.setting.floatingwindow.selector.FloatingTickerSelectFragment"
             android:exported="false" />
         <activity
             android:name="com.mingg.coincheck.ui.tickerdetail.TickerDetailFragment"
