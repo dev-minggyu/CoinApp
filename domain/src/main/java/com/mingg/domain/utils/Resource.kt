@@ -9,5 +9,5 @@ sealed class Resource<out T> {
 sealed class TickerResource<out T : Any> {
     class Update<T : Any>(val data: T) : TickerResource<T>()
     class Refresh<T : Any>(val data: T) : TickerResource<T>()
-    class Error(val message: String?) : TickerResource<Nothing>()
+    class Error(val exception: Exception?) : TickerResource<Nothing>()
 }

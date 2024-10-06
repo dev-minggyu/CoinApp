@@ -92,16 +92,17 @@ class TickerRepositoryImpl @Inject constructor(
                                     }
                                 } else {
                                     _tickerSocketData.emit(TickerResource.Update(atomicTickerList.getList()))
-                                    _tickerSocketUnfilteredData.emit(TickerResource.Update(atomicTickerList.getUnfilteredList())
-                                    )
+                                    _tickerSocketUnfilteredData.emit(TickerResource.Update(atomicTickerList.getUnfilteredList()))
                                     delay(receiveDelayMillis)
                                 }
                             }
 
-                            else -> {
+                            is Resource.Error -> {
                                 _tickerSocketData.emit(TickerResource.Error(null))
                                 _tickerSocketUnfilteredData.emit(TickerResource.Error(null))
                             }
+
+                            else -> {}
                         }
                     }.launchIn(_coroutineScope)
 

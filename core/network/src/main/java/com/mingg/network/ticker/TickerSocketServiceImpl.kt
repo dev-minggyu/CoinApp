@@ -70,7 +70,7 @@ class TickerSocketServiceImpl @Inject constructor(
             }
         } catch (e: Exception) {
             closeSession()
-            emit(Resource.Error(null))
+            emit(Resource.Error(e))
         }
     }
 }
