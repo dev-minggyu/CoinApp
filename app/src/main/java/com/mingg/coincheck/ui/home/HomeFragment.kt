@@ -6,20 +6,14 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.mingg.coincheck.R
 import com.mingg.coincheck.databinding.FragmentHomeBinding
 import com.mingg.coincheck.extension.collectWithLifecycle
-import com.mingg.coincheck.extension.isServiceRunning
 import com.mingg.coincheck.model.MyTickerInfo
 import com.mingg.coincheck.ui.base.BaseFragment
 import com.mingg.coincheck.ui.custom.SortButton
-import com.mingg.coincheck.ui.floating.FloatingWindowService
 import com.mingg.coincheck.ui.home.adapter.TickerListAdapter
 import com.mingg.coincheck.ui.main.SharedSettingIntent
 import com.mingg.coincheck.ui.main.SharedSettingViewModel
@@ -31,8 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate),
-    LifecycleEventObserver {
+class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
 
     private val homeViewModel: HomeViewModel by viewModels()
     private val sharedSettingViewModel: SharedSettingViewModel by viewModels()
@@ -42,7 +35,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
 
         setupListener()
         setupRecyclerView()
@@ -167,27 +159,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         tickerListAdapter?.submitList(filteredList)
     }
 
-    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-        when (event) {
-            Lifecycle.Event.ON_START -> homeViewModel.setEvent(HomeIntent.Subscribe)
-            Lifecycle.Event.ON_STOP -> {
-                if (requireContext().isServiceRunning(FloatingWindowService::class.java)) {
-                    homeViewModel.setEvent(HomeIntent.Unsubscribe)
-                }
-            }
-
-            else -> {}
-        }
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         tickerListAdapter = null
         tickerList = null
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        ProcessLifecycleOwner.get().lifecycle.removeObserver(this)
     }
 }
