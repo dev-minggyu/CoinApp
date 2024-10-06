@@ -126,7 +126,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     private fun updateUI(state: HomeState) {
         with(binding) {
             progress.isVisible = state.isLoading
-            rvTicker.isVisible = !state.isLoading
+            rvTicker.isVisible = !state.isLoading && state.error == null
             layoutError.root.isVisible = state.error != null
 
             state.sortModel?.let {
