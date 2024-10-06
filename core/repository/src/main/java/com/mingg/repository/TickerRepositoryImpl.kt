@@ -16,7 +16,6 @@ import com.mingg.network.ticker.TickerSymbolRemoteDataSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -130,7 +129,6 @@ class TickerRepositoryImpl @Inject constructor(
 
     override suspend fun unsubscribeTicker() {
         tickerSocketService.closeSession()
-        _coroutineScope.cancel()
     }
 
     override suspend fun sortTickerList(sortModel: SortModel) =
