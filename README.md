@@ -24,6 +24,7 @@
 ## WIP
 - ✔️ MVVM to MVI
 - ✔️ SAA(Single Activity Architecture, Navigation)
+- ⌛ View to Compose
 - ❔ Orbit MVI
 - ❔ Feature layer modulazation
 <br/>
