@@ -1,5 +1,6 @@
 package com.mingg.common
 
+import com.mingg.common.extension.updateOrInsert
 import com.mingg.domain.model.ticker.AtomicTickerList
 import com.mingg.domain.model.ticker.SortCategory
 import com.mingg.domain.model.ticker.SortModel
@@ -24,29 +25,31 @@ class AtomicTickerListImpl @Inject constructor() : AtomicTickerList {
 
     override suspend fun updateTicker(element: Ticker) {
         mutex.withLock {
-            _list.find {
-                (it.symbol == element.symbol) && (it.currencyType == element.currencyType)
-            }?.apply {
-                currentPrice = element.currentPrice
-                decimalCurrentPrice = element.decimalCurrentPrice
-                changePricePrevDay = element.changePricePrevDay
-                rate = element.rate
-                volume = element.volume
-                formattedVolume = element.formattedVolume
-            } ?: run {
-                _list.add(element)
-            }
+            _list.updateOrInsert(
+                predicate = { it.symbol == element.symbol && it.currencyType == element.currencyType },
+                update = {
+                    copy(
+                        currentPrice = element.currentPrice,
+                        decimalCurrentPrice = element.decimalCurrentPrice,
+                        changePricePrevDay = element.changePricePrevDay,
+                        rate = element.rate,
+                        volume = element.volume,
+                        formattedVolume = element.formattedVolume
+                    )
+                },
+                insert = element
+            )
         }
     }
 
     override suspend fun updateFavorite(symbol: String, isFavorite: Boolean) {
         mutex.withLock {
             val splitSymbol = symbol.split("-")
-            _list.find {
-                (it.symbol == splitSymbol[1]) && (it.currencyType.name == splitSymbol[0])
-            }?.apply {
-                this.isFavorite = isFavorite
-            }
+            _list.updateOrInsert(
+                predicate = { it.symbol == splitSymbol[1] && it.currencyType.name == splitSymbol[0] },
+                update = { copy(isFavorite = isFavorite) },
+                insert = null
+            )
         }
     }
 
