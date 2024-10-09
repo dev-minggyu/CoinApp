@@ -51,7 +51,9 @@ abstract class BaseViewModel<State : UiState, Intent : UiIntent, Effect : UiEffe
     }
 
     protected fun setState(reduce: State.() -> State) {
-        _uiState.update { currentState.reduce() }
+        _uiState.update { prevState ->
+            prevState.reduce()
+        }
     }
 
     protected fun setEffect(builder: () -> Effect) {
