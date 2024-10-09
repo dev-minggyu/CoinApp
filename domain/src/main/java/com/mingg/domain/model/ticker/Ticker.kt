@@ -13,7 +13,8 @@ data class Ticker(
     val rate: String,
     val volume: String,
     val formattedVolume: String,
-    val isFavorite: Boolean = false
+    val isFavorite: Boolean = false,
+    val isVolumeDividedByMillion: Boolean = false
 ) : Diffable<Ticker> {
     override fun areItemsTheSame(other: Ticker): Boolean {
         return this.symbol == other.symbol

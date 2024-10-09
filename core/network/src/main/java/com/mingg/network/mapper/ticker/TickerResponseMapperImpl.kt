@@ -1,16 +1,13 @@
-package com.mingg.coincheck.provider
+package com.mingg.network.mapper.ticker
 
-import com.mingg.coincheck.App
-import com.mingg.coincheck.R
-import com.mingg.coincheck.extension.formatWithPlusSignPrefix
+import com.mingg.common.extension.formatWithPlusSignPrefix
 import com.mingg.domain.model.ticker.Currency
 import com.mingg.domain.model.ticker.Ticker
 import com.mingg.network.data.response.TickerResponse
-import com.mingg.network.mapper.ticker.TickerMapperProvider
 import java.text.NumberFormat
 import javax.inject.Inject
 
-class TickerMapperProviderImpl @Inject constructor() : TickerMapperProvider {
+class TickerResponseMapperImpl @Inject constructor() : TickerResponseMapper {
     override fun mapperToTicker(tickerResponse: TickerResponse): Ticker {
         return tickerResponse.run {
             val splitCode = code.split("-")
@@ -27,16 +24,21 @@ class TickerMapperProviderImpl @Inject constructor() : TickerMapperProvider {
                 maximumFractionDigits = currencyType.volumeDecimalDigits
             }
 
+            var isVolumeDividedByMillion = false
+
             when (currencyType) {
                 Currency.KRW -> {
                     decimalCurrentPrice = priceFormat.format(trade_price ?: 0.0)
                     changePricePrevDay = priceFormat.formatWithPlusSignPrefix(signed_change_price ?: 0.0)
-                    val dividedValue = ((acc_trade_price_24h ?: 0.0) / 1_000_000).toInt()
-                    formattedVolume = volumeFormat.format(dividedValue)
-                    formattedVolume += if (dividedValue < 1) {
-                        App.getString(R.string.unit_won)
+
+                    val accTradePrice = acc_trade_price_24h ?: 0.0
+                    val dividedValue = (accTradePrice / 1_000_000)
+
+                    formattedVolume = if (dividedValue < 1) {
+                        volumeFormat.format(accTradePrice)
                     } else {
-                        App.getString(R.string.unit_million)
+                        isVolumeDividedByMillion = true
+                        volumeFormat.format(dividedValue)
                     }
                 }
 
@@ -61,7 +63,8 @@ class TickerMapperProviderImpl @Inject constructor() : TickerMapperProvider {
                 changePricePrevDay = changePricePrevDay,
                 rate = String.format("%.2f", (signed_change_rate ?: 0.0) * 100),
                 volume = acc_trade_price_24h.toString(),
-                formattedVolume = formattedVolume
+                formattedVolume = formattedVolume,
+                isVolumeDividedByMillion = isVolumeDividedByMillion
             )
         }
     }
