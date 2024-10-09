@@ -17,6 +17,12 @@ class TickerListAdapter(
         tickerChangeColor = value
     }
 
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TickerViewHolder {
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val binding = ItemTickerBinding.inflate(layoutInflater, parent, false)
+        return TickerViewHolder(binding, favoriteClickListener)
+    }
+
     override fun onBindViewHolder(holder: TickerViewHolder, position: Int) {
         val item = getItem(position)
         holder.itemView.setOnClickListener {
@@ -27,12 +33,6 @@ class TickerListAdapter(
         } else {
             holder.bind(item)
         }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TickerViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
-        val binding = ItemTickerBinding.inflate(layoutInflater, parent, false)
-        return TickerViewHolder(binding, favoriteClickListener)
     }
 
     interface FavoriteClickListener {

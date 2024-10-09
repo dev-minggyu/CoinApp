@@ -1,7 +1,7 @@
 package com.mingg.coincheck.di
 
-import com.mingg.coincheck.provider.TickerMapperProviderImpl
-import com.mingg.network.mapper.ticker.TickerMapperProvider
+import com.mingg.network.mapper.ticker.TickerResponseMapperImpl
+import com.mingg.network.mapper.ticker.TickerResponseMapper
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -13,5 +13,5 @@ import javax.inject.Singleton
 abstract class ProviderModule {
     @Binds
     @Singleton
-    abstract fun bindTickerMapperProvider(tickerMapperProviderImpl: TickerMapperProviderImpl): TickerMapperProvider
+    abstract fun bindTickerMapperProvider(tickerResponseMapperImpl: TickerResponseMapperImpl): TickerResponseMapper
 }

@@ -4,7 +4,7 @@ import com.mingg.domain.model.ticker.AtomicTickerList
 import com.mingg.domain.utils.Resource
 import com.mingg.network.data.request.TickerRequest
 import com.mingg.network.data.response.TickerResponse
-import com.mingg.network.mapper.ticker.TickerMapperProvider
+import com.mingg.network.mapper.ticker.TickerResponseMapper
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.websocket.webSocketSession
 import io.ktor.client.request.url
@@ -24,7 +24,7 @@ import javax.inject.Inject
 class TickerSocketServiceImpl @Inject constructor(
     private val client: HttpClient,
     private val atomicTickerList: AtomicTickerList,
-    private val tickerMapperProvider: TickerMapperProvider
+    private val tickerResponseMapper: TickerResponseMapper
 ) : TickerSocketService {
     override var socketSession: WebSocketSession? = null
 
@@ -64,7 +64,7 @@ class TickerSocketServiceImpl @Inject constructor(
                 }
                 if (frame is Frame.Binary) {
                     val tickerResponse = json.decodeFromString<TickerResponse>(String(frame.readBytes()))
-                    atomicTickerList.updateTicker(tickerMapperProvider.mapperToTicker(tickerResponse))
+                    atomicTickerList.updateTicker(tickerResponseMapper.mapperToTicker(tickerResponse))
                     emit(Resource.Success(Unit))
                 }
             }

@@ -13,7 +13,8 @@ data class Ticker(
     var rate: String,
     var volume: String,
     var formattedVolume: String,
-    var isFavorite: Boolean = false
+    var isFavorite: Boolean = false,
+    var isVolumeDividedByMillion: Boolean = false
 ) : Diffable<Ticker> {
     override fun areItemsTheSame(other: Ticker): Boolean {
         return this.symbol == other.symbol

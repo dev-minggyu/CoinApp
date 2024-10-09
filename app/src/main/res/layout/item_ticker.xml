@@ -117,7 +117,7 @@
             android:id="@+id/tv_volume"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{ticker.formattedVolume}"
+            android:text='@{ticker.formattedVolume + (ticker.isVolumeDividedByMillion ? @string/unit_million : @string/unit_won)}'
             android:textColor="@color/color_text"
             android:textSize="@dimen/_12sdp"
             app:layout_constraintBottom_toBottomOf="parent"

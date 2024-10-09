@@ -33,6 +33,7 @@ class AtomicTickerListImpl @Inject constructor() : AtomicTickerList {
                 rate = element.rate
                 volume = element.volume
                 formattedVolume = element.formattedVolume
+                isVolumeDividedByMillion = element.isVolumeDividedByMillion
             } ?: run {
                 _list.add(element)
             }
