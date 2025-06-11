@@ -6,7 +6,7 @@
 
         <variable
             name="ticker"
-            type="com.mingg.domain.model.ticker.Ticker" />
+            type="com.ming.domain.model.ticker.Ticker" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

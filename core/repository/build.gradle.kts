@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.mingg.repository"
+    namespace = "com.ming.repository"
 }
 
 dependencies {

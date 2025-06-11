@@ -6,7 +6,7 @@
 
         <variable
             name="symbol"
-            type="com.mingg.domain.model.setting.FloatingTicker" />
+            type="com.ming.domain.model.setting.FloatingTicker" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

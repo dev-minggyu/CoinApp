@@ -12,15 +12,15 @@ gradlePlugin {
     plugins {
         register("androidCompose") {
             id = "android.compose"
-            implementationClass = "com.mingg.buildlogic.etc.AndroidComposePlugin"
+            implementationClass = "com.ming.buildlogic.etc.AndroidComposePlugin"
         }
         register("androidHilt") {
             id = "android.hilt"
-            implementationClass = "com.mingg.buildlogic.etc.AndroidHiltPlugin"
+            implementationClass = "com.ming.buildlogic.etc.AndroidHiltPlugin"
         }
         register("androidRoom") {
             id = "android.room"
-            implementationClass = "com.mingg.buildlogic.etc.AndroidRoomPlugin"
+            implementationClass = "com.ming.buildlogic.etc.AndroidRoomPlugin"
         }
     }
 }

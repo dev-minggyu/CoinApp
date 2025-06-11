@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.mingg.coincheck"
+    namespace = "com.ming.coincheck"
 
     signingConfigs {
         create("release") {

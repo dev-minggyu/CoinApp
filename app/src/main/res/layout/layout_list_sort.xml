@@ -34,7 +34,7 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="1" />
 
-    <com.mingg.coincheck.ui.custom.SortButton
+    <com.ming.coincheck.ui.custom.SortButton
         android:id="@+id/btn_sort_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:sortCategory="name" />
 
-    <com.mingg.coincheck.ui.custom.SortButton
+    <com.ming.coincheck.ui.custom.SortButton
         android:id="@+id/btn_sort_price"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:sortCategory="price" />
 
-    <com.mingg.coincheck.ui.custom.SortButton
+    <com.ming.coincheck.ui.custom.SortButton
         android:id="@+id/btn_sort_rate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:sortCategory="rate" />
 
-    <com.mingg.coincheck.ui.custom.SortButton
+    <com.ming.coincheck.ui.custom.SortButton
         android:id="@+id/btn_sort_volume"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

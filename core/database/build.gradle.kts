@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.mingg.database"
+    namespace = "com.ming.database"
 }
 
 dependencies {

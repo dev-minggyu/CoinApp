@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.mingg.network"
+    namespace = "com.ming.network"
 
     buildFeatures {
         buildConfig = true
