@@ -4,6 +4,8 @@
 
 기존 CoinApp 프로젝트(https://github.com/dev-minggyu/CoinMVVM) 구조를 재설계.
 
+Google Play : https://play.google.com/store/apps/details?id=com.ming.coincheck
+
 <br/>
 
 ![screenshot.png](https://github.com/dev-minggyu/CoinApp/blob/master/readme-res/screenshot.png)
